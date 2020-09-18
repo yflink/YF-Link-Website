@@ -76,6 +76,7 @@ const styles = (theme) => ({
     lineHeight: "21px",
     letterSpacing: "0.06em",
     color: colors.white,
+    whiteSpace: "nowrap",
   },
 
   linkTextSelectedMark: {
