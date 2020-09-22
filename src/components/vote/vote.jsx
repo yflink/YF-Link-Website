@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
+import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import bigInt from "big-integer";
 
 import HeaderLogo from "../header/logo/logo";
@@ -40,6 +41,7 @@ import {
   STAKE_RETURNED,
   WITHDRAW,
   WITHDRAW_RETURNED,
+  PROPOSE,
 } from "../../constants";
 
 const styles = (theme) => ({
@@ -399,8 +401,27 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     paddingTop: "10px",
+    position: "relative",
     [theme.breakpoints.up("ms")]: {
       paddingTop: "50px",
+    },
+  },
+
+  cardPreviousSection: {
+    position: "absolute",
+    top: "-40px",
+    left: "0px",
+    [theme.breakpoints.up("ms")]: {
+      top: "-56px",
+      left: "-10px",
+    },
+  },
+
+  previousButtonStyle: {
+    marginLeft: "8px",
+    color: colors.white,
+    [theme.breakpoints.up("ms")]: {
+      marginLeft: "16px",
     },
   },
 
@@ -411,6 +432,17 @@ const styles = (theme) => ({
     justifyContent: "space-between",
     marginBottom: "24px",
   },
+  newProposalCardHeaderSection: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "24px",
+    marginTop: "16px",
+    [theme.breakpoints.up("ms")]: {
+      marginTop: "0px",
+    },
+  },
 
   cardHeading: {
     color: colors.white,
@@ -419,6 +451,13 @@ const styles = (theme) => ({
     [theme.breakpoints.up("ms")]: {
       fontSize: "48px",
     },
+  },
+
+  newProposalCard: {
+    width: "100%",
+    minHeight: "300px",
+    backgroundColor: colors.lightGray2,
+    borderRadius: "8px",
   },
 
   governanceCard: {
@@ -437,6 +476,17 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
   },
+
+  newProposalCardHeadSection: {
+    width: "100%",
+    height: "56px",
+    backgroundColor: colors.darkGray2,
+    borderRadius: "8px 8px 0px 0px",
+    padding: "0px 12px",
+    display: "flex",
+    alignItems: "center",
+  },
+
   governanceButtonSpan: {
     color: colors.white,
     marginRight: "8px",
@@ -446,11 +496,30 @@ const styles = (theme) => ({
       fontSize: "16px",
     },
   },
+
+  newProposalButtonSpan: {
+    color: colors.white,
+    marginRight: "8px",
+    fontWeight: "normal",
+    fontSize: "14px",
+    [theme.breakpoints.up("ms")]: {
+      fontSize: "16px",
+    },
+  },
+
   governanceCardBodySection: {
     display: "flex",
     flexDirection: "column",
     width: "100%",
   },
+
+  newProposalCardBodySection: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    paddingTop: "12px",
+  },
+
   governanceCardBodyVault: {
     display: "flex",
     width: "100%",
@@ -458,6 +527,15 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+
+  newProposalCardBodyVault: {
+    display: "flex",
+    width: "100%",
+    padding: "12px",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+
   governanceVaultButtonSpan: {
     marginLeft: "12px",
     color: colors.white,
@@ -467,6 +545,17 @@ const styles = (theme) => ({
       fontSize: "24px",
     },
   },
+
+  newProposalVaultButtonSpan: {
+    marginLeft: "12px",
+    color: colors.white,
+    fontWeight: "normal",
+    fontSize: "18px",
+    [theme.breakpoints.up("ms")]: {
+      fontSize: "24px",
+    },
+  },
+
   governanceVaultIcon: {
     width: "24px",
     height: "24px",
@@ -486,6 +575,47 @@ const styles = (theme) => ({
     [theme.breakpoints.up("ms")]: {
       flexDirection: "row",
     },
+  },
+
+  newProposalActionContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    padding: "12px 24px 24px 24px",
+  },
+
+  newProposalCommentContainer: {
+    display: "flex",
+    marginBottom: "16px",
+  },
+
+  newProposalComment: {
+    color: colors.white,
+    fontWeight: "normal",
+  },
+
+  newProposalButtonContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    [theme.breakpoints.up("ms")]: {
+      justifyContent: "flex-end",
+    },
+  },
+
+  newProposalInput: {
+    width: "100%",
+    height: 56,
+    background: colors.lightGray3,
+    borderRadius: 3,
+    border: "solid 2px rgba(255, 255, 255, 0)",
+    color: colors.white,
+    padding: "0 12px",
+  },
+
+  newProposalError: {
+    border: "solid 1px rgba(255, 0, 0, 0.8)",
   },
 
   govStakeContainer: {
@@ -520,6 +650,11 @@ const styles = (theme) => ({
     fontWeight: "normal",
   },
   govStakeWithdrawInputContainer: {
+    width: "100%",
+    marginBottom: "16px",
+  },
+
+  newProposalInputContainer: {
     width: "100%",
     marginBottom: "16px",
   },
@@ -680,6 +815,7 @@ class Vote extends Component {
       voteLockValid: false,
       balanceValid: false,
       voteLock: null,
+      proposalScreen: false,
     };
 
     if (account && account.address) {
@@ -712,7 +848,17 @@ class Vote extends Component {
   }
 
   errorReturned = (_error) => {
+    const snackbarObj = { snackbarMessage: null, snackbarType: null };
+    this.setState(snackbarObj);
     this.setState({ loading: false });
+    const that = this;
+    setTimeout(() => {
+      const snackbarObj = {
+        snackbarMessage: _error.toString(),
+        snackbarType: "Error",
+      };
+      that.setState(snackbarObj);
+    });
   };
 
   proposalsReturned = () => {
@@ -763,6 +909,22 @@ class Vote extends Component {
 
   showAddressCopiedSnack = () => {
     this.showSnackbar("Address Copied to Clipboard", "Success");
+  };
+
+  onPropose = () => {
+    this.setState({ urlError: false });
+    const { url } = this.state;
+
+    let error = false;
+    if (!url || url === "") {
+      this.setState({ urlError: "This field is required" });
+      error = true;
+    }
+
+    if (!error) {
+      this.setState({ loading: true });
+      dispatcher.dispatch({ type: PROPOSE, content: { url } });
+    }
   };
 
   showSnackbar = (message, type) => {
@@ -1229,6 +1391,239 @@ class Vote extends Component {
     }
   };
 
+  renderNewProposalSection = (screenType) => {
+    const { classes } = this.props;
+    const { urlError } = this.state;
+
+    if (screenType === "DESKTOP") {
+      return (
+        <div className={classes.desktopSectionStyle}>
+          <div className={classes.cardPreviousSection}>
+            <IconButton
+              onClick={() => {
+                this.setState({ proposalScreen: false });
+              }}
+            >
+              <ArrowBackOutlinedIcon style={{ color: colors.white }} />
+              <Typography
+                variant={"h4"}
+                className={classes.previousButtonStyle}
+              >
+                Back to Vote
+              </Typography>
+            </IconButton>{" "}
+          </div>
+          <div className={classes.newProposalCardHeaderSection}>
+            <Typography variant={"h1"} className={classes.cardHeading}>
+              Create a new proposal
+            </Typography>
+          </div>
+          <Card className={classes.newProposalCard}>
+            <div className={classes.newProposalCardHeadSection}>
+              <IconButton
+                onClick={() => {
+                  this.openInstructions();
+                }}
+              >
+                <Typography
+                  variant={"h4"}
+                  className={classes.newProposalButtonSpan}
+                >
+                  Instructions
+                </Typography>
+                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  this.openForumSite();
+                }}
+              >
+                <Typography
+                  variant={"h4"}
+                  className={classes.newProposalButtonSpan}
+                >
+                  Governance Forum Site
+                </Typography>
+                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+              </IconButton>
+            </div>
+            <div className={classes.newProposalCardBodySection}>
+              <div className={classes.newProposalCardBodyVault}>
+                <Typography
+                  variant={"h3"}
+                  className={classes.newProposalVaultButtonSpan}
+                >
+                  Proposal URL
+                </Typography>
+              </div>
+              <div className={classes.newProposalActionContainer}>
+                <div className={classes.newProposalInputContainer}>
+                  <InputBase
+                    classes={{
+                      root: classes.newProposalInput,
+                      input: classes.customInputBoxInput,
+                      error: classes.newProposalError,
+                    }}
+                    onChange={(ev) => {
+                      this.setState({
+                        url: ev.target.value,
+                      });
+                    }}
+                    placeholder="Enter proposal URL from YFL Governance Forum"
+                    type="text"
+                    autoFocus
+                    error={urlError}
+                  />
+                </div>
+                <div className={classes.newProposalCommentContainer}>
+                  <Typography
+                    variant={"h4"}
+                    className={classes.newProposalComment}
+                  >
+                    Append ?meme to the proposal URL to submit in the memes
+                    category.
+                  </Typography>
+                </div>
+                <div className={classes.newProposalButtonContainer}>
+                  <Button
+                    variant="contained"
+                    classes={{
+                      root: classes.voteCreateProposalButton,
+                      disabled: classes.voteCreateProposalButtonDisabled,
+                    }}
+                    onClick={() => {
+                      this.onPropose();
+                    }}
+                  >
+                    <Typography
+                      variant="h4"
+                      className={classes.voteCreateProposalLabel}
+                    >
+                      Create Proposal
+                    </Typography>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      );
+    } else if (screenType === "MOBILE") {
+      return (
+        <div className={classes.mobileSectionStyle}>
+          <div className={classes.cardPreviousSection}>
+            <IconButton
+              onClick={() => {
+                this.setState({ proposalScreen: false });
+              }}
+            >
+              <ArrowBackOutlinedIcon style={{ color: colors.white }} />
+              <Typography
+                variant={"h4"}
+                className={classes.previousButtonStyle}
+              >
+                Back to Vote
+              </Typography>
+            </IconButton>{" "}
+          </div>
+          <div className={classes.newProposalCardHeaderSection}>
+            <Typography variant={"h1"} className={classes.cardHeading}>
+              Create a new proposal
+            </Typography>
+          </div>
+          <Card className={classes.newProposalCard}>
+            <div className={classes.newProposalCardHeadSection}>
+              <IconButton
+                onClick={() => {
+                  this.openInstructions();
+                }}
+              >
+                <Typography
+                  variant={"h4"}
+                  className={classes.newProposalButtonSpan}
+                >
+                  Instructions
+                </Typography>
+                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  this.openForumSite();
+                }}
+              >
+                <Typography
+                  variant={"h4"}
+                  className={classes.newProposalButtonSpan}
+                >
+                  Governance Forum Site
+                </Typography>
+                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+              </IconButton>
+            </div>
+            <div className={classes.newProposalCardBodySection}>
+              <div className={classes.newProposalCardBodyVault}>
+                <Typography
+                  variant={"h3"}
+                  className={classes.newProposalVaultButtonSpan}
+                >
+                  Proposal URL
+                </Typography>
+              </div>
+              <div className={classes.newProposalActionContainer}>
+                <div className={classes.newProposalInputContainer}>
+                  <InputBase
+                    classes={{
+                      root: classes.newProposalInput,
+                      input: classes.customInputBoxInput,
+                      error: classes.newProposalError,
+                    }}
+                    onChange={(ev) => {
+                      this.setState({
+                        url: ev.target.value,
+                      });
+                    }}
+                    placeholder="Enter proposal URL from YFL Governance Forum"
+                    type="text"
+                    autoFocus
+                    error={urlError}
+                  />
+                </div>
+                <div className={classes.newProposalCommentContainer}>
+                  <Typography
+                    variant={"h4"}
+                    className={classes.newProposalComment}
+                  >
+                    Append ?meme to the proposal URL to submit in the memes
+                    category.
+                  </Typography>
+                </div>
+                <div className={classes.newProposalButtonContainer}>
+                  <Button
+                    variant="contained"
+                    classes={{
+                      root: classes.voteCreateProposalButton,
+                      disabled: classes.voteCreateProposalButtonDisabled,
+                    }}
+                    onClick={() => {
+                      this.onPropose();
+                    }}
+                  >
+                    <Typography
+                      variant="h4"
+                      className={classes.voteCreateProposalLabel}
+                    >
+                      Generate New Proposal
+                    </Typography>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      );
+    }
+  };
+
   renderVoteSection = (screenType) => {
     const { classes } = this.props;
     const { value } = this.state;
@@ -1278,6 +1673,9 @@ class Vote extends Component {
                 root: classes.voteCreateProposalButton,
                 disabled: classes.voteCreateProposalButtonDisabled,
               }}
+              onClick={() => {
+                this.setState({ proposalScreen: true });
+              }}
             >
               <Typography
                 variant="h4"
@@ -1320,6 +1718,9 @@ class Vote extends Component {
               <Typography
                 variant="h4"
                 className={classes.voteCreateProposalLabel}
+                onClick={() => {
+                  this.setState({ proposalScreen: true });
+                }}
               >
                 Generate New Proposal
               </Typography>
@@ -1388,6 +1789,12 @@ class Vote extends Component {
     );
   };
 
+  openForumSite = () => {
+    window.open(
+      "https://etherscan.io/address/0xc150eade946079033c3b840bd7e81cdd5354e467"
+    );
+  };
+
   openProposal = (url) => {
     window.open(url);
   };
@@ -1449,7 +1856,7 @@ class Vote extends Component {
 
   render() {
     const { classes } = this.props;
-    const { loading, modalOpen, snackbarMessage } = this.state;
+    const { loading, modalOpen, snackbarMessage, proposalScreen } = this.state;
 
     return (
       <div className={classes.root}>
@@ -1457,12 +1864,20 @@ class Vote extends Component {
         {this.renderBackground("MOBILE")}
         {this.renderHeader("DESKTOP")}
         {this.renderHeader("MOBILE")}
-        <div className={classes.mainBody}>
-          {this.renderGovernanceSection("DESKTOP")}
-          {this.renderGovernanceSection("MOBILE")}
-          {this.renderVoteSection("DESKTOP")}
-          {this.renderVoteSection("MOBILE")}
-        </div>
+        {!proposalScreen && (
+          <div className={classes.mainBody}>
+            {this.renderGovernanceSection("DESKTOP")}
+            {this.renderGovernanceSection("MOBILE")}
+            {this.renderVoteSection("DESKTOP")}
+            {this.renderVoteSection("MOBILE")}
+          </div>
+        )}
+        {proposalScreen && (
+          <div className={classes.mainBody}>
+            {this.renderNewProposalSection("DESKTOP")}
+            {this.renderNewProposalSection("MOBILE")}
+          </div>
+        )}
         {snackbarMessage && this.renderSnackbar()}
         {loading && <Loader />}
         {modalOpen && this.renderModal()}
@@ -1542,10 +1957,6 @@ class Vote extends Component {
     let val = [];
     val[event.target.id] = event.target.value;
     this.setState(val);
-  };
-
-  onPropose = () => {
-    this.props.history.push("propose");
   };
 
   renderModal = () => {
