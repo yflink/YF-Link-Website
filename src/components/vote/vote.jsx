@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 import {
   Typography,
-  InputBase,
+  Box,
   Button,
-  IconButton,
   Card,
 } from "@material-ui/core";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
@@ -23,16 +22,12 @@ import UnlockModal from "../unlock/unlockModal.jsx";
 import Proposal from "./proposal";
 
 import Store from "../../stores";
-import { colors } from "../../theme";
-
-import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
+import { colors } from '../../theme'
 
 import {
   ERROR,
   CONFIGURE_RETURNED,
   PROPOSE_RETURNED,
-  GET_GOV_REQUIREMENTS,
-  GET_BALANCES_RETURNED,
   GET_PROPOSALS,
   GET_PROPOSALS_RETURNED,
   VOTE_FOR_RETURNED,
@@ -44,23 +39,20 @@ import {
   PROPOSE,
 } from "../../constants";
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    height: "100%",
-    minHeight: "100vh",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: colors.greyBackground,
-    overflow: "hidden",
-    position: "relative",
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '900px',
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: '40px'
   },
   between: {
-    width: "40px",
+    width: '40px'
   },
-
   desktopSectionStyle: {
     zIndex: "2",
     width: "100%",
@@ -87,39 +79,43 @@ const styles = (theme) => ({
     padding: "0px 16px",
     [theme.breakpoints.up("ms")]: {
       display: "none",
-    },
+    }
   },
 
   investedContainer: {
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "12px",
-    minWidth: "100%",
-    [theme.breakpoints.up("md")]: {
-      minWidth: "800px",
-    },
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '12px',
+    minWidth: '100%',
+    [theme.breakpoints.up('md')]: {
+      minWidth: '800px',
+    }
   },
   connectContainer: {
-    padding: "12px",
-    display: "flex",
-    justifyContent: "center",
-    width: "100%",
-    maxWidth: "450px",
-    [theme.breakpoints.up("md")]: {
-      width: "450",
-    },
+    padding: '12px',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+    maxWidth: '450px',
+    [theme.breakpoints.up('md')]: {
+      width: '450',
+    }
   },
-
   actionButton: {
-    padding: "12px 16px",
-    backgroundColor: "transparent",
-    borderRadius: "3px",
-    border: "1px solid #FFFFFF",
-    color: colors.white,
-    height: "43px",
+    '&:hover': {
+      backgroundColor: "#2F80ED",
+    },
+    padding: '12px',
+    backgroundColor: "#2F80ED",
+    borderRadius: '1rem',
+    border: '1px solid #E1E1E1',
+    fontWeight: 500,
+    [theme.breakpoints.up('md')]: {
+      padding: '15px',
+    }
   },
   actionButtonLabel: {
     fontWeight: "normal",
@@ -128,108 +124,107 @@ const styles = (theme) => ({
       fontSize: "16px",
     },
   },
-
   buttonText: {
-    fontWeight: "700",
-    color: "white",
+    fontWeight: '700',
+    color: 'white',
   },
   instructions: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   disaclaimer: {
-    padding: "12px",
-    border: "1px solid rgb(174, 174, 174)",
-    borderRadius: "0.75rem",
-    marginBottom: "24px",
+    padding: '12px',
+    border: '1px solid rgb(174, 174, 174)',
+    borderRadius: '0.75rem',
+    marginBottom: '24px',
   },
   addressContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    overflow: "hidden",
+    display: 'flex',
+    justifyContent: 'space-between',
+    overflow: 'hidden',
     flex: 1,
-    whiteSpace: "nowrap",
-    fontSize: "0.83rem",
-    textOverflow: "ellipsis",
-    cursor: "pointer",
-    padding: "28px 30px",
-    borderRadius: "50px",
-    border: "1px solid " + colors.borderBlue,
-    alignItems: "center",
-    [theme.breakpoints.up("md")]: {
-      width: "100%",
-    },
+    whiteSpace: 'nowrap',
+    fontSize: '0.83rem',
+    textOverflow:'ellipsis',
+    cursor: 'pointer',
+    padding: '28px 30px',
+    borderRadius: '50px',
+    border: '1px solid '+colors.borderBlue,
+    alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      width: '100%'
+    }
   },
   walletAddress: {
-    padding: "0px 12px",
+    padding: '0px 12px'
   },
   walletTitle: {
     flex: 1,
-    color: colors.darkGray,
+    color: colors.darkGray
   },
   proposalContainer: {
-    position: "relative",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   field: {
-    minWidth: "100%",
-    paddingBottom: "20px",
+    minWidth: '100%',
+    paddingBottom: '20px'
   },
   fieldTitle: {
-    paddingLeft: "20px",
+    paddingLeft: '20px'
   },
   titleInput: {
-    borderRadius: "25px",
+    borderRadius: '25px'
   },
   headingName: {
-    paddingTop: "5px",
+    paddingTop: '5px',
     flex: 2,
     flexShrink: 0,
-    display: "flex",
-    alignItems: "center",
-    minWidth: "100%",
-    [theme.breakpoints.up("sm")]: {
-      minWidth: "auto",
-    },
+    display: 'flex',
+    alignItems: 'center',
+    minWidth: '100%',
+    [theme.breakpoints.up('sm')]: {
+      minWidth: 'auto',
+    }
   },
   heading: {
-    display: "none",
-    paddingTop: "12px",
+    display: 'none',
+    paddingTop: '12px',
     flex: 1,
     flexShrink: 0,
-    [theme.breakpoints.up("sm")]: {
-      paddingTop: "5px",
-      display: "block",
-    },
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: '5px',
+      display: 'block'
+    }
   },
   assetSummary: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     flex: 1,
-    flexWrap: "wrap",
-    [theme.breakpoints.up("sm")]: {
-      flexWrap: "nowrap",
-    },
+    flexWrap: 'wrap',
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap'
+    }
   },
   assetIcon: {
-    display: "flex",
-    alignItems: "center",
-    verticalAlign: "middle",
-    borderRadius: "20px",
-    height: "30px",
-    width: "30px",
-    textAlign: "center",
-    cursor: "pointer",
-    marginRight: "20px",
-    [theme.breakpoints.up("sm")]: {
-      height: "40px",
-      width: "40px",
-      marginRight: "24px",
-    },
+    display: 'flex',
+    alignItems: 'center',
+    verticalAlign: 'middle',
+    borderRadius: '20px',
+    height: '30px',
+    width: '30px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    marginRight: '20px',
+    [theme.breakpoints.up('sm')]: {
+      height: '40px',
+      width: '40px',
+      marginRight: '24px',
+    }
   },
   grey: {
-    color: colors.darkGray,
+    color: colors.darkGray
   },
   proposalCard: {
     width: "100%",
@@ -252,22 +247,21 @@ const styles = (theme) => ({
   },
 
   stakeTitle: {
-    width: "100%",
-    color: colors.white,
-    textAlign: "center",
-    fontWeight: "normal",
+    width: '100%',
+    color: colors.darkGray,
   },
-  propEmptyContainer: {
-    display: "flex",
-    flexWrap: "wrap",
-    padding: "28px 30px",
-    borderRadius: "3px",
-    background: "transparent",
-    width: "100%",
-    marginBottom: "12px",
+  claimContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: '28px 30px',
+    borderRadius: '50px',
+    border: '1px solid '+colors.borderBlue,
+    margin: '20px',
+    background: colors.white,
+    width: '100%'
   },
   stakeButton: {
-    minWidth: "300px",
+    minWidth: '300px'
   },
   proposerAddressContainer: {
     display: "flex",
@@ -785,31 +779,25 @@ const styles = (theme) => ({
   },
 });
 
-const emitter = Store.emitter;
-const dispatcher = Store.dispatcher;
-const store = Store.store;
-
-function toFixed(bi, decimals, desired) {
-  const trunc = decimals - desired;
-  const shift = decimals - trunc;
-  return (bi.divide(10 ** trunc).toJSNumber() / 10 ** shift).toFixed(desired);
-}
+const emitter = Store.emitter
+const dispatcher = Store.dispatcher
+const store = Store.store
 
 class Vote extends Component {
-  constructor(props) {
-    super(props);
 
-    const account = store.getStore("account");
-    const proposals = store.getStore("proposals");
-    const pool = store.getStore("currentPool");
+  constructor(props) {
+    super(props)
+
+    const account = store.getStore('account')
+    const proposals = store.getStore('proposals')
+
     if (!account || !account.address) {
-      props.history.push("/");
+      props.history.push('/')
     }
 
     this.state = {
-      loading: true,
+      loading: false,
       account: account,
-      pool: pool,
       proposals: proposals,
       value: 0,
       voteLockValid: false,
@@ -817,35 +805,28 @@ class Vote extends Component {
       voteLock: null,
       proposalScreen: false,
     };
-
     if (account && account.address) {
-      dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
-    }
-    if (pool && pool.id.startsWith("gov") && account && account.address) {
-      dispatcher.dispatch({ type: GET_GOV_REQUIREMENTS, content: {} });
+      dispatcher.dispatch({ type: GET_PROPOSALS, content: {} })
     }
   }
 
   componentDidMount() {
     emitter.on(ERROR, this.errorReturned);
-    emitter.on(CONFIGURE_RETURNED, this.configureReturned);
-    emitter.on(PROPOSE_RETURNED, this.showHash);
-    emitter.on(GET_PROPOSALS_RETURNED, this.proposalsReturned);
-    emitter.on(GET_BALANCES_RETURNED, this.balancesReturned);
+    emitter.on(CONFIGURE_RETURNED, this.configureReturned)
+    emitter.on(PROPOSE_RETURNED, this.showHash)
+    emitter.on(GET_PROPOSALS_RETURNED, this.proposalsReturned)
     emitter.on(VOTE_FOR_RETURNED, this.showHash);
     emitter.on(VOTE_AGAINST_RETURNED, this.showHash);
-    emitter.on(STAKE_RETURNED, this.stakeReturned);
-    emitter.on(WITHDRAW_RETURNED, this.withdrawReturned);
   }
 
   componentWillUnmount() {
     emitter.removeListener(ERROR, this.errorReturned);
-    emitter.removeListener(CONFIGURE_RETURNED, this.configureReturned);
-    emitter.removeListener(PROPOSE_RETURNED, this.showHash);
-    emitter.removeListener(GET_PROPOSALS_RETURNED, this.proposalsReturned);
+    emitter.removeListener(CONFIGURE_RETURNED, this.configureReturned)
+    emitter.removeListener(PROPOSE_RETURNED, this.showHash)
+    emitter.removeListener(GET_PROPOSALS_RETURNED, this.proposalsReturned)
     emitter.removeListener(VOTE_FOR_RETURNED, this.showHash);
     emitter.removeListener(VOTE_AGAINST_RETURNED, this.showHash);
-  }
+  };
 
   errorReturned = (_error) => {
     const snackbarObj = { snackbarMessage: null, snackbarType: null };
@@ -862,54 +843,17 @@ class Vote extends Component {
   };
 
   proposalsReturned = () => {
-    const proposals = store.getStore("proposals");
-    this.setState({ proposals: proposals, loading: false });
-  };
-
-  balancesReturned = () => {
-    const currentPool = store.getStore("currentPool");
-    const pools = store.getStore("rewardPools");
-    if (currentPool) {
-      let newPool = pools.filter((pool) => {
-        return pool.id === currentPool.id;
-      });
-
-      if (newPool.length > 0) {
-        newPool = newPool[0];
-        store.setStore({ currentPool: newPool });
-        this.setState({ pool: newPool });
-      }
-    } else {
-      if (pools.length > 0) {
-        store.setStore({ currentPool: pools[0] });
-        this.setState({ pool: pools[0] });
-      }
-    }
-  };
-
-  govRequirementsReturned = (requirements) => {
-    this.setState({
-      balanceValid: requirements.balanceValid,
-      voteLockValid: requirements.voteLockValid,
-      voteLock: requirements.voteLock,
-    });
-  };
-
-  stakeReturned = (txData) => {
-    this.showSnackbar(txData, "Hash");
-  };
-
-  withdrawReturned = (txData) => {
-    this.showSnackbar(txData, "Hash");
-  };
+    const proposals = store.getStore('proposals')
+    this.setState({ proposals: proposals, loading: false })
+  }
 
   showHash = (txHash) => {
-    this.showSnackbar(txHash, "Hash");
+    this.showSnackbar(txHash, 'Hash')
   };
 
   showAddressCopiedSnack = () => {
-    this.showSnackbar("Address Copied to Clipboard", "Success");
-  };
+    this.showSnackbar("Address Copied to Clipboard", 'Success')
+  }
 
   onPropose = () => {
     this.setState({ urlError: false });
@@ -928,116 +872,86 @@ class Vote extends Component {
   };
 
   showSnackbar = (message, type) => {
-    this.setState({
-      snackbarMessage: null,
-      snackbarType: null,
-      loading: false,
-    });
-    const that = this;
+    this.setState({ snackbarMessage: null, snackbarType: null, loading: false })
+    const that = this
     setTimeout(() => {
-      const snackbarObj = { snackbarMessage: message, snackbarType: type };
-      that.setState(snackbarObj);
-    });
-  };
+      const snackbarObj = { snackbarMessage: message, snackbarType: type }
+      that.setState(snackbarObj)
+    })
+  }
 
   configureReturned = () => {
-    this.setState({ loading: false });
-  };
+    this.setState({ loading: false })
+  }
 
-  renderHeader = (screenType) => {
+  render() {
     const { classes } = this.props;
-    const { account } = this.state;
-    const wallet =
-      account.address &&
-      account.address.substring(0, 6) +
-        "..." +
-        account.address.substring(
-          account.address.length - 4,
-          account.address.length
-        );
+    const {
+      value,
+      account,
+      loading,
+      modalOpen,
+      snackbarMessage,
+    } = this.state
 
-    if (screenType === "DESKTOP") {
-      return (
-        <div className={classes.desktopHeaderContainer}>
-          <div className={classes.logoContainer}>
-            <HeaderLogo />
-          </div>
-          <div className={classes.linkContainer}>
-            {/* <HeaderLink text='STAKE' to={account && account.address ? '/staking' : '/account'} redirectedTo={'/staking'} /> */}
-            <HeaderLink
-              text="VOTE"
-              to={account && account.address ? "/vote" : "/account"}
-              redirectedTo={"/vote"}
-              selected={true}
-            />
-            <HeaderLink
-              text="BUY YFL"
-              to={
-                "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
-              }
-              externalLink={true}
-            />
-            <HeaderLink text="LINKSWAP" to="/" disabled tag="SOON" />
-            {/* <HeaderLink text='PRODUCTS' to='/' disabled tag='SOON' /> */}
-          </div>
-          <div className={classes.walletContainer}>
-            {account && account.address && (
-              <Button
-                className={classes.walletButton}
-                variant="contained"
-                color="primary"
-                onClick={this.overlayClicked}
-                startIcon={
-                  <FiberManualRecordIcon style={{ color: colors.lightGreen }} />
-                }
-              >
-                <Typography
-                  variant={"h4"}
-                  className={classes.headerWalletAddress}
-                  noWrap
-                >
-                  {wallet}
-                </Typography>
-              </Button>
-            )}
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className={classes.mobileHeaderContainer}>
-          <div className={classes.logoContainer}>
-            <HeaderLogo />
-          </div>
-          <div className={classes.optionsContainer}>
-            <IconButton
-              onClick={() => {
-                this.setState({ navModalOpen: true });
-              }}
-            >
-              <OptionsIcon style={{ color: colors.white }} />
-            </IconButton>
-          </div>
-        </div>
-      );
+    var address = null;
+    if (account.address) {
+      address = account.address.substring(0,6)+'...'+account.address.substring(account.address.length-4,account.address.length)
     }
-  };
 
-  renderNavigationModal = () => {
-    const { account } = this.state;
     return (
-      <RedirectModal
-        closeModal={this.closeNavModal}
-        modalOpen={this.state.navModalOpen}
-        account={account}
-      />
-    );
-  };
+      <div className={ classes.root }>
+        <Typography variant={'h5'} className={ classes.disaclaimer }>This project is in beta. Use at your own risk.</Typography>
+        <div className={ classes.intro }>
+          <Card className={ classes.addressContainer } onClick={this.overlayClicked}>
+            <Typography variant={ 'h3'} className={ classes.walletTitle } noWrap>Wallet</Typography>
+            <Typography variant={ 'h4'} className={ classes.walletAddress } noWrap>{ address }</Typography>
+            <div style={{ background: '#DC6BE5', opacity: '1', borderRadius: '10px', width: '10px', height: '10px', marginRight: '3px', marginTop:'3px', marginLeft:'6px' }}/>
+          </Card>
+          <div className={classes.between}/>
+          <div>
+            <Button className={ classes.stakeButton } variant="outlined" color="secondary" disabled={ loading } onClick={ () => { this.goToDashboard() } }>
+              <Typography variant={ 'h4'}>Governance Forum Site</Typography>
+            </Button>
+          </div>
+        </div>
+        <div className={ classes.intro }>
+          <ToggleButtonGroup value={value} onChange={this.handleTabChange} aria-label="version" exclusive size={ 'small' }>
+            <ToggleButton value={0} aria-label="v1">
+              <Typography variant={ 'h4' }>Gov</Typography>
+            </ToggleButton>
+            <ToggleButton value={1} aria-label="v2">
+              <Typography variant={ 'h4' }>Memes</Typography>
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <div className={ classes.between }>
+          </div>
+          <div>
+            <Button className={ classes.stakeButton } variant="outlined" color="secondary" disabled={ loading } onClick={ () => { this.onPropose() } }>
+              <Typography variant={ 'h4'}>Generate a new proposal</Typography>
+            </Button>
+            <Typography className={classes.instructions }><a href="https://gov.yflink.io/t/voting-and-proposal-submission-instructions/30" target="_blank" rel="noopener noreferrer">Instructions</a></Typography>
+          </div>
+        </div>
+        { this.renderProposals() }
+        { snackbarMessage && this.renderSnackbar() }
+        { loading && <Loader /> }
+        { modalOpen && this.renderModal() }
+      </div>
+    )
+  }
 
-  renderBackground = (screenType) => {
-    const { classes } = this.props;
+  renderProposals = () => {
+    const { proposals, expanded, value } = this.state
+    const { classes } = this.props
+    // const now = store.getStore('currentBlock')
 
-    if (screenType === "DESKTOP") {
+    const filteredProposals = proposals.filter((proposal) => {
+      const isMeme = proposal.url.includes('?meme')
+      return (value === 0 ? !isMeme : isMeme)
+    })
+
+    if(filteredProposals.length === 0) {
       return (
         <>
           <div className={classes.rightMarkSection} />
@@ -1382,6 +1296,7 @@ class Vote extends Component {
                       </Typography>
                     </Button>
                   </div>
+                  <Typography variant={ 'h5' } className={ classes.grey }>Proposer</Typography>
                 </div>
               </div>
             </div>
@@ -1931,61 +1846,56 @@ class Vote extends Component {
   };
 
   goToDashboard = () => {
-    window.open("https://gov.yflink.io/", "_blank");
-  };
+    window.open('https://gov.yflink.io/', "_blank")
+  }
 
   handleTabChange = (event, newValue) => {
-    this.setState({ value: newValue });
+    this.setState({value:newValue})
   };
 
   startLoading = () => {
-    this.setState({ loading: true });
-  };
+    this.setState({ loading: true })
+  }
 
   handleChange = (id) => {
-    this.setState({ expanded: this.state.expanded === id ? null : id });
-  };
+    this.setState({ expanded: this.state.expanded === id ? null : id })
+  }
 
   copyAddressToClipboard = (event, address) => {
     event.stopPropagation();
     navigator.clipboard.writeText(address).then(() => {
       this.showAddressCopiedSnack();
     });
-  };
+  }
 
   onChange = (event) => {
-    let val = [];
-    val[event.target.id] = event.target.value;
-    this.setState(val);
-  };
+    let val = []
+    val[event.target.id] = event.target.value
+    this.setState(val)
+  }
 
   renderModal = () => {
     return (
-      <UnlockModal
-        closeModal={this.closeModal}
-        modalOpen={this.state.modalOpen}
-      />
-    );
-  };
+      <UnlockModal closeModal={ this.closeModal } modalOpen={ this.state.modalOpen } />
+    )
+  }
 
   renderSnackbar = () => {
-    var { snackbarType, snackbarMessage } = this.state;
-    return (
-      <Snackbar type={snackbarType} message={snackbarMessage} open={true} />
-    );
+    var {
+      snackbarType,
+      snackbarMessage
+    } = this.state
+    return <Snackbar type={ snackbarType } message={ snackbarMessage } open={true}/>
   };
 
   overlayClicked = () => {
-    this.setState({ modalOpen: true });
-  };
+    this.setState({ modalOpen: true })
+  }
 
   closeModal = () => {
-    this.setState({ modalOpen: false });
-  };
+    this.setState({ modalOpen: false })
+  }
 
-  closeNavModal = () => {
-    this.setState({ navModalOpen: false });
-  };
 }
 
 export default withRouter(withStyles(styles)(Vote));
