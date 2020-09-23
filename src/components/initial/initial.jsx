@@ -25,7 +25,7 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    background: `linear-gradient(0deg, ${colors.greyBackground}, ${colors.greyBackground})`,
+    background: colors.greyBackground,
     overflow: "hidden",
     position: "relative",
   },

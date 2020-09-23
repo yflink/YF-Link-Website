@@ -361,7 +361,7 @@ class Stake extends Component {
       return null;
     }
 
-    const token = pool.tokens[0];
+    const token = pool && pool.tokens && pool.tokens[0];
     return (
       <div className={classes.root}>
         <Typography variant={"h5"} className={classes.disaclaimer}>
@@ -487,7 +487,7 @@ class Stake extends Component {
             </Typography>
           </Button>
         </div>
-        {pool.tokens[0].rewardsSymbol && (
+        {pool && pool.tokens && pool.tokens[0].rewardsSymbol && (
           <div className={classes.actionContainer}>
             <Button
               fullWidth
@@ -523,7 +523,7 @@ class Stake extends Component {
             </Typography>
           </Button>
         </div>
-        {pool.tokens[0].rewardsSymbol && (
+        {pool && pool.tokens && pool.tokens[0].rewardsSymbol && (
           <div className={classes.actionContainer}>
             <Button
               fullWidth
@@ -571,7 +571,7 @@ class Stake extends Component {
     const { classes } = this.props;
     const { loading, pool } = this.state;
 
-    const asset = pool.tokens[0];
+    const asset = pool && pool.tokens && pool.tokens[0];
 
     return (
       <div className={classes.actions}>
@@ -611,7 +611,7 @@ class Stake extends Component {
     const { classes } = this.props;
     const { loading, pool, voteLockValid } = this.state;
 
-    const asset = pool.tokens[0];
+    const asset = pool && pool.tokens && pool.tokens[0];
 
     return (
       <div className={classes.actions}>
@@ -660,7 +660,7 @@ class Stake extends Component {
   onStake = () => {
     this.setState({ amountError: false });
     const { pool } = this.state;
-    const asset = pool.tokens[0];
+    const asset = pool && pool.tokens && pool.tokens[0];
     const amountString = this.state[asset.id + "_stake"];
     // Using toString() here seems to magically render trailing zeros past the point of significance,
     // while toFixed() renders the nearest number.
@@ -690,7 +690,7 @@ class Stake extends Component {
   onUnstake = () => {
     this.setState({ amountError: false });
     const { pool } = this.state;
-    const asset = pool.tokens[0];
+    const asset = pool && pool.tokens && pool.tokens[0];
     const amountString = this.state[asset.id + "_unstake"];
     const amount = bigInt(
       (parseFloat(amountString) * 10 ** asset.decimals).toString()
