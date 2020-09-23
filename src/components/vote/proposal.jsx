@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import * as moment from 'moment';
+import * as moment from "moment";
 import { withRouter } from "react-router-dom";
-import { withStyles } from '@material-ui/core/styles';
-import {
-  Typography,
-  Button,
-} from '@material-ui/core';
-import { withNamespaces } from 'react-i18next';
+import { withStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+import { withNamespaces } from "react-i18next";
 
 import {
   ERROR,
@@ -15,22 +12,19 @@ import {
   VOTE_AGAINST,
   VOTE_AGAINST_RETURNED,
   GET_BALANCES_RETURNED,
-} from '../../constants'
+} from "../../constants";
 
-import { colors } from '../../theme'
+import { colors } from "../../theme";
 
 import Store from "../../stores";
-const emitter = Store.emitter
-const dispatcher = Store.dispatcher
-const store = Store.store
+const emitter = Store.emitter;
+const dispatcher = Store.dispatcher;
+const store = Store.store;
 
-
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'column',
-    padding: '0px 36px 0px 18px'
+    display: "flex",
+    width: "100%",
   },
 
   desktopContainer: {
@@ -83,27 +77,35 @@ const styles = theme => ({
     borderRadius: "4px",
     [theme.breakpoints.up("ms")]: {
       marginBottom: "8px",
-    }
+    },
   },
-  balances: {
-    width: '100%',
-    textAlign: 'right',
-    paddingRight: '20px',
-    cursor: 'pointer'
+
+  proposalId: {
+    fontWeight: "normal",
+    color: colors.white,
   },
-  actionsContainer: {
-    paddingBottom: '12px',
-    display: 'flex',
-    flex: '1',
-    flexWrap: 'wrap',
+
+  indexerTime: {
+    width: "100%",
+    height: "14px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  title: {
-    paddingRight: '24px'
+
+  proposalTimeNormal: {
+    fontWeight: "normal",
+    fontSize: "12px",
+    color: colors.white,
   },
-  actionButton: {
-    height: '47px'
+
+  proposalTimeEnded: {
+    fontWeight: "normal",
+    fontSize: "12px",
+    color: colors.greyText,
   },
-  tradeContainer: {
+
+  titleProperContainer: {
     flex: 1,
     display: "flex",
     flexDirection: "column",
@@ -189,90 +191,47 @@ const styles = theme => ({
     top: "10px",
     padding: "4px",
   },
-  sepperator: {
-    borderBottom: '1px solid #E1E1E1',
-    [theme.breakpoints.up('sm')]: {
-      width: '40px',
-      borderBottom: 'none'
-    }
+  voteIndicatorText: {
+    fontSize: "12px",
+    fontWeight: "normal",
+    color: colors.greyText,
   },
-  scaleContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '0px 0px 12px 0px',
-    alignItems: 'center',
-    flexWrap: 'wrap',
+  voteUpIcon: {
+    marginRight: "8px",
   },
-  scale: {
-    minWidth: '10px'
+  voteDownIcon: {
+    marginLeft: "8px",
   },
-  buttonText: {
-    fontWeight: '700',
-  },
-  headingContainer: {
-    width: '100%',
-    display: 'flex',
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    }
+  value: {
+    cursor: "pointer",
   },
   heading: {
-    flexShrink: 0
+    flexShrink: 0,
   },
   right: {
-    textAlign: 'right'
-  },
-  assetSummary: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    paddingBottom: '24px',
+    textAlign: "right",
   },
   grey: {
-    color: colors.darkGray
+    color: colors.darkGray,
   },
-  headingName: {
-    flex: 2,
-    flexShrink: 0,
-    display: 'flex',
-    alignItems: 'center',
-    minWidth: '100%',
-    [theme.breakpoints.up('sm')]: {
-      minWidth: 'auto',
-    }
-  },
-  proposerAddressContainer: {
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    '& > svg': {
-      visibility: 'hidden',
-    },
-    '&:hover > svg': {
-      visibility: 'visible'
-    }
-  }
 });
 
-
 class Proposal extends Component {
-
   constructor() {
-    super()
+    super();
 
-    const now = store.getStore('currentBlock')
+    const now = store.getStore("currentBlock");
 
     this.state = {
-      amount: '',
+      amount: "",
       amountError: false,
-      redeemAmount: '',
+      redeemAmount: "",
       redeemAmountError: false,
       currentBlock: now,
       currentTime: new Date().getTime(),
-    }
+      title: "",
+      loading: true,
+    };
   }
 
   componentDidMount() {
@@ -280,6 +239,7 @@ class Proposal extends Component {
     emitter.on(VOTE_AGAINST_RETURNED, this.voteAgainstReturned);
     emitter.on(GET_BALANCES_RETURNED, this.balancesUpdated);
     emitter.on(ERROR, this.errorReturned);
+    this.getProposalTitle();
   }
 
   componentWillUnmount() {
@@ -287,40 +247,88 @@ class Proposal extends Component {
     emitter.removeListener(VOTE_AGAINST_RETURNED, this.voteAgainstReturned);
     emitter.removeListener(GET_BALANCES_RETURNED, this.balancesUpdated);
     emitter.removeListener(ERROR, this.errorReturned);
+  }
+
+  getProposalTitle = async () => {
+    const { proposal } = this.props;
+    if (!proposal.url || !proposal.url.includes("gov.yflink.io")) {
+      this.setState({ title: "Invalid Proposal!" });
+      return;
+    }
+    const subSections = proposal.url.split("/");
+    const propDescription = subSections[4];
+    const propTitle = propDescription.replace(/-/g, " ");
+    this.setState({ title: propTitle });
   };
 
   balancesUpdated = () => {
-    let now = store.getStore('currentBlock')
-    this.setState({ currentBlock: now })
+    let now = store.getStore("currentBlock");
+    this.setState({ currentBlock: now });
   };
 
   voteForReturned = () => {
-    this.setState({ loading: false })
+    this.setState({ loading: false });
   };
 
   voteAgainstReturned = (_txHash) => {
-    this.setState({ loading: false })
+    this.setState({ loading: false });
   };
 
   errorReturned = (_error) => {
-    this.setState({ loading: false })
+    this.setState({ loading: false });
   };
 
   renderProposal = (screenType) => {
     const { classes, proposal } = this.props;
-    const {
-      loading,
-      currentBlock,
-      currentTime,
-    } = this.state
+    const { currentBlock, currentTime, title } = this.state;
 
-    const blocksTillEnd = proposal.end - currentBlock
-    const blocksSinceStart = currentBlock - proposal.start
+    const blocksTillEnd = proposal.end - currentBlock;
+    const blocksSinceStart = currentBlock - proposal.start;
 
-    const endTime = currentTime + (blocksTillEnd * 1000 * 13.8)
-    const startTime = currentTime - (blocksSinceStart * 1000 * 13.8)
+    const endTime = currentTime + blocksTillEnd * 1000 * 13.8;
+    const startTime = currentTime - blocksSinceStart * 1000 * 13.8;
 
-    const url = proposal.url
+    const proposerAddress =
+      proposal && proposal.proposer
+        ? proposal.proposer.substring(0, 8) +
+          "..." +
+          proposal.proposer.substring(
+            proposal.proposer.length - 6,
+            proposal.proposer.length
+          )
+        : null;
+
+    let proposalTimeStamp = "Ended";
+    if (proposal.end > currentBlock) {
+      const periodTime = moment(endTime).subtract(startTime);
+      proposalTimeStamp = `${periodTime.format("d")}d 
+        ${periodTime.format("hh")}h 
+        ${periodTime.format("mm")}m`;
+    }
+
+    const proposalVotesFor = proposal.totalForVotes
+      ? parseFloat(proposal.totalForVotes) / 10 ** 18
+      : 0;
+    const proposalVotesAgainst = proposal.totalAgainstVotes
+      ? parseFloat(proposal.totalAgainstVotes) / 10 ** 18
+      : 0;
+
+    const votesForText = proposalVotesFor.toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+    });
+    const votesAgainstText = proposalVotesAgainst.toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+    });
+    const votesForPercentage = (
+      (proposalVotesFor / (proposalVotesFor + proposalVotesAgainst)) *
+      100
+    ).toFixed(2);
+    const votesAgainstPercentage = (
+      (proposalVotesAgainst / (proposalVotesFor + proposalVotesAgainst)) *
+      100
+    ).toFixed(2);
 
     if (screenType === "DESKTOP") {
       return (
@@ -466,35 +474,40 @@ class Proposal extends Component {
         {this.renderProposal("DESKTOP")}
         {this.renderProposal("MOBILE")}
       </div>
-    )
-  };
+    );
+  }
 
   copyAddressToClipboard = (event, address) => {
     event.stopPropagation();
     navigator.clipboard.writeText(address).then(() => {
       this.showAddressCopiedSnack();
     });
-  }
+  };
 
   showAddressCopiedSnack = () => {
-    this.props.showSnackbar("Address Copied to Clipboard", 'Success')
-  }
+    this.props.showSnackbar("Address Copied to Clipboard", "Success");
+  };
 
   onVoteFor = () => {
-    const { proposal, startLoading } = this.props
+    const { proposal, startLoading } = this.props;
 
-    this.setState({ loading: true })
-    startLoading()
-    dispatcher.dispatch({ type: VOTE_FOR, content: { proposal: proposal } })
-  }
+    this.setState({ loading: true });
+    startLoading();
+    dispatcher.dispatch({ type: VOTE_FOR, content: { proposal: proposal } });
+  };
 
   onVoteAgainst = () => {
-    const { proposal, startLoading } = this.props
+    const { proposal, startLoading } = this.props;
 
-    this.setState({ loading: true })
-    startLoading()
-    dispatcher.dispatch({ type: VOTE_AGAINST, content: { proposal: proposal } })
-  }
+    this.setState({ loading: true });
+    startLoading();
+    dispatcher.dispatch({
+      type: VOTE_AGAINST,
+      content: { proposal: proposal },
+    });
+  };
 }
 
-export default withNamespaces()(withRouter(withStyles(styles, { withTheme: true })(Proposal)));
+export default withNamespaces()(
+  withRouter(withStyles(styles, { withTheme: true })(Proposal))
+);
