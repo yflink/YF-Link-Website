@@ -1202,12 +1202,7 @@ class Vote extends Component {
                       onClick={() => {
                         this.onWithdraw();
                       }}
-                      disabled={
-                        !token ||
-                        (token &&
-                          token.stakedBalance &&
-                          token.stakedBalance.value === 0n)
-                      }
+                      disabled={!token}
                     >
                       <Typography
                         className={classes.actionButtonLabel}
