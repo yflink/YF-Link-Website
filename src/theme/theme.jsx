@@ -46,10 +46,11 @@ export const colors = {
 };
 
 const breakpoints = createBreakpoints({
-  keys: ["xs", "sm", "md", "lg", "xl"],
+  keys: ["xs", "sm", "ms", "md", "lg", "xl"],
   values: {
     xs: 0,
     sm: 600,
+    ms: 768,
     md: 900,
     lg: 1200,
     xl: 1800
@@ -146,9 +147,9 @@ const iswapTheme =  {
     },
     MuiButton: {
       root: {
-        borderRadius: '50px',
-        padding: '10px 24px',
-        background: 'white'
+        borderRadius: "4px",
+        padding: "10px 24px",
+        background: "white",
       },
       outlined: {
         padding: '10px 24px',

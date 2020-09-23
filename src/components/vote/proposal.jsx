@@ -32,12 +32,58 @@ const styles = theme => ({
     flexDirection: 'column',
     padding: '0px 36px 0px 18px'
   },
-  value: {
-    cursor: 'pointer'
+
+  desktopContainer: {
+    display: "none",
+    width: "100%",
+    [theme.breakpoints.up("ms")]: {
+      display: "flex",
+    },
   },
-  actionInput: {
-    padding: '0px 0px 12px 0px',
-    fontSize: '0.5rem'
+
+  mobileContainer: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    [theme.breakpoints.up("ms")]: {
+      display: "none",
+    },
+  },
+
+  mobileIndexerHeadingContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: "12px",
+  },
+
+  indexerContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
+    [theme.breakpoints.up("ms")]: {
+      width: "80px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: "20px",
+    },
+  },
+
+  indexerValue: {
+    width: "80px",
+    height: "36px",
+    backgroundColor: colors.lightGray5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "4px",
+    [theme.breakpoints.up("ms")]: {
+      marginBottom: "8px",
+    }
   },
   balances: {
     width: '100%',
@@ -59,9 +105,89 @@ const styles = theme => ({
   },
   tradeContainer: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    [theme.breakpoints.up("ms")]: {
+      marginRight: "40px",
+    },
+  },
+
+  proposalTitleContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    width: "100%",
+    marginBottom: "6px",
+    [theme.breakpoints.up("ms")]: {
+      marginBottom: "12px",
+    },
+  },
+  proposalTitle: {
+    fontWeight: "normal",
+    textAlign: "left",
+    wordBreak: "break-word",
+    textTransform: "capitalize",
+
+    "-webkit-line-clamp": 2,
+    "-webkit-box-orient": "vertical",
+    overflow: "hidden",
+    "text-overflow": "ellipsis",
+    display: "-webkit-box",
+  },
+  proposalAddressContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    width: "100%",
+  },
+  proposalAddress: {
+    fontWeight: "normal",
+    textAlign: "left",
+    color: colors.greyText,
+  },
+  voteRatioContainer: {
+    width: "200px",
+    display: "flex",
+    flexDirection: "column",
+  },
+  voteValueContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    [theme.breakpoints.up("ms")]: {
+      marginBottom: "12px",
+    },
+  },
+  voteValueLineContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    position: "relative",
+  },
+  voteGreenLine: {
+    height: "10px",
+    backgroundColor: colors.lightGreen2,
+    borderTopLeftRadius: "3px",
+    borderBottomLeftRadius: "3px",
+  },
+
+  voteRedLine: {
+    height: "10px",
+    backgroundColor: colors.lightRed,
+    borderTopRightRadius: "3px",
+    borderBottomRightRadius: "3px",
+  },
+
+  voteIndicator: {
+    position: "absolute",
+    border: "solid 0px transparent",
+    borderRight: "solid 1px #BDCBDA",
+    height: "20px",
+    top: "10px",
+    padding: "4px",
   },
   sepperator: {
     borderBottom: '1px solid #E1E1E1',
@@ -180,7 +306,7 @@ class Proposal extends Component {
     this.setState({ loading: false })
   };
 
-  render() {
+  renderProposal = (screenType) => {
     const { classes, proposal } = this.props;
     const {
       loading,
@@ -196,53 +322,149 @@ class Proposal extends Component {
 
     const url = proposal.url
 
-    return (
-      <div className={ classes.root }>
-        <div className={ classes.assetSummary }>
-          <div className={classes.heading}>
-            <Typography variant={ 'h3' }><a href={ url } target="_blank" rel="noopener noreferrer"><span role="image">💬 Discussion</span></a></Typography>
-            <Typography variant={ 'h5' } className={ classes.grey }>Link</Typography>
+    if (screenType === "DESKTOP") {
+      return (
+        <div className={classes.desktopContainer}>
+          <div className={classes.indexerContainer}>
+            <div className={classes.indexerValue}>
+              <Typography variant={"h3"} className={classes.proposalId}>
+                {proposal.id}
+              </Typography>
+            </div>
+            <div className={classes.indexerTime}>
+              <Typography
+                variant={"h5"}
+                className={
+                  proposalTimeStamp === "Ended"
+                    ? classes.proposalTimeEnded
+                    : classes.proposalTimeNormal
+                }
+              >
+                {proposalTimeStamp}
+              </Typography>
+            </div>
           </div>
-          <div className={classes.heading}>
-            <Typography variant={ 'h3' }>{ moment(startTime).format("ddd MMM D, HH:mm") }</Typography>
-            <Typography variant={ 'h5' } className={ classes.grey }>Vote Start: {proposal.start}</Typography>
+          <div className={classes.titleProperContainer}>
+            <div className={classes.proposalTitleContainer}>
+              <Typography variant={"h4"} className={classes.proposalTitle}>
+                {title}
+              </Typography>
+            </div>
+            <div className={classes.proposalAddressContainer}>
+              <Typography variant={"h5"} className={classes.proposalAddress}>
+                Prosposer {proposerAddress}
+              </Typography>
+            </div>
           </div>
-          <div className={classes.heading}>
-            <Typography variant={ 'h3' }>{ moment(endTime).format("ddd MMM D, HH:mm") }</Typography>
-            <Typography variant={ 'h5' } className={ classes.grey }>Vote End: {proposal.end}</Typography>
-          </div>
-        </div>
-        { proposal.end > currentBlock &&
-          <div>
-            <div className={ classes.actionsContainer }>
-              <div className={ classes.tradeContainer }>
-                <Button
-                  className={ classes.actionButton }
-                  variant="outlined"
-                  color="primary"
-                  disabled={ loading || proposal.end < currentBlock }
-                  onClick={ this.onVoteFor }
-                  fullWidth
-                  >
-                  <Typography className={ classes.buttonText } variant={ 'h5'} color={'secondary'}>Vote For</Typography>
-                </Button>
+          <div className={classes.voteRatioContainer}>
+            <div className={classes.voteValueContainer}>
+              <div className={classes.voteAgreeContainer}>
+                <img
+                  className={classes.voteUpIcon}
+                  src={require("../../assets/thumbs-up.svg")}
+                  alt="thumb-up"
+                />
+                {votesForText}
               </div>
-              <div className={ classes.sepperator }/>
-              <div className={classes.tradeContainer}>
-                <Button
-                  className={ classes.actionButton }
-                  variant="outlined"
-                  color="primary"
-                  disabled={ loading || proposal.end < currentBlock }
-                  onClick={ this.onVoteAgainst }
-                  fullWidth
-                  >
-                  <Typography className={ classes.buttonText } variant={ 'h5'} color='secondary'>Vote Against</Typography>
-                </Button>
+              <div className={classes.voteAgainstContainer}>
+                {votesAgainstText}
+                <img
+                  className={classes.voteDownIcon}
+                  src={require("../../assets/thumbs-down.svg")}
+                  alt="thumb-down"
+                />
+              </div>
+            </div>
+            <div className={classes.voteValueLineContainer}>
+              <div
+                className={classes.voteGreenLine}
+                style={{ width: `${votesForPercentage}%` }}
+              />
+              <div
+                className={classes.voteRedLine}
+                style={{ width: `${votesAgainstPercentage}%` }}
+              />
+              <div
+                className={classes.voteIndicator}
+                style={{ right: `${votesAgainstPercentage}%` }}
+              >
+                <Typography className={classes.voteIndicatorText}>
+                  {votesForPercentage}
+                </Typography>
               </div>
             </div>
           </div>
-        }
+        </div>
+      );
+    } else if (screenType === "MOBILE") {
+      return (
+        <div className={classes.mobileContainer}>
+          <div className={classes.mobileIndexerHeadingContainer}>
+            <div className={classes.indexerContainer}>
+              <div className={classes.indexerValue}>
+                <Typography variant={"h3"} className={classes.proposalId}>
+                  {proposal.id}
+                </Typography>
+              </div>
+              <div className={classes.indexerTime}>
+                <Typography
+                  variant={"h5"}
+                  className={
+                    proposalTimeStamp === "Ended"
+                      ? classes.proposalTimeEnded
+                      : classes.proposalTimeNormal
+                  }
+                >
+                  {proposalTimeStamp}
+                </Typography>
+              </div>
+            </div>
+            <div className={classes.voteRatioContainer}>
+              <div className={classes.voteValueContainer}>
+                <div className={classes.voteAgreeContainer}>
+                  {votesForPercentage}%
+                </div>
+                <div className={classes.voteAgainstContainer}>
+                  {votesAgainstPercentage}%
+                </div>
+              </div>
+              <div className={classes.voteValueLineContainer}>
+                <div
+                  className={classes.voteGreenLine}
+                  style={{ width: `${votesForPercentage}%` }}
+                />
+                <div
+                  className={classes.voteRedLine}
+                  style={{ width: `${votesAgainstPercentage}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={classes.titleProperContainer}>
+            <div className={classes.proposalTitleContainer}>
+              <Typography variant={"h4"} className={classes.proposalTitle}>
+                {title}
+              </Typography>
+            </div>
+            <div className={classes.proposalAddressContainer}>
+              <Typography variant={"h5"} className={classes.proposalAddress}>
+                Prosposer {proposerAddress}
+              </Typography>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div className={classes.root}>
+        {this.renderProposal("DESKTOP")}
+        {this.renderProposal("MOBILE")}
       </div>
     )
   };

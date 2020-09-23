@@ -76,6 +76,15 @@ const styles = theme => ({
     lineHeight: '21px',
     letterSpacing: '0.06em',
     color: colors.white,
+    whiteSpace: "nowrap",
+  },
+
+  linkTextSelectedMark: {
+    position: "absolute",
+    bottom: "-8px",
+    width: "100%",
+    height: "3px",
+    backgroundColor: colors.white,
   }
 });
 

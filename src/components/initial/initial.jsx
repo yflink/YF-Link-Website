@@ -489,7 +489,7 @@ class Initial extends Component {
               <SocialShare
                 twitterUrl="https://twitter.com/YFLinkio"
                 githubUrl="https://github.com/yflink"
-                mediumUrl="https://medium.com/yflink"
+                mediumUrl="https://blog.yflink.io/"
                 telegramUrl="https://t.me/YFLinkGroup"
                 discordUrl="https://discord.gg/nQWEx88"
               />
