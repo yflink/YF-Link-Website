@@ -1790,9 +1790,7 @@ class Vote extends Component {
   };
 
   openForumSite = () => {
-    window.open(
-      "https://etherscan.io/address/0xc150eade946079033c3b840bd7e81cdd5354e467"
-    );
+    window.open("https://gov.yflink.io/c/governance-proposals/5");
   };
 
   openProposal = (url) => {
