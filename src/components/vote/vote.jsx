@@ -1791,7 +1791,7 @@ class Vote extends Component {
   };
 
   openForumSite = () => {
-    window.open("https://gov.yflink.io/c/governance-proposals/5");
+    window.open("https://gov.yflink.io/");
   };
 
   openProposal = (url) => {
