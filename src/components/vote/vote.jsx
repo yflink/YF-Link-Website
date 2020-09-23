@@ -1052,7 +1052,7 @@ class Vote extends Component {
   renderGovernanceSection = (screenType) => {
     const { classes } = this.props;
     const { pool } = this.state;
-    const token = pool && pool.tokens[0];
+    const token = pool && pool.tokens && pool.tokens[0];
 
     if (screenType === "DESKTOP") {
       return (
@@ -1203,7 +1203,10 @@ class Vote extends Component {
                         this.onWithdraw();
                       }}
                       disabled={
-                        !token || (token && token.stakedBalance.value === 0n)
+                        !token ||
+                        (token &&
+                          token.stakedBalance &&
+                          token.stakedBalance.value === 0n)
                       }
                     >
                       <Typography
@@ -1369,9 +1372,7 @@ class Vote extends Component {
                       onClick={() => {
                         this.onWithdraw();
                       }}
-                      disabled={
-                        !token || (token && token.stakedBalance.value === 0n)
-                      }
+                      disabled={!token}
                     >
                       <Typography
                         className={classes.actionButtonLabel}
@@ -1811,7 +1812,7 @@ class Vote extends Component {
       console.log("OnStake POOL error!");
       return;
     }
-    const asset = pool.tokens[0];
+    const asset = pool && pool.tokens && pool.tokens[0];
     if (!stakeAmount || stakeAmount < 0.1) {
       console.log("OnStake Invalid Amount!");
       return;
@@ -1835,7 +1836,7 @@ class Vote extends Component {
       console.log("OnWithdraw POOL error!");
       return;
     }
-    const asset = pool.tokens[0];
+    const asset = pool && pool.tokens && pool.tokens[0];
     if (!withdrawAmount) {
       console.log("OnWithdraw Invalid Amount!");
       return;
