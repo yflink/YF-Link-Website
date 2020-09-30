@@ -331,6 +331,7 @@ class Vote extends Component {
 
   render() {
     const { classes } = this.props;
+<<<<<<< Updated upstream
     const {
       value,
       account,
@@ -344,6 +345,90 @@ class Vote extends Component {
       votingStatus,
       governanceContractVersion
     } = this.state
+=======
+    const { account } = this.state;
+    const wallet =
+      account.address &&
+      account.address.substring(0, 6) +
+        "..." +
+        account.address.substring(
+          account.address.length - 4,
+          account.address.length
+        );
+
+    if (screenType === "DESKTOP") {
+      return (
+        <div className={classes.desktopHeaderContainer}>
+          <div className={classes.logoContainer}>
+            <HeaderLogo />
+          </div>
+          <div className={classes.linkContainer}>
+            {/* <HeaderLink text='STAKE' to={account && account.address ? '/staking' : '/account'} redirectedTo={'/staking'} /> */}
+            <HeaderLink
+              text="VOTE"
+              to={account && account.address ? "/vote" : "/account"}
+              redirectedTo={"/vote"}
+              selected={true}
+            />
+            <HeaderLink
+              text="BLOG"
+              to='https://blog.yflink.io'
+              externalLink={true}
+            />
+            <HeaderLink
+              text="BUY YFL"
+              to={
+                "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+              }
+              externalLink={true}
+            />
+            <HeaderLink text="LINKSWAP" to="/" disabled tag="SOON" />
+            <HeaderLink text="WAFFLEHOUSE" to="/" disabled tag="SOON" />
+            {/* <HeaderLink text='PRODUCTS' to='/' disabled tag='SOON' /> */}
+          </div>
+          <div className={classes.walletContainer}>
+            {account && account.address && (
+              <Button
+                className={classes.walletButton}
+                variant="contained"
+                color="primary"
+                onClick={this.overlayClicked}
+                startIcon={
+                  <FiberManualRecordIcon style={{ color: colors.lightGreen }} />
+                }
+              >
+                <Typography
+                  variant={"h4"}
+                  className={classes.headerWalletAddress}
+                  noWrap
+                >
+                  {wallet}
+                </Typography>
+              </Button>
+            )}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className={classes.mobileHeaderContainer}>
+          <div className={classes.logoContainer}>
+            <HeaderLogo />
+          </div>
+          <div className={classes.optionsContainer}>
+            <IconButton
+              onClick={() => {
+                this.setState({ navModalOpen: true });
+              }}
+            >
+              <OptionsIcon style={{ color: colors.white }} />
+            </IconButton>
+          </div>
+        </div>
+      );
+    }
+  };
+>>>>>>> Stashed changes
 
     return (
       <div className={ classes.root }>
