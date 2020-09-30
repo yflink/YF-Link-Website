@@ -76,6 +76,12 @@ class RedirectModal extends Component {
             />
             <HeaderLink
               screenType="MOBILE"
+              text="BLOG"
+              to="https://blog.yflink.io"
+              externalLink={true}
+            />
+            <HeaderLink
+              screenType="MOBILE"
               text="BUY YFL"
               to={
                 "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
@@ -85,6 +91,13 @@ class RedirectModal extends Component {
             <HeaderLink
               screenType="MOBILE"
               text="LINKSWAP"
+              to="/"
+              disabled
+              tag="SOON"
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="WAFFLEHOUSE"
               to="/"
               disabled
               tag="SOON"
