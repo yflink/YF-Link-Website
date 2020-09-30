@@ -140,7 +140,9 @@ class Link extends Component {
             if (redirectedTo) {
               store.setStore({ redirect: redirectedTo });
             }
-            this.nav(to);
+            if (!disabled) {
+              this.nav(to);
+            }
           }}
         >
           {tag && (

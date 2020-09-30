@@ -367,6 +367,12 @@ class Initial extends Component {
               redirectedTo={"/vote"}
             />
             <HeaderLink
+              text="BLOG"
+              to={"https://blog.yflink.io"}
+              externalLink={true}
+            />
+
+            <HeaderLink
               text="BUY YFL"
               to={
                 "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
@@ -374,6 +380,7 @@ class Initial extends Component {
               externalLink={true}
             />
             <HeaderLink text="LINKSWAP" to="/" disabled tag="SOON" />
+            <HeaderLink text="WAFFLEHOUSE" to="/" disabled tag="SOON" />
             {/* <HeaderLink text='PRODUCTS' to='/' disabled tag='SOON' /> */}
           </div>
         </div>
