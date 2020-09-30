@@ -260,7 +260,7 @@ class Propose extends Component {
             </div>
           <div className={ classes.field }>
             <Typography className={classes.fieldMessage} variant='h5'>You must have staked 0.1 YFL in the <Link to={"/staking"} className={classes.link}>Governance pool</Link> to submit a proposal.</Typography>
-            <Typography className={classes.fieldMessage} variant='h5'>Append <Typography className={classes.code}>?meme</Typography> to the proposal URL to submit in the memes category.</Typography>
+            <Typography className={classes.fieldMessage} variant='h5'>Append <Typography className={classes.code}>?type=meme</Typography> to the proposal URL to submit in the memes category.</Typography>
           </div>
           <Button
             className={ classes.stakeButton }

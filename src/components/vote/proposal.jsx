@@ -17,9 +17,12 @@ import {
 import { colors } from "../../theme";
 
 import Store from "../../stores";
-const emitter = Store.emitter;
-const dispatcher = Store.dispatcher;
-const store = Store.store;
+import { isLinkMeme } from "../../utils";
+
+const emitter = Store.emitter
+const dispatcher = Store.dispatcher
+const store = Store.store
+
 
 const styles = (theme) => ({
   root: {
@@ -55,14 +58,14 @@ const styles = (theme) => ({
   indexerContainer: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
 
     [theme.breakpoints.up("ms")]: {
       width: "80px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       marginRight: "20px",
     },
   },
@@ -162,6 +165,16 @@ const styles = (theme) => ({
     [theme.breakpoints.up("ms")]: {
       marginBottom: "12px",
     },
+  },
+  heading: {
+    flexShrink: 0,
+  },
+  memeHeading: {
+    maxWidth: '30%',
+  },
+  memeImage: {
+    width: '100%',
+    objectFit: 'contain',
   },
   voteValueLineContainer: {
     width: "100%",
@@ -354,9 +367,15 @@ class Proposal extends Component {
           </div>
           <div className={classes.titleProperContainer}>
             <div className={classes.proposalTitleContainer}>
-              <Typography variant={"h4"} className={classes.proposalTitle}>
-                {title}
-              </Typography>
+              {isLinkMeme(proposal.url) ? (
+                <div className={classes.memeHeading}>
+                  <img src={proposal.url} className={classes.memeImage} />
+                </div>
+              ) : (
+                <Typography variant={"h4"} className={classes.proposalTitle}>
+                  {title}
+                </Typography>
+              )}
             </div>
             <div className={classes.proposalAddressContainer}>
               <Typography variant={"h5"} className={classes.proposalAddress}>
@@ -451,9 +470,15 @@ class Proposal extends Component {
 
           <div className={classes.titleProperContainer}>
             <div className={classes.proposalTitleContainer}>
-              <Typography variant={"h4"} className={classes.proposalTitle}>
-                {title}
-              </Typography>
+              {isLinkMeme(proposal.url) ? (
+                <div className={classes.memeHeading}>
+                  <img src={proposal.url} className={classes.memeImage} />
+                </div>
+              ) : (
+                <Typography variant={"h4"} className={classes.proposalTitle}>
+                  {title}
+                </Typography>
+              )}
             </div>
             <div className={classes.proposalAddressContainer}>
               <Typography variant={"h5"} className={classes.proposalAddress}>

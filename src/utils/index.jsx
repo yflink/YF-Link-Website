@@ -1,0 +1,1 @@
+export const isLinkMeme = url => url.includes('?type=meme');
