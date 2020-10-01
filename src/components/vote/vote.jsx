@@ -7,7 +7,10 @@ import {
   Button,
   IconButton,
   Card,
+  Tooltip,
+  Zoom,
 } from "@material-ui/core";
+
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
@@ -120,6 +123,12 @@ const styles = (theme) => ({
     border: "1px solid #FFFFFF",
     color: colors.white,
     height: "43px",
+    cursor: "pointer",
+    "&:disabled": {
+      opacity: 0.3,
+      border: "1px solid #FFFFFF",
+      color: colors.white,
+    },
   },
   actionButtonLabel: {
     fontWeight: "normal",
@@ -689,6 +698,10 @@ const styles = (theme) => ({
   },
 
   customInputBoxInput: {
+    fontSize: "14px",
+    [theme.breakpoints.up("ms")]: {
+      fontSize: "16px",
+    },
     "&::-webkit-input-placeholder": {
       fontWeight: "normal",
     },
@@ -764,6 +777,7 @@ const styles = (theme) => ({
     backgroundColor: colors.brandBlue,
     borderRadius: "3px",
     padding: "12px 16px",
+    boxShadow: "none",
     "&:hover": {
       backgroundColor: colors.transGreyBackgroundHover,
     },
@@ -775,6 +789,13 @@ const styles = (theme) => ({
     backgroundColor: `${colors.blue} !important`,
     borderRadius: "3px",
     padding: "12px 16px",
+    boxShadow: "none",
+    cursor: "not-allowed",
+  },
+
+  voteCreateProposalButtonTooltip: {
+    padding: "12px 16px",
+    fontSize: "14px",
   },
 
   voteCreateProposalLabel: {
@@ -836,6 +857,7 @@ class Vote extends Component {
     emitter.on(VOTE_AGAINST_RETURNED, this.showHash);
     emitter.on(STAKE_RETURNED, this.stakeReturned);
     emitter.on(WITHDRAW_RETURNED, this.withdrawReturned);
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount() {
@@ -1127,7 +1149,7 @@ class Vote extends Component {
                       Your Balance:&nbsp;
                       {token && token.balance
                         ? toFixed(token.balance, token.decimals, 6)
-                        : "0"}{" "}
+                        : "Loading..."}{" "}
                       {token && token.symbol}
                     </Typography>
                     <Typography
@@ -1181,7 +1203,7 @@ class Vote extends Component {
                       Staked:&nbsp;
                       {token && token.stakedBalance
                         ? toFixed(token.stakedBalance, token.decimals, 6)
-                        : "0"}{" "}
+                        : "Loading..."}{" "}
                       {token && token.symbol}
                     </Typography>
                   </div>
@@ -1292,7 +1314,7 @@ class Vote extends Component {
                       Balance:&nbsp;
                       {token && token.balance
                         ? toFixed(token.balance, token.decimals, 6)
-                        : "0"}{" "}
+                        : "Loading..."}{" "}
                       {token && token.symbol}
                     </Typography>
                     <Typography
@@ -1346,7 +1368,7 @@ class Vote extends Component {
                       Staked:&nbsp;
                       {token && token.stakedBalance
                         ? toFixed(token.stakedBalance, token.decimals, 6)
-                        : "0"}{" "}
+                        : "Loading..."}{" "}
                       {token && token.symbol}
                     </Typography>
                   </div>
@@ -1628,7 +1650,17 @@ class Vote extends Component {
 
   renderVoteSection = (screenType) => {
     const { classes } = this.props;
-    const { value } = this.state;
+    const { value, pool } = this.state;
+    const token = pool && pool.tokens && pool.tokens[0];
+    const stakedBalance =
+      (token &&
+        token.stakedBalance &&
+        toFixed(token.stakedBalance, token.decimals, 6)) ||
+      "0";
+    const accBalance =
+      (token && token.balance && toFixed(token.balance, token.decimals, 6)) ||
+      "0";
+    const isGenPossible = stakedBalance >= 0.1 || accBalance >= 0.1;
 
     if (screenType === "DESKTOP") {
       return (
@@ -1669,23 +1701,48 @@ class Vote extends Component {
                 )}
               </Button>
             </div>
-            <Button
-              variant="contained"
+            <Tooltip
+              TransitionComponent={Zoom}
+              title="Minimum of 0.1YFL is required in order to generate a new proposal"
+              placement="top"
               classes={{
-                root: classes.voteCreateProposalButton,
-                disabled: classes.voteCreateProposalButtonDisabled,
-              }}
-              onClick={() => {
-                this.setState({ proposalScreen: true });
+                tooltip: classes.voteCreateProposalButtonTooltip,
               }}
             >
-              <Typography
-                variant="h4"
-                className={classes.voteCreateProposalLabel}
-              >
-                Generate New Proposal
-              </Typography>
-            </Button>
+              {isGenPossible ? (
+                <Button
+                  variant="contained"
+                  classes={{
+                    root: classes.voteCreateProposalButton,
+                    disabled: classes.voteCreateProposalButtonDisabled,
+                  }}
+                  onClick={() => {
+                    this.setState({ proposalScreen: true });
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    className={classes.voteCreateProposalLabel}
+                  >
+                    Generate New Proposal
+                  </Typography>
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  classes={{
+                    root: classes.voteCreateProposalButtonDisabled,
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    className={classes.voteCreateProposalLabel}
+                  >
+                    Generate New Proposal
+                  </Typography>
+                </Button>
+              )}
+            </Tooltip>
           </div>
           <div className={classes.voteProposalList}>
             {this.renderProposals()}
@@ -1716,6 +1773,7 @@ class Vote extends Component {
                 root: classes.voteCreateProposalButton,
                 disabled: classes.voteCreateProposalButtonDisabled,
               }}
+              disabled={!isGenPossible}
             >
               <Typography
                 variant="h4"
