@@ -24,8 +24,8 @@ import Proposal from "./proposal";
 
 import Store from "../../stores";
 import { colors } from "../../theme";
-
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
+import { isLinkMeme } from '../../utils'
 
 import {
   ERROR,
@@ -1893,7 +1893,7 @@ class Vote extends Component {
     const filteredProposals = proposals
       .filter((proposal) => {
         const isGov = proposal.url.includes("gov");
-        const isMeme = proposal.url.includes("?meme");
+        const isMeme = isLinkMeme(proposal.url);
         return value === 0 ? isGov : isMeme;
       })
       .sort((prop1, prop2) => prop2.end - prop1.end);
