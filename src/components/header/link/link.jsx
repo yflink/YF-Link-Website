@@ -58,10 +58,8 @@ const styles = (theme) => ({
   },
 
   activeSpan: {
+    position: "relative",
     cursor: "pointer",
-    "&:hover": {
-      opacity: 0.8,
-    },
   },
 
   disabledSpan: {
@@ -83,8 +81,18 @@ const styles = (theme) => ({
     position: "absolute",
     bottom: "-8px",
     width: "100%",
-    height: "3px",
-    backgroundColor: colors.white,
+    height: "calc(100% + 8px)",
+    borderBottom: "solid 3px #ffffff",
+  },
+
+  linkTextMarkHover: {
+    position: "absolute",
+    bottom: "-8px",
+    width: "100%",
+    height: "calc(100% + 8px)",
+    "&:hover": {
+      borderBottom: "solid 3px #ffffff",
+    },
   },
 });
 
@@ -156,6 +164,7 @@ class Link extends Component {
             <Typography variant="h4" className={classes.linkText}>
               {text}
               {selected && <div className={classes.linkTextSelectedMark} />}
+              {!disabled && <div className={classes.linkTextMarkHover} />}
             </Typography>
           </div>
         </div>

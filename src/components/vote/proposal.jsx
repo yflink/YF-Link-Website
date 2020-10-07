@@ -181,6 +181,8 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
     position: "relative",
+    borderRadius: "3px",
+    overflow: "hidden",
   },
   voteGreenLine: {
     height: "10px",
@@ -209,6 +211,21 @@ const styles = (theme) => ({
     fontWeight: "normal",
     color: colors.greyText,
   },
+
+  voteAgreeContainer: {
+    fontSize: "14px",
+    [theme.breakpoints.up("ms")]: {
+      fontSize: "16px",
+    },
+  },
+
+  voteAgainstContainer: {
+    fontSize: "14px",
+    [theme.breakpoints.up("ms")]: {
+      fontSize: "16px",
+    },
+  },
+
   voteUpIcon: {
     marginRight: "8px",
   },
@@ -448,12 +465,12 @@ class Proposal extends Component {
             </div>
             <div className={classes.voteRatioContainer}>
               <div className={classes.voteValueContainer}>
-                <div className={classes.voteAgreeContainer}>
+                <span className={classes.voteAgreeContainer}>
                   {votesForPercentage}%
-                </div>
-                <div className={classes.voteAgainstContainer}>
+                </span>
+                <span className={classes.voteAgainstContainer}>
                   {votesAgainstPercentage}%
-                </div>
+                </span>
               </div>
               <div className={classes.voteValueLineContainer}>
                 <div
