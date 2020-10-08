@@ -44,15 +44,18 @@ export const colors = {
   yellowText: "#EECB70",
   blueGreyText: "#BDCBDA",
 
+  transGrayBackground0: "rgba(255, 255, 255, 0.1)",
   transGreyBackground: "rgba(255, 255, 255, 0.2)",
   transGreyBackgroundHover: "rgba(255, 255, 255, 0.4)",
   lightGreen: "#8BFF55",
 
+  darkBackground: "#222B35",
   darkGray2: "#3a4754",
   lightGray2: "#41505d",
   lightGray3: "#54616d",
   lightGray4: "#56626f",
   lightGray5: "#67727d",
+  lightGray6: "#414f5d",
   brandBlue: "#2A5BDB",
 
   lightGreen2: "#A0FFC1",
