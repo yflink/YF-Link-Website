@@ -23,12 +23,13 @@ import Loader from "../loader";
 import Snackbar from "../snackbar";
 import UnlockModal from "../unlock/unlockModal.jsx";
 
+import VoteModal from "./modal";
 import Proposal from "./proposal";
 
 import Store from "../../stores";
 import { colors } from "../../theme";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
-import { isLinkMeme } from '../../utils'
+import { isLinkMeme } from "../../utils";
 
 import {
   ERROR,
@@ -837,6 +838,7 @@ class Vote extends Component {
       balanceValid: false,
       voteLock: null,
       proposalScreen: false,
+      voteModalOpen: false,
     };
 
     if (account && account.address) {
@@ -1058,6 +1060,25 @@ class Vote extends Component {
         closeModal={this.closeNavModal}
         modalOpen={this.state.navModalOpen}
         account={account}
+      />
+    );
+  };
+
+  renderVoteModal = () => {
+    const { voteProposal, voteType, account, pool } = this.state;
+    const token = pool && pool.tokens && pool.tokens[0];
+    const accBalance =
+      (token && token.balance && toFixed(token.balance, token.decimals, 6)) ||
+      "0";
+    return (
+      <VoteModal
+        closeModal={this.closeVoteModal}
+        modalOpen={this.state.voteModalOpen}
+        account={account}
+        proposal={voteProposal}
+        voteType={voteType}
+        balance={accBalance}
+        startLoading={this.startLoading}
       />
     );
   };
@@ -1940,9 +1961,18 @@ class Vote extends Component {
         {loading && <Loader />}
         {modalOpen && this.renderModal()}
         {this.renderNavigationModal()}
+        {this.renderVoteModal()}
       </div>
     );
   }
+
+  onVote = (voteInfo) => {
+    this.setState({
+      voteProposal: voteInfo.proposal,
+      voteType: voteInfo.voteType,
+      voteModalOpen: true,
+    });
+  };
 
   renderProposals = () => {
     const { proposals, value } = this.state;
@@ -1982,6 +2012,7 @@ class Vote extends Component {
             proposal={proposal}
             startLoading={this.startLoading}
             showSnackbar={this.showSnackbar}
+            onVote={this.onVote}
           />
         </Button>
       );
@@ -2043,6 +2074,10 @@ class Vote extends Component {
 
   closeNavModal = () => {
     this.setState({ navModalOpen: false });
+  };
+
+  closeVoteModal = () => {
+    this.setState({ voteModalOpen: false });
   };
 }
 

@@ -2,14 +2,12 @@ import React, { Component } from "react";
 import * as moment from "moment";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import { withNamespaces } from "react-i18next";
 
 import {
   ERROR,
-  VOTE_FOR,
   VOTE_FOR_RETURNED,
-  VOTE_AGAINST,
   VOTE_AGAINST_RETURNED,
   GET_BALANCES_RETURNED,
 } from "../../constants";
@@ -19,10 +17,8 @@ import { colors } from "../../theme";
 import Store from "../../stores";
 import { isLinkMeme } from "../../utils";
 
-const emitter = Store.emitter
-const dispatcher = Store.dispatcher
-const store = Store.store
-
+const emitter = Store.emitter;
+const store = Store.store;
 
 const styles = (theme) => ({
   root: {
@@ -156,7 +152,12 @@ const styles = (theme) => ({
     width: "200px",
     display: "flex",
     flexDirection: "column",
+    [theme.breakpoints.up("ms")]: {
+      width: "264px",
+      borderLeft: "1px solid rgba(255, 255, 255, 0.3)",
+    },
   },
+
   voteValueContainer: {
     width: "100%",
     display: "flex",
@@ -164,26 +165,32 @@ const styles = (theme) => ({
     justifyContent: "space-between",
     [theme.breakpoints.up("ms")]: {
       marginBottom: "12px",
+      paddingLeft: "10px",
+      paddingRight: "10px",
     },
   },
   heading: {
     flexShrink: 0,
   },
   memeHeading: {
-    maxWidth: '30%',
+    maxWidth: "30%",
   },
   memeImage: {
-    width: '100%',
-    objectFit: 'contain',
+    width: "100%",
+    objectFit: "contain",
   },
   voteValueLineContainer: {
-    width: "100%",
     display: "flex",
     alignItems: "center",
     position: "relative",
     borderRadius: "3px",
     overflow: "hidden",
+    [theme.breakpoints.up("ms")]: {
+      marginLeft: "32px",
+      marginRight: "32px",
+    },
   },
+
   voteGreenLine: {
     height: "10px",
     backgroundColor: colors.lightGreen2,
@@ -213,6 +220,10 @@ const styles = (theme) => ({
   },
 
   voteAgreeContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flex: 1,
     fontSize: "14px",
     [theme.breakpoints.up("ms")]: {
       fontSize: "16px",
@@ -220,6 +231,10 @@ const styles = (theme) => ({
   },
 
   voteAgainstContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    flex: 1,
     fontSize: "14px",
     [theme.breakpoints.up("ms")]: {
       fontSize: "16px",
@@ -228,15 +243,65 @@ const styles = (theme) => ({
 
   voteUpIcon: {
     marginRight: "8px",
+    [theme.breakpoints.up("ms")]: {
+      marginRight: "0px",
+    },
   },
+
   voteDownIcon: {
     marginLeft: "8px",
   },
+
+  voteAgreeButton: {
+    width: "100%",
+    borderRadius: "4px",
+    backgroundColor: "transparent",
+    boxShadow: "0 0 black",
+    paddingTop: "5px",
+    paddingBottom: "5px",
+    paddingLeft: "5px",
+    paddingRight: "5px",
+    "&:hover": {
+      backgroundColor: colors.transGrayBackground0,
+    },
+    [theme.breakpoints.up("ms")]: {
+      paddingLeft: "24px",
+      paddingRight: "24px",
+    },
+  },
+  voteAgreeLabel: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  voteAgainstButton: {
+    width: "100%",
+    borderRadius: "4px",
+    backgroundColor: "transparent",
+    boxShadow: "0 0 black",
+    paddingTop: "5px",
+    paddingBottom: "5px",
+    paddingLeft: "5px",
+    paddingRight: "5px",
+    "&:hover": {
+      backgroundColor: colors.transGrayBackground0,
+    },
+    [theme.breakpoints.up("ms")]: {
+      paddingLeft: "24px",
+      paddingRight: "24px",
+    },
+  },
+  voteAgainstLabel: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  voteText: {
+    fontWeight: "normal",
+  },
+
   value: {
     cursor: "pointer",
-  },
-  heading: {
-    flexShrink: 0,
   },
   right: {
     textAlign: "right",
@@ -308,6 +373,22 @@ class Proposal extends Component {
     this.setState({ loading: false });
   };
 
+  voteAgreeClicked = (event) => {
+    event.stopPropagation();
+    const { onVote, proposal } = this.props;
+    if (onVote) {
+      onVote({ proposal, voteType: "FOR" });
+    }
+  };
+
+  voteAgainstClicked = (event) => {
+    event.stopPropagation();
+    const { onVote, proposal } = this.props;
+    if (onVote) {
+      onVote({ proposal, voteType: "AGAINST" });
+    }
+  };
+
   renderProposal = (screenType) => {
     const { classes, proposal } = this.props;
     const { currentBlock, currentTime, title } = this.state;
@@ -330,8 +411,8 @@ class Proposal extends Component {
 
     let proposalTimeStamp = "Ended";
     if (proposal.end > currentBlock) {
-      const periodTime = moment(endTime).subtract(startTime);
-      proposalTimeStamp = `${periodTime.format("d")}d 
+      const periodTime = moment(endTime).subtract(currentTime);
+      proposalTimeStamp = `${periodTime.format("DD")}d 
         ${periodTime.format("hh")}h 
         ${periodTime.format("mm")}m`;
     }
@@ -344,20 +425,20 @@ class Proposal extends Component {
       : 0;
 
     const votesForText = proposalVotesFor.toLocaleString(undefined, {
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 2,
       minimumFractionDigits: 0,
     });
     const votesAgainstText = proposalVotesAgainst.toLocaleString(undefined, {
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 2,
       minimumFractionDigits: 0,
     });
-    const votesForPercentage = (
-      (proposalVotesFor / (proposalVotesFor + proposalVotesAgainst)) *
-      100
+    const votesForPercentage = (proposalVotesFor + proposalVotesAgainst > 0
+      ? (proposalVotesFor / (proposalVotesFor + proposalVotesAgainst)) * 100
+      : 0
     ).toFixed(2);
-    const votesAgainstPercentage = (
-      (proposalVotesAgainst / (proposalVotesFor + proposalVotesAgainst)) *
-      100
+    const votesAgainstPercentage = (proposalVotesFor + proposalVotesAgainst > 0
+      ? (proposalVotesAgainst / (proposalVotesFor + proposalVotesAgainst)) * 100
+      : 0
     ).toFixed(2);
 
     if (screenType === "DESKTOP") {
@@ -403,20 +484,56 @@ class Proposal extends Component {
           <div className={classes.voteRatioContainer}>
             <div className={classes.voteValueContainer}>
               <div className={classes.voteAgreeContainer}>
-                <img
-                  className={classes.voteUpIcon}
-                  src={require("../../assets/thumbs-up.svg")}
-                  alt="thumb-up"
-                />
-                {votesForText}
+                <Button
+                  classes={{
+                    root: classes.voteAgreeButton,
+                    label: classes.voteAgreeLabel,
+                  }}
+                  variant="contained"
+                  color="primary"
+                  onClick={this.voteAgreeClicked}
+                  startIcon={
+                    <img
+                      className={classes.voteUpIcon}
+                      src={require("../../assets/thumbs-up.svg")}
+                      alt="thumb-up"
+                    />
+                  }
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.voteText}
+                    noWrap
+                  >
+                    {votesForText}
+                  </Typography>
+                </Button>
               </div>
               <div className={classes.voteAgainstContainer}>
-                {votesAgainstText}
-                <img
-                  className={classes.voteDownIcon}
-                  src={require("../../assets/thumbs-down.svg")}
-                  alt="thumb-down"
-                />
+                <Button
+                  classes={{
+                    root: classes.voteAgainstButton,
+                    label: classes.voteAgainstLabel,
+                  }}
+                  variant="contained"
+                  color="primary"
+                  onClick={this.voteAgainstClicked}
+                  endIcon={
+                    <img
+                      className={classes.voteDownIcon}
+                      src={require("../../assets/thumbs-down.svg")}
+                      alt="thumb-down"
+                    />
+                  }
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.voteText}
+                    noWrap
+                  >
+                    {votesAgainstText}
+                  </Typography>
+                </Button>
               </div>
             </div>
             <div className={classes.voteValueLineContainer}>
@@ -465,12 +582,58 @@ class Proposal extends Component {
             </div>
             <div className={classes.voteRatioContainer}>
               <div className={classes.voteValueContainer}>
-                <span className={classes.voteAgreeContainer}>
-                  {votesForPercentage}%
-                </span>
-                <span className={classes.voteAgainstContainer}>
-                  {votesAgainstPercentage}%
-                </span>
+                <div className={classes.voteAgreeContainer}>
+                  <Button
+                    classes={{
+                      root: classes.voteAgreeButton,
+                      label: classes.voteAgreeLabel,
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={this.voteAgreeClicked}
+                    startIcon={
+                      <img
+                        className={classes.voteUpIcon}
+                        src={require("../../assets/thumbs-up.svg")}
+                        alt="thumb-up"
+                      />
+                    }
+                  >
+                    <Typography
+                      variant={"h4"}
+                      className={classes.voteText}
+                      noWrap
+                    >
+                      {votesForPercentage}%
+                    </Typography>
+                  </Button>
+                </div>
+                <div className={classes.voteAgainstContainer}>
+                  <Button
+                    classes={{
+                      root: classes.voteAgainstButton,
+                      label: classes.voteAgainstLabel,
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={this.voteAgainstClicked}
+                    startIcon={
+                      <img
+                        className={classes.voteUpIcon}
+                        src={require("../../assets/thumbs-down.svg")}
+                        alt="thumb-down"
+                      />
+                    }
+                  >
+                    <Typography
+                      variant={"h4"}
+                      className={classes.voteText}
+                      noWrap
+                    >
+                      {votesAgainstPercentage}%
+                    </Typography>
+                  </Button>
+                </div>
               </div>
               <div className={classes.voteValueLineContainer}>
                 <div
@@ -528,25 +691,6 @@ class Proposal extends Component {
 
   showAddressCopiedSnack = () => {
     this.props.showSnackbar("Address Copied to Clipboard", "Success");
-  };
-
-  onVoteFor = () => {
-    const { proposal, startLoading } = this.props;
-
-    this.setState({ loading: true });
-    startLoading();
-    dispatcher.dispatch({ type: VOTE_FOR, content: { proposal: proposal } });
-  };
-
-  onVoteAgainst = () => {
-    const { proposal, startLoading } = this.props;
-
-    this.setState({ loading: true });
-    startLoading();
-    dispatcher.dispatch({
-      type: VOTE_AGAINST,
-      content: { proposal: proposal },
-    });
   };
 }
 
