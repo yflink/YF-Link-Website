@@ -373,23 +373,33 @@ class Proposal extends Component {
     this.setState({ loading: false });
   };
 
-  voteAgreeClicked = (event) => {
-    event.stopPropagation();
-    const { onVote, proposal } = this.props;
-    if (onVote) {
-      onVote({ proposal, voteType: "FOR" });
-    }
+  votingMessage = (proposal) => {
+    let message;
+    if (proposal.myVotes > 0)
+      message = "You have voted " + proposal.direction + ".";
+    else message = "You have not voted.";
+
+    if (proposal.canStillVote && proposal.myVotes === 0)
+      message += " Please vote now.";
+
+    return message;
   };
 
-  voteAgainstClicked = (event) => {
-    event.stopPropagation();
-    const { onVote, proposal } = this.props;
-    if (onVote) {
-      onVote({ proposal, voteType: "AGAINST" });
-    }
+  formatVotes = (votes) => {
+    return (parseFloat(votes) / 10 ** 18).toLocaleString(undefined, {
+      maximumFractionDigits: 4,
+      minimumFractionDigits: 4,
+    });
   };
 
-  renderProposal = (screenType) => {
+  formatAsPercent = (ratio) => {
+    return (ratio * 100.0).toFixed(2).toLocaleString(undefined, {
+      maximumFractionDigits: 4,
+      minimumFractionDigits: 4,
+    });
+  };
+
+  renderProposal(screenType) {
     const { classes, proposal } = this.props;
     const { currentBlock, currentTime, title } = this.state;
 
@@ -477,7 +487,7 @@ class Proposal extends Component {
             </div>
             <div className={classes.proposalAddressContainer}>
               <Typography variant={"h5"} className={classes.proposalAddress}>
-                Prosposer {proposerAddress}
+                Proposer {proposerAddress}
               </Typography>
             </div>
           </div>
@@ -662,18 +672,17 @@ class Proposal extends Component {
             </div>
             <div className={classes.proposalAddressContainer}>
               <Typography variant={"h5"} className={classes.proposalAddress}>
-                Prosposer {proposerAddress}
+                Proposer {proposerAddress}
               </Typography>
             </div>
           </div>
         </div>
       );
     }
-  };
+  }
 
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         {this.renderProposal("DESKTOP")}

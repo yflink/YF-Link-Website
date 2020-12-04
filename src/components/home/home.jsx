@@ -1,212 +1,163 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { withStyles } from '@material-ui/core/styles';
-import {
-  Card,
-  Typography,
-} from '@material-ui/core';
-import { withNamespaces } from 'react-i18next';
-import { colors } from '../../theme'
-import HowToVoteIcon from '@material-ui/icons/HowToVote';
-import DetailsIcon from '@material-ui/icons/ShowChart'; // Details
+import { withStyles } from "@material-ui/core/styles";
+import { Card, Typography } from "@material-ui/core";
+import { withNamespaces } from "react-i18next";
+import { colors } from "../../theme";
+import HowToVoteIcon from "@material-ui/icons/HowToVote";
+import DetailsIcon from "@material-ui/icons/ShowChart"; // Details
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flex: 1,
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    flexDirection: 'column',
-    [theme.breakpoints.up('sm')]: {
-      flexDirection: 'row',
-    }
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-around",
+    alignItems: "center",
+    flexDirection: "column",
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+    },
   },
   card: {
-    flex: '1',
-    height: '25vh',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    cursor: 'pointer',
-    borderRadius: '0px',
-    transition: 'background-color 0.2s linear',
-    [theme.breakpoints.up('sm')]: {
-      height: '100vh',
-      minWidth: '20%',
-      minHeight: '50vh',
-    }
+    flex: "1",
+    height: "25vh",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    cursor: "pointer",
+    borderRadius: "0px",
+    transition: "background-color 0.2s linear",
+    [theme.breakpoints.up("sm")]: {
+      height: "100vh",
+      minWidth: "20%",
+      minHeight: "50vh",
+    },
   },
-  earn: {
+  stake: {
     backgroundColor: colors.white,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: colors.blue,
-      '& .title': {
-        color: colors.white
+      "& .title": {
+        color: colors.white,
       },
-      '& .icon': {
-        color: colors.white
-      }
+      "& .icon": {
+        color: colors.white,
+      },
     },
-    '& .title': {
-      color: colors.blue
+    "& .title": {
+      color: colors.blue,
     },
-    '& .icon': {
-      color: colors.blue
-    }
+    "& .icon": {
+      color: colors.blue,
+    },
   },
-  zap: {
+  vote: {
     backgroundColor: colors.white,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: colors.blackBlue,
-      '& .title': {
+      "& .title": {
         color: colors.white,
       },
-      '& .icon': {
-        color: colors.white
-      }
-    },
-    '& .title': {
-      color: colors.blackBlue,
-      display: 'block'
-    },
-    '& .soon': {
-      color: colors.blackBlue,
-      display: 'none'
-    },
-    '& .icon': {
-      color: colors.blackBlue
-    },
-  },
-  apr: {
-    backgroundColor: colors.white,
-    '&:hover': {
-      backgroundColor: colors.lightBlack,
-      '& .title': {
-        color: colors.white
-      },
-      '& .icon': {
-        color: colors.white
-      }
-    },
-    '& .title': {
-      color: colors.lightBlack
-    },
-    '& .icon': {
-      color: colors.lightBlack
-    },
-  },
-  cover: {
-    backgroundColor: colors.white,
-    '&:hover': {
-      backgroundColor: colors.compoundGreen,
-      '& .title': {
+      "& .icon": {
         color: colors.white,
       },
-      '& .icon': {
-        color: colors.white
-      }
     },
-    '& .title': {
-      color: colors.compoundGreen,
+    "& .title": {
+      color: colors.blackBlue,
+      display: "block",
     },
-    '& .icon': {
-      color: colors.compoundGreen
+    "& .soon": {
+      color: colors.blackBlue,
+      display: "none",
+    },
+    "& .icon": {
+      color: colors.blackBlue,
     },
   },
-  pool: {
+  lock: {
     backgroundColor: colors.white,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: colors.tomato,
-      '& .title': {
+      "& .title": {
         color: colors.white,
       },
-      '& .icon': {
-        color: colors.white
-      }
+      "& .icon": {
+        color: colors.white,
+      },
     },
-    '& .title': {
+    "& .title": {
       color: colors.tomato,
     },
-    '& .icon': {
-      color: colors.tomato
-    },
-  },
-  balancer: {
-    backgroundColor: colors.white,
-    '&:hover': {
-      backgroundColor: colors.purple,
-      '& .title': {
-        color: colors.white,
-      },
-      '& .icon': {
-        color: colors.white
-      }
-    },
-    '& .title': {
-      color: colors.purple,
-    },
-    '& .icon': {
-      color: colors.purple
+    "& .icon": {
+      color: colors.tomato,
     },
   },
   title: {
-    padding: '24px',
-    paddingBottom: '0px',
-    [theme.breakpoints.up('sm')]: {
-      paddingBottom: '24px'
-    }
+    padding: "24px",
+    paddingBottom: "0px",
+    [theme.breakpoints.up("sm")]: {
+      paddingBottom: "24px",
+    },
   },
   icon: {
-    fontSize: '60px',
-    [theme.breakpoints.up('sm')]: {
-      fontSize: '100px',
-    }
+    fontSize: "60px",
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "100px",
+    },
   },
   link: {
-    textDecoration: 'none'
-  }
+    textDecoration: "none",
+  },
 });
 
 class Home extends Component {
-
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {
-    }
+    this.state = {};
   }
 
   render() {
     const { classes, location } = this.props;
 
     return (
-      <div className={ classes.root }>
-        <Card className={ `${classes.card} ${classes.earn}` } onClick={ () => { this.nav(location.pathname+'staking') } }>
-          <DetailsIcon className={ `${classes.icon} icon` } />
-          <Typography variant={'h3'} className={ `${classes.title} title` }>Stake</Typography>
+      <div className={classes.root}>
+        <Card
+          className={`${classes.card} ${classes.stake}`}
+          onClick={() => {
+            this.nav(location.pathname + "staking");
+          }}
+        >
+          <DetailsIcon className={`${classes.icon} icon`} />
+          <Typography variant={"h3"} className={`${classes.title} title`}>
+            Stake
+          </Typography>
         </Card>
-        {/*<Card className={ `${classes.card} ${classes.zap}` } onClick={ () => { this.nav(location.pathname+'propose') } }>
-          <WbIncandescentIcon className={ `${classes.icon} icon` } />
-          <Typography variant={'h3'} className={ `${classes.title} title` }>Propose</Typography>
-        </Card>*/}
-        <Card className={ `${classes.card} ${classes.zap}` } onClick={ () => { this.nav(location.pathname+'vote') } }>
-          <HowToVoteIcon className={ `${classes.icon} icon` } />
-          <Typography variant={'h3'} className={ `${classes.title} title` }>Vote</Typography>
+        <Card
+          className={`${classes.card} ${classes.vote}`}
+          onClick={() => {
+            this.nav(location.pathname + "vote");
+          }}
+        >
+          <HowToVoteIcon className={`${classes.icon} icon`} />
+          <Typography variant={"h3"} className={`${classes.title} title`}>
+            Vote
+          </Typography>
         </Card>
-        {/*<Card className={ `${classes.card} ${classes.pool}` } onClick={ () => { this.nav(location.pathname+'claim') }}>
-          <AttachMoneyIcon className={ `${classes.icon} icon` } />
-          <Typography variant={'h3'} className={ `${classes.title} title` }>claim</Typography>
+        {/*<Card className={ `${classes.card} ${classes.lock}` } onClick={ () => { this.nav(location.pathname+'lock') }}>
+          <LockIcon className={ `${classes.icon} icon` } />
+          <Typography variant={'h3'} className={ `${classes.title} title` }>Lock</Typography>
         </Card>*/}
       </div>
-    )
-  };
+    );
+  }
 
   nav = (screen) => {
-    this.props.history.push(screen)
-  }
+    this.props.history.push(screen);
+  };
 }
 
 export default withNamespaces()(withRouter(withStyles(styles)(Home)));

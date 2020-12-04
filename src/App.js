@@ -9,7 +9,6 @@ import interestTheme from "./theme";
 import Account from "./components/account";
 import Footer from "./components/footer";
 import Home from "./components/home";
-import Stake from "./components/stake";
 import Wrap from "./components/wrap";
 import RewardsPools from "./components/rewardPools";
 import Propose from "./components/propose";
@@ -115,10 +114,6 @@ class App extends Component {
             }}
           >
             <Switch>
-              <Route path="/stake">
-                <Footer />
-                <Stake />
-              </Route>
               <Route path="/wrap">
                 <Footer />
                 <Wrap />

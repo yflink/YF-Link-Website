@@ -19,7 +19,7 @@ const WorkSans = {
 export const colors = {
   white: "#fff",
   black: "#000",
-  blackBlue: "#1e272f",
+  darkBlue: "#2c3b57",
   blue: "#2F80ED",
   gray: "#e1e1e1",
   lightGray: "#737373",
@@ -60,6 +60,9 @@ export const colors = {
 
   lightGreen2: "#A0FFC1",
   lightRed: "#FFA0A0",
+
+  lightBlack2: "rgba(0, 0, 0, 0.3)",
+  lightBlack3: "rgba(255, 255, 255, 0.1)",
 };
 
 const breakpoints = createBreakpoints({
@@ -280,7 +283,6 @@ const iswapTheme = {
         borderRadius: "50px",
         textTransform: "none",
         minWidth: "100px",
-        background: "white",
         border: "none",
         "& > span > h4": {
           color: "#555",
