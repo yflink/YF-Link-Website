@@ -27,10 +27,10 @@ import {
   GET_WRAPPED_RETURNED,
   PROPOSE,
   PROPOSE_RETURNED,
-  GET_PROPOSALS,
-  GET_PROPOSALS_RETURNED,
   VOTE_FOR,
   VOTE_FOR_RETURNED,
+  VOTE_AGAINST,
+  VOTE_AGAINST_RETURNED,
   WITHDRAW,
   WITHDRAW_RETURNED,
   WRAP,
@@ -39,6 +39,9 @@ import {
   UNWRAP_RETURNED,
   CONVERT,
   CONVERT_RETURNED,
+  GET_GOVERNANCE_REQUIREMENTS,
+  STAKE_RETURNED,
+  STAKE,
 } from "../constants";
 import Web3 from "web3";
 
@@ -182,9 +185,6 @@ class Store {
           case GET_BALANCES_PERPETUAL:
             this.getBalancesPerpetual(payload);
             break;
-          case STAKE:
-            this.stake(payload);
-            break;
           case WITHDRAW:
             this.withdraw(payload);
             break;
@@ -230,10 +230,8 @@ class Store {
           case CONVERT:
             this.convert(payload);
             break;
-          case GET_GOVERNANCE_REQUIREMENTS:
-            this.getGovernanceV2Requirements(payload);
-          default: {
-          }
+          default:
+            break;
         }
       }.bind(this)
     );
@@ -1722,35 +1720,6 @@ class Store {
           callback(error);
         }
       });
-  };
-
-  getGovernanceV2Requirements = async (payload) => {
-    try {
-      const account = store.getStore("account");
-      const web3 = new Web3(store.getStore("web3context").library.provider);
-      const governanceContract = new web3.eth.Contract(
-        config.governanceABI,
-        config.governanceAddress
-      );
-
-      // let balance = await governanceContract.methods.balanceOf(account.address).call({ from: account.address })
-      // balance = bigInt(balance)
-
-      const voteLock = await governanceContract.methods
-        .voteLock(account.address)
-        .call({ from: account.address });
-      const currentBlock = await web3.eth.getBlockNumber();
-
-      const returnOBJ = {
-        breakerEnabled: breaker,
-        voteLockValid: voteLock > currentBlock,
-        voteLock: voteLock,
-      };
-
-      emitter.emit(GET_GOV_REQUIREMENTS_RETURNED, returnOBJ);
-    } catch (ex) {
-      return emitter.emit(ERROR, ex);
-    }
   };
 
   _getGasPrice = async () => {

@@ -9,11 +9,17 @@ import {
   Card,
   Tooltip,
   Zoom,
+  Paper,
 } from "@material-ui/core";
 
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
+import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
+import LockRoundedIcon from "@material-ui/icons/LockRounded";
+import AttachMoneyRoundedIcon from "@material-ui/icons/AttachMoneyRounded";
+import AddIcon from "@material-ui/icons/Add";
+
 import bigInt from "big-integer";
 
 import HeaderLogo from "../header/logo/logo";
@@ -24,12 +30,15 @@ import Snackbar from "../snackbar";
 import UnlockModal from "../unlock/unlockModal.jsx";
 
 import VoteModal from "./modal";
+import StakeWithdrawModal from "./modal/stakeModal";
 import Proposal from "./proposal";
+import FunctionProposal from "./function";
 
 import Store from "../../stores";
 import { colors } from "../../theme";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
-import { isLinkMeme } from "../../utils";
+import { isLinkMeme, getSignature } from "../../utils";
+import { AbiCoder } from "ethers";
 
 import {
   ERROR,
@@ -47,9 +56,10 @@ import {
   WITHDRAW_RETURNED,
   CONVERT,
   CONVERT_RETURNED,
+  PROPOSE,
 } from "../../constants";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -1331,19 +1341,88 @@ class Vote extends Component {
 
   renderHeader = (screenType) => {
     const { classes } = this.props;
-    const {
-      value,
-      account,
-      loading,
-      modalOpen,
-      snackbarMessage,
-      title,
-      titleError,
-      description,
-      descriptionError,
-      votingStatus,
-      governanceContractVersion
-    } = this.state
+    const { account } = this.state;
+    const wallet =
+      account.address &&
+      account.address.substring(0, 6) +
+        "..." +
+        account.address.substring(
+          account.address.length - 4,
+          account.address.length
+        );
+
+    if (screenType === "DESKTOP") {
+      return (
+        <div className={classes.desktopHeaderContainer}>
+          <div className={classes.logoContainer}>
+            <HeaderLogo />
+          </div>
+          <div className={classes.linkContainer}>
+            {/* <HeaderLink text='STAKE' to={account && account.address ? '/staking' : '/account'} redirectedTo={'/staking'} /> */}
+            <HeaderLink
+              text="VOTE"
+              to={account && account.address ? "/vote" : "/account"}
+              redirectedTo={"/vote"}
+              selected={true}
+            />
+            <HeaderLink
+              text="BLOG"
+              to="https://blog.yflink.io"
+              externalLink={true}
+            />
+            <HeaderLink
+              text="BUY YFL"
+              to={
+                "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+              }
+              externalLink={true}
+            />
+            <HeaderLink text="LINKSWAP" to="/" disabled tag="SOON" />
+            <HeaderLink text="WAFFLEHOUSE" to="/" disabled tag="SOON" />
+            {/* <HeaderLink text='PRODUCTS' to='/' disabled tag='SOON' /> */}
+          </div>
+          <div className={classes.walletContainer}>
+            {account && account.address && (
+              <Button
+                className={classes.walletButton}
+                variant="contained"
+                color="primary"
+                onClick={this.overlayClicked}
+                startIcon={
+                  <FiberManualRecordIcon style={{ color: colors.lightGreen }} />
+                }
+              >
+                <Typography
+                  variant={"h4"}
+                  className={classes.headerWalletAddress}
+                  noWrap
+                >
+                  {wallet}
+                </Typography>
+              </Button>
+            )}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className={classes.mobileHeaderContainer}>
+          <div className={classes.logoContainer}>
+            <HeaderLogo />
+          </div>
+          <div className={classes.optionsContainer}>
+            <IconButton
+              onClick={() => {
+                this.setState({ navModalOpen: true });
+              }}
+            >
+              <OptionsIcon style={{ color: colors.white }} />
+            </IconButton>
+          </div>
+        </div>
+      );
+    }
+  };
 
   renderVoteModal = () => {
     const { voteProposal, voteType, account, pool, value } = this.state;
@@ -1358,9 +1437,6 @@ class Vote extends Component {
         token.voteLocked &&
         toFixed(token.voteLocked, token.decimals, 3)) ||
       "0";
-
-  renderNavigationModal = () => {
-    const { account } = this.state;
     return (
       <VoteModal
         closeModal={this.closeVoteModal}
@@ -1374,6 +1450,17 @@ class Vote extends Component {
         startLoading={this.startLoading}
         decimals={token && token.decimals}
         symbol={token && token.symbol}
+      />
+    );
+  };
+
+  renderNavigationModal = () => {
+    const { account } = this.state;
+    return (
+      <RedirectModal
+        closeModal={this.closeNavModal}
+        modalOpen={this.state.navModalOpen}
+        account={account}
       />
     );
   };
@@ -3330,6 +3417,7 @@ class Vote extends Component {
       },
     });
   };
+
   render() {
     const { classes } = this.props;
     const { loading, modalOpen, snackbarMessage, proposalScreen } = this.state;
