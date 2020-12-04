@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import bigInt from "big-integer";
+
 import { withStyles } from "@material-ui/core/styles";
 import {
   DialogContent,
@@ -9,13 +11,20 @@ import {
   InputBase,
   Button,
   Zoom,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
 import { colors } from "../../../theme";
 import Store from "../../../stores";
 import { VOTE_FOR, VOTE_AGAINST } from "../../../constants";
+import { getSignature, getFunctionBySignature } from "../../../utils";
+import { AbiCoder } from "ethers/utils";
 
 const dispatcher = Store.dispatcher;
 
@@ -62,6 +71,10 @@ const styles = (theme) => ({
     justifyContent: "flex-start",
     padding: "24px",
     width: "100%",
+    height: "100%",
+    [theme.breakpoints.up("ms")]: {
+      height: "auto",
+    },
   },
   voteModalHeader: {
     width: "100%",
@@ -142,12 +155,15 @@ const styles = (theme) => ({
 
   voteActionCard: {
     width: "100%",
-    height: "100%",
+    height: "230px",
     display: "flex",
     flexDirection: "column",
     padding: "24px",
     background: colors.lightGray6,
     borderRadius: "8px",
+    [theme.breakpoints.up("ms")]: {
+      height: "100%",
+    },
   },
   voteInputBoxRoot: {
     width: "100%",
@@ -217,6 +233,103 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "flex-end",
   },
+  accordionRoot: {
+    width: "100%",
+    backgroundColor: "transparent",
+    "&.Mui-expanded": {
+      minHeight: "43px",
+      margin: "0px",
+      overflow: "auto",
+    },
+  },
+  accordionSummaryRoot: {
+    padding: "0px",
+    marginBottom: "16px",
+    "&.Mui-expanded": {
+      minHeight: "43px",
+      margin: "0px",
+    },
+  },
+  accordionDetailsRoot: {
+    padding: "0px",
+    [theme.breakpoints.up("md")]: {
+      padding: "8px",
+    },
+  },
+  accordionSummaryContent: {
+    margin: "0px",
+    "&.Mui-expanded": {
+      margin: "0px",
+    },
+  },
+  viewHideButton: {
+    width: "100%",
+    height: "43px",
+    color: colors.white,
+    backgroundColor: "transparent",
+    border: "solid 1px #ffffff",
+    borderRadius: "3px",
+    marginBottom: "10px",
+  },
+  viewHideButtonText: {
+    color: colors.white,
+  },
+  detailWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+  contractWrapper: {
+    display: "flex",
+    width: "100%",
+    minHeight: "80px",
+    marginBottom: "12px",
+    borderRadius: "8px",
+    backgroundColor: colors.lightBlack2,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    padding: "16px",
+  },
+  contractIndexWrapper: {
+    width: "30px",
+    height: "30px",
+    backgroundColor: colors.lightBlack3,
+    borderRadius: "4px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    color: colors.white,
+    marginRight: "16px",
+  },
+  contractInfoWrapper: {
+    flex: "1",
+    display: "flex",
+    flexDirection: "column",
+    color: colors.greyText,
+  },
+  contractInfoHeader: {
+    display: "flex",
+    flexDirection: "column",
+    fontWeight: "700",
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "20px",
+    marginBottom: "6px",
+    width: "100%",
+    [theme.breakpoints.up("ms")]: {
+      flexDirection: "row",
+    },
+  },
+  contractInfoValue: {
+    fontWeight: "400",
+    fontStyle: "normal",
+    fontSize: "16px",
+    lineHeight: "20px",
+    maxHeight: "50px",
+    overflowWrap: "anywhere",
+    marginLeft: "5px",
+  },
 });
 
 const formatProposer = (address) => {
@@ -233,28 +346,44 @@ class VoteModal extends Component {
 
     this.state = {
       loading: false,
+      expanded: false,
       voteAmount: "0",
     };
   }
 
   onVoteFor = () => {
-    const { proposal, startLoading } = this.props;
-
+    const { proposal, proposalType, startLoading, decimals } = this.props;
+    const voteAmount = bigInt(
+      (parseFloat(this.state.voteAmount) * 10 ** decimals).toString()
+    );
+    console.log("voteAmount", voteAmount, decimals, this.state.voteAmount);
     this.setState({ loading: true });
     startLoading();
     dispatcher.dispatch({
       type: VOTE_FOR,
-      content: { proposal: proposal, amount: this.state.voteAmount },
+      content: {
+        proposal: proposal,
+        amount: voteAmount,
+        type: proposalType === 2 ? "LINKSWAP" : "GOV",
+      },
     });
   };
 
   onVoteAgainst = () => {
-    const { proposal, startLoading } = this.props;
+    const { proposal, proposalType, startLoading, decimals } = this.props;
+    const voteAmount = bigInt(
+      (parseFloat(this.state.voteAmount) * 10 ** decimals).toString()
+    );
+
     this.setState({ loading: true });
     startLoading();
     dispatcher.dispatch({
       type: VOTE_AGAINST,
-      content: { proposal: proposal, amount: this.state.voteAmount },
+      content: {
+        proposal: proposal,
+        amount: voteAmount,
+        type: proposalType === 2 ? "LINKSWAP" : "GOV",
+      },
     });
   };
 
@@ -280,17 +409,41 @@ class VoteModal extends Component {
       proposal,
       voteType,
       balance,
+      proposalType,
+      symbol,
+      voteLocked,
     } = this.props;
-
+    const { expanded } = this.state;
     let title = "Invalid Proposal!";
-    if (proposal?.url && proposal?.url.includes("gov.yflink.io")) {
-      const subSections = proposal.url.split("/");
-      const propDescription = subSections[4];
-      title = propDescription.replace(/-/g, " ");
-      if (typeof title === "string") {
-        title = title.charAt(0).toUpperCase() + title.slice(1);
+    if (proposalType === 0 || proposalType === 1) {
+      if (proposal?.url && proposal?.url.includes("gov.yflink.io")) {
+        const subSections = proposal.url.split("/");
+        const propDescription = subSections[4];
+        title = propDescription.replace(/-/g, " ");
+        if (typeof title === "string") {
+          title = title.charAt(0).toUpperCase() + title.slice(1);
+        }
       }
+    } else if (proposalType === 2) {
+      title = proposal && proposal.description;
     }
+
+    const contracts =
+      proposal &&
+      proposal.targets.map((target, index) => {
+        const signature = proposal.signatures[index];
+        const calldata = proposal.calldatas[index];
+        const value = proposal.values[index];
+
+        const params = getSignature(signature);
+        const abi = new AbiCoder();
+        const decodedCalldata = abi.decode(params, calldata);
+        const funcString = getFunctionBySignature(signature, decodedCalldata);
+        return {
+          contract: target,
+          func: funcString,
+        };
+      });
 
     const fullScreen = window.innerWidth < 768;
 
@@ -353,46 +506,122 @@ class VoteModal extends Component {
                 Proposer{" "}
                 {formatProposer(proposal?.proposer) || "0x000000...000000"}
               </Typography>
-              <IconButton
-                classes={{ root: classes.openProposalButton }}
-                onClick={() => {
-                  this.openProposal();
+              {(proposalType === 0 || proposalType === 1) && (
+                <IconButton
+                  classes={{ root: classes.openProposalButton }}
+                  onClick={() => {
+                    this.openProposal();
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.openProposalSpan}
+                  >
+                    Open Proposal
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+              )}
+            </div>
+            {proposalType === 2 && (
+              <Accordion
+                classes={{ root: classes.accordionRoot }}
+                expanded={expanded}
+                onChange={(event, isExpanded) => {
+                  if (isExpanded) {
+                    this.setState({ expanded: true });
+                  }
                 }}
               >
-                <Typography variant={"h4"} className={classes.openProposalSpan}>
-                  Open Proposal
-                </Typography>
-                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
-              </IconButton>
-            </div>
+                <AccordionSummary
+                  aria-controls="proposal-content"
+                  id="vote-proposal-header"
+                  classes={{
+                    root: classes.accordionSummaryRoot,
+                    content: classes.accordionSummaryContent,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    className={classes.viewHideButton}
+                    onClick={() => {
+                      this.setState({ expanded: false });
+                    }}
+                  >
+                    <Typography
+                      variant="h4"
+                      className={classes.viewHideButtonText}
+                    >
+                      {expanded ? "Hide Function" : "View Function"}
+                    </Typography>
+                    {expanded ? (
+                      <ArrowDropUpIcon style={{ color: colors.white }} />
+                    ) : (
+                      <ArrowDropDownIcon style={{ color: colors.white }} />
+                    )}
+                  </Button>
+                </AccordionSummary>
+                <AccordionDetails
+                  classes={{ root: classes.accordionDetailsRoot }}
+                >
+                  <div className={classes.detailWrapper}>
+                    {contracts &&
+                      contracts.map((item, index) => (
+                        <div className={classes.contractWrapper} key={index}>
+                          <span className={classes.contractIndexWrapper}>
+                            {index + 1}
+                          </span>
+                          <div className={classes.contractInfoWrapper}>
+                            <span className={classes.contractInfoHeader}>
+                              Contract:{" "}
+                              <span className={classes.contractInfoValue}>
+                                {item.contract || ""}
+                              </span>
+                            </span>
+                            <span className={classes.contractInfoHeader}>
+                              Function:{" "}
+                              <span className={classes.contractInfoValue}>
+                                {item.func || ""}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            )}
             <div className={classes.voteActionCard}>
               <div className={classes.voteAvailableWrapper}>
                 <Typography
                   className={classes.voteAvailableSpan}
                   variant={"h6"}
                 >
-                  Available: {balance} YFL
+                  Available: {balance} {symbol}
                 </Typography>
                 <Typography className={classes.voteMinSpan} variant={"h6"}>
-                  Min: 0.1 YFL
+                  Min: {voteLocked} {symbol}
                 </Typography>
               </div>
-              {/* <div className={classes.voteInputValueWrapper}>
-                <InputBase
-                  classes={{
-                    root: classes.voteInputBoxRoot,
-                    input: classes.voteInputBoxInput,
-                  }}
-                  onChange={(ev) => {
-                    this.setState({
-                      voteAmount: ev.target.value,
-                    });
-                  }}
-                  placeholder="Enter amount you want to vote with"
-                  type="number"
-                  autoFocus
-                />
-              </div> */}
+              {proposalType === 2 && (
+                <div className={classes.voteInputValueWrapper}>
+                  <InputBase
+                    classes={{
+                      root: classes.voteInputBoxRoot,
+                      input: classes.voteInputBoxInput,
+                    }}
+                    onChange={(ev) => {
+                      this.setState({
+                        voteAmount: ev.target.value,
+                      });
+                    }}
+                    placeholder="Enter amount you want to vote with"
+                    type="number"
+                    autoFocus
+                  />
+                </div>
+              )}
+
               <div className={classes.voteButtonWrapper}>
                 <Button
                   className={classes.actionButton}

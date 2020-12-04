@@ -1,7 +1,6 @@
-import * as moment from "moment";
 const config = {
-  // YFLink Mainnet
-  yflAddress: "0x28cb7e841ee97947a86b06fa4090c8451f64c0be",
+  // YFLink Goerli Network
+  yflAddress: "0xcd370d3ed6b3501A40A5D673897341404ba18D2E",
   yflABI: [
     {
       inputs: [],
@@ -233,54 +232,8 @@ const config = {
     },
   ],
 
-  // YFLinkGov
-  governanceAddress: "0xc150eade946079033c3b840bd7e81cdd5354e467",
+  governanceAddress: "0x0F8F5E4a8F43A61eC975Ae8C09E4497fd28Cc563",
   governanceABI: [
-    {
-      constant: false,
-      inputs: [{ internalType: "string", name: "_url", type: "string" }],
-      name: "propose",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-      name: "stake",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [{ internalType: "uint256", name: "id", type: "uint256" }],
-      name: "voteAgainst",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [{ internalType: "uint256", name: "id", type: "uint256" }],
-      name: "voteFor",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-      name: "withdraw",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
     {
       constant: true,
       inputs: [{ internalType: "address", name: "account", type: "address" }],
@@ -344,6 +297,24 @@ const config = {
       type: "function",
     },
     {
+      constant: false,
+      inputs: [{ internalType: "string", name: "_url", type: "string" }],
+      name: "propose",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+      name: "stake",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
       constant: true,
       inputs: [],
       name: "totalSupply",
@@ -353,12 +324,39 @@ const config = {
       type: "function",
     },
     {
+      constant: false,
+      inputs: [{ internalType: "uint256", name: "id", type: "uint256" }],
+      name: "voteAgainst",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [{ internalType: "uint256", name: "id", type: "uint256" }],
+      name: "voteFor",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
       constant: true,
       inputs: [{ internalType: "address", name: "", type: "address" }],
       name: "voteLock",
       outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
       payable: false,
       stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+      name: "withdraw",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
       type: "function",
     },
     {
@@ -372,57 +370,7 @@ const config = {
     },
   ],
 
-  // YFLinkWrapper
-  yflinkWrapperAddress: "0x456f5d976696b9b42d53ec715ea9900b2818489b",
-  yflinkWrapperABI: [
-    {
-      constant: true,
-      inputs: [{ internalType: "address", name: "account", type: "address" }],
-      name: "balanceOf",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "totalSupply",
-      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-      name: "unwrap",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-      name: "wrap",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "wrappedYFLink",
-      outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-  ],
-
-  yYFLAddress: "0x75D1aA733920b14fC74c9F6e6faB7ac1EcE8482E",
+  yYFLAddress: "0x61044db17336a2658da73445cfa8717a43903b27",
   yYFLABI: [
     {
       inputs: [
@@ -1036,7 +984,7 @@ const config = {
     },
   ],
   // YFLinkGov
-  yYFLGovAddress: "0x75D1aA733920b14fC74c9F6e6faB7ac1EcE8482E",
+  yYFLGovAddress: "0x61044db17336a2658da73445cfa8717a43903b27",
   yYFLGovABI: [
     {
       inputs: [
@@ -1650,120 +1598,14 @@ const config = {
     },
   ],
 
-  erc20ABI: [
-    {
-      constant: false,
-      inputs: [
-        { name: "_spender", type: "address" },
-        { name: "_value", type: "uint256" },
-      ],
-      name: "approve",
-      outputs: [{ name: "success", type: "bool" }],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [
-        { name: "_to", type: "address" },
-        { name: "_value", type: "uint256" },
-      ],
-      name: "showMeTheMoney",
-      outputs: [],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [
-        { name: "_to", type: "address" },
-        { name: "_value", type: "uint256" },
-      ],
-      name: "transfer",
-      outputs: [{ name: "success", type: "bool" }],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      constant: false,
-      inputs: [
-        { name: "_from", type: "address" },
-        { name: "_to", type: "address" },
-        { name: "_value", type: "uint256" },
-      ],
-      name: "transferFrom",
-      outputs: [{ name: "success", type: "bool" }],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        { indexed: true, name: "_from", type: "address" },
-        { indexed: true, name: "_to", type: "address" },
-        { indexed: false, name: "_value", type: "uint256" },
-      ],
-      name: "Transfer",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        { indexed: true, name: "_owner", type: "address" },
-        { indexed: true, name: "_spender", type: "address" },
-        { indexed: false, name: "_value", type: "uint256" },
-      ],
-      name: "Approval",
-      type: "event",
-    },
+  // YFLinkWrapper
+  yflinkWrapperAddress: "0x456f5d976696b9b42d53ec715ea9900b2818489b",
+  yflinkWrapperABI: [
     {
       constant: true,
-      inputs: [
-        { name: "_owner", type: "address" },
-        { name: "_spender", type: "address" },
-      ],
-      name: "allowance",
-      outputs: [{ name: "remaining", type: "uint256" }],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [{ name: "_owner", type: "address" }],
+      inputs: [{ internalType: "address", name: "account", type: "address" }],
       name: "balanceOf",
-      outputs: [{ name: "balance", type: "uint256" }],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "decimals",
-      outputs: [{ name: "", type: "uint256" }],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "name",
-      outputs: [{ name: "", type: "string" }],
-      payable: false,
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      constant: true,
-      inputs: [],
-      name: "symbol",
-      outputs: [{ name: "", type: "string" }],
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
       payable: false,
       stateMutability: "view",
       type: "function",
@@ -1772,13 +1614,330 @@ const config = {
       constant: true,
       inputs: [],
       name: "totalSupply",
-      outputs: [{ name: "", type: "uint256" }],
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+      name: "unwrap",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+      name: "wrap",
+      outputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "wrappedYFLink",
+      outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
       payable: false,
       stateMutability: "view",
       type: "function",
     },
   ],
-  linkAddress: "0x514910771af9ca656af840dff83e8264ecf986ca",
+
+  erc20ABI: [
+    {
+      inputs: [
+        {
+          internalType: "string",
+          name: "name",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "symbol",
+          type: "string",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "owner",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "value",
+          type: "uint256",
+        },
+      ],
+      name: "Approval",
+      type: "event",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+      ],
+      name: "approve",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "subtractedValue",
+          type: "uint256",
+        },
+      ],
+      name: "decreaseAllowance",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "addedValue",
+          type: "uint256",
+        },
+      ],
+      name: "increaseAllowance",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "recipient",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+      ],
+      name: "transfer",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "value",
+          type: "uint256",
+        },
+      ],
+      name: "Transfer",
+      type: "event",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "sender",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "recipient",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+      ],
+      name: "transferFrom",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "owner",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+      ],
+      name: "allowance",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "account",
+          type: "address",
+        },
+      ],
+      name: "balanceOf",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "decimals",
+      outputs: [
+        {
+          internalType: "uint8",
+          name: "",
+          type: "uint8",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "name",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "symbol",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "totalSupply",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+  ],
+
+  linkAddress: "0xe827E80f82a90E15033339155fd79a4c15A46b4e",
   linkABI: [
     {
       constant: true,
@@ -1939,7 +2098,7 @@ const config = {
       type: "event",
     },
   ],
-  wethAddress: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+  wethAddress: "0x04CEaf950309B850dbEea3a0bcd6FF9B97479083",
   wethABI: [
     {
       constant: true,

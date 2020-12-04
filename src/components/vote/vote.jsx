@@ -45,10 +45,11 @@ import {
   STAKE_RETURNED,
   WITHDRAW,
   WITHDRAW_RETURNED,
-  PROPOSE,
+  CONVERT,
+  CONVERT_RETURNED,
 } from "../../constants";
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -616,16 +617,27 @@ const styles = (theme) => ({
 
   newProposalInput: {
     width: "100%",
-    height: 56,
+    height: "54px",
     background: colors.lightGray3,
-    borderRadius: 3,
+    borderRadius: 8,
     border: "solid 2px rgba(255, 255, 255, 0)",
     color: colors.white,
     padding: "0 12px",
   },
 
   newProposalError: {
-    border: "solid 1px rgba(255, 0, 0, 0.8)",
+    border: "solid 1px rgba(255, 0, 0, 0.8) !important",
+  },
+
+  newProposalParamInput: {
+    width: "100%",
+    height: "54px",
+    background: colors.lightGray3,
+    borderRadius: 3,
+    border: "solid 2px rgba(255, 255, 255, 0)",
+    color: colors.white,
+    padding: "0 12px",
+    marginBottom: "12px",
   },
 
   govStakeContainer: {
@@ -805,6 +817,259 @@ const styles = (theme) => ({
       fontSize: "16px",
     },
   },
+  newProposalParamsContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  newProposalParamHeader: {
+    fontWeight: "400",
+    fontSize: "18px",
+    lineHeight: "21px",
+    width: "100%",
+    textAlign: "left",
+  },
+  newProposalParamRecord: {
+    flex: 1,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  newProposalAddParam: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  newProposalParamRecordHeader: {
+    display: "flex",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  newProposalParamRecordHeaderText: {
+    fontSize: "18px",
+    lineHeight: "21px",
+    letterSpacing: "0.06rem",
+    color: colors.white,
+  },
+  anotherSetButton: {
+    backgroundColor: "transparent",
+    border: `solid 1px ${colors.white}`,
+  },
+  anotherSetLabel: {
+    color: colors.white,
+  },
+  linkswapCardHeader: {
+    display: "flex",
+    width: "100%",
+    alignItems: "center",
+    marginBottom: "24px",
+  },
+  mobileLinkswapCardHeader: {
+    display: "flex",
+    color: colors.white,
+    backgroundColor: colors.transGreyBackground,
+    borderRadius: "4px",
+    width: "100%",
+    height: "223px",
+    flexDirection: "column",
+    marginBottom: "16px",
+    padding: "16px",
+  },
+  linkswapInfoCard: {
+    flex: "1",
+    height: "86px",
+    padding: "16px",
+    display: "flex",
+    color: colors.white,
+    backgroundColor: colors.transGreyBackground,
+    borderRadius: "4px",
+    minWidth: "250px",
+    marginRight: "16px",
+    "&:last-child": {
+      marginRight: "0px",
+    },
+  },
+  mobileLinkswapInfoCard: {
+    flex: "1",
+    width: "100%",
+    height: "70px",
+    padding: "0px",
+    display: "flex",
+    color: colors.white,
+  },
+
+  linkswapInfoIconWrapper: {
+    width: "40px",
+    height: "40px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    border: `solid 3px ${colors.white}`,
+    borderRadius: "50%",
+    marginRight: "16px",
+    [theme.breakpoints.up("ms")]: {
+      width: "50px",
+      height: "50px",
+    },
+  },
+  linkswapInfoTextWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+  },
+  linkswapValueText: {
+    fontWeight: "bold",
+    fontSize: "24px",
+    lineHeight: "29px",
+    letterSpacing: "0.05rem",
+  },
+  linkswapActionContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+    padding: "8px 16px 16px 16px",
+    [theme.breakpoints.up("ms")]: {
+      flexDirection: "row",
+      height: "200px",
+    },
+  },
+  linkswapStakeContainer: {
+    width: "100%",
+    height: "136px",
+    background: colors.lightBlack2,
+    borderRadius: "8px",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: "12px",
+    [theme.breakpoints.up("ms")]: {
+      flex: "1",
+      height: "100%",
+      marginRight: "8px",
+      marginBottom: "0px",
+    },
+  },
+  linkswapWithdrawContainer: {
+    width: "100%",
+    height: "136px",
+    background: colors.lightBlack2,
+    borderRadius: "8px",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: "12px",
+    [theme.breakpoints.up("ms")]: {
+      flex: "1",
+      height: "100%",
+      marginRight: "8px",
+      marginBottom: "0px",
+    },
+  },
+  linkswapConvertContainer: {
+    width: "100%",
+    height: "180px",
+    background: colors.lightBlack2,
+    borderRadius: "8px",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+    [theme.breakpoints.up("ms")]: {
+      flex: "2",
+      height: "100%",
+    },
+  },
+  linkswapSWAHeaderContainer: {
+    fontSize: "16px",
+    lineHeight: "19px",
+    width: "100%",
+    color: colors.white,
+    marginBottom: "8px",
+  },
+  linkswapStakeBodyText: {
+    fontWeight: "bold",
+    fontSize: "20px",
+    lineHeight: "24px",
+    letterSpacing: "0.05rem",
+    color: colors.white,
+    marginBottom: "4px",
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    width: "100%",
+    [theme.breakpoints.up("ms")]: {
+      fontSize: "24px",
+    },
+  },
+  linkswapStakeCommentText: {
+    fontFamily: "Helvetica",
+    fontSize: "12px",
+    lineHeight: "14px",
+    color: colors.greyText,
+    marginBottom: "4px",
+  },
+  linkswapStakeWithdrawButtonContainer: {
+    flex: "1",
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "flex-start",
+  },
+
+  linkswapActionButton: {
+    padding: "12px 16px",
+    backgroundColor: colors.transGreyBackground,
+    borderRadius: "3px",
+    color: colors.white,
+    height: "43px",
+    cursor: "pointer",
+    "&:disabled": {
+      opacity: 0.3,
+      color: colors.white,
+    },
+    "&:hover": {
+      color: colors.grey,
+    },
+  },
+  linkswapActionButtonLabel: {
+    fontWeight: "bold",
+    fontSize: "16px",
+    lineHeight: "20px",
+  },
+  linkswapConvertBody: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  linkswapRewardItem: {
+    flex: "1",
+    display: "flex",
+    flexDirection: "column",
+  },
+  linkswapRewardHeader: {
+    fontWeight: "normal",
+    fontSize: "12px",
+    lineHeight: "14px",
+    color: colors.white,
+    marginBottom: "4px",
+  },
+  linkswapTotalReward: {
+    fontWeight: "bold",
+    fontSize: "24px",
+    lineHeight: "29px",
+    color: colors.white,
+  },
+  linkswapRewardValue: {
+    fontWeight: "bold",
+    fontSize: "12px",
+    lineHeight: "15px",
+    color: colors.white,
+    letterSpacing: "0.05rem",
+  },
 });
 
 const emitter = Store.emitter;
@@ -822,7 +1087,8 @@ class Vote extends Component {
     super(props);
 
     const account = store.getStore("account");
-    const proposals = store.getStore("proposals");
+    const govProposals = store.getStore("govProposals");
+    const yYFLProposals = store.getStore("yYFLProposals");
     const pool = store.getStore("currentPool");
     if (!account || !account.address) {
       props.history.push("/");
@@ -832,20 +1098,19 @@ class Vote extends Component {
       loading: true,
       account: account,
       pool: pool,
-      proposals: proposals,
+      govProposals: govProposals,
+      yYFLProposals: yYFLProposals,
       value: 0,
       voteLockValid: false,
       balanceValid: false,
       voteLock: null,
       proposalScreen: false,
       voteModalOpen: false,
+      newProposalParams: [],
     };
 
     if (account && account.address) {
       dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
-    }
-    if (pool && pool.id.startsWith("gov") && account && account.address) {
-      dispatcher.dispatch({ type: GET_GOV_REQUIREMENTS, content: {} });
     }
   }
 
@@ -860,6 +1125,12 @@ class Vote extends Component {
     emitter.on(STAKE_RETURNED, this.stakeReturned);
     emitter.on(WITHDRAW_RETURNED, this.withdrawReturned);
     window.scrollTo(0, 0);
+
+    const pools = store.getStore("rewardPools");
+    if (pools.length > 0) {
+      store.setStore({ currentPool: pools[0] });
+      this.setState({ pool: pools[0] });
+    }
   }
 
   componentWillUnmount() {
@@ -886,37 +1157,22 @@ class Vote extends Component {
   };
 
   proposalsReturned = () => {
-    const proposals = store.getStore("proposals");
-    this.setState({ proposals: proposals, loading: false });
+    const govProposals = store.getStore("govProposals");
+    const yYFLProposals = store.getStore("yYFLProposals");
+
+    this.setState({
+      govProposals: govProposals,
+      yYFLProposals: yYFLProposals,
+      loading: false,
+    });
   };
 
   balancesReturned = () => {
-    const currentPool = store.getStore("currentPool");
     const pools = store.getStore("rewardPools");
-    if (currentPool) {
-      let newPool = pools.filter((pool) => {
-        return pool.id === currentPool.id;
-      });
-
-      if (newPool.length > 0) {
-        newPool = newPool[0];
-        store.setStore({ currentPool: newPool });
-        this.setState({ pool: newPool });
-      }
-    } else {
-      if (pools.length > 0) {
-        store.setStore({ currentPool: pools[0] });
-        this.setState({ pool: pools[0] });
-      }
+    if (pools.length > 0) {
+      store.setStore({ currentPool: pools[0] });
+      this.setState({ pool: pools[0] });
     }
-  };
-
-  govRequirementsReturned = (requirements) => {
-    this.setState({
-      balanceValid: requirements.balanceValid,
-      voteLockValid: requirements.voteLockValid,
-      voteLock: requirements.voteLock,
-    });
   };
 
   stakeReturned = (txData) => {
@@ -935,19 +1191,124 @@ class Vote extends Component {
     this.showSnackbar("Address Copied to Clipboard", "Success");
   };
 
+  showErrorMessage = (message) => {
+    this.showSnackbar(message, "Warning");
+  };
+
+  getCurrentToken = (pool, value) => {
+    const token =
+      value === 0 || value === 1
+        ? pool && pool.tokens && pool.tokens[0]
+        : pool && pool.tokens && pool.tokens[1];
+    return token;
+  };
+
   onPropose = () => {
     this.setState({ urlError: false });
-    const { url } = this.state;
+    const { value, url, description, newProposalParams } = this.state;
 
-    let error = false;
-    if (!url || url === "") {
-      this.setState({ urlError: "This field is required" });
-      error = true;
-    }
+    if (value === 0 || value === 1) {
+      let error = false;
+      if (!url || url === "") {
+        this.setState({ urlError: "This field is required" });
+        error = true;
+      }
 
-    if (!error) {
-      this.setState({ loading: true });
-      dispatcher.dispatch({ type: PROPOSE, content: { url } });
+      if (!error) {
+        this.setState({ loading: true });
+        dispatcher.dispatch({ type: PROPOSE, content: { url, type: "URL" } });
+      }
+    } else if (value === 2) {
+      let error = false;
+      if (!description || description === "") {
+        this.setState({ descriptionError: "This field is required" });
+        error = true;
+      }
+
+      let targetErrors = [];
+      let valueErrors = [];
+      let signatureErrors = [];
+      let calldataErrors = [];
+
+      const proposeParameters = newProposalParams.map((param) => {
+        let errorTarget = "";
+        if (!param.target) {
+          errorTarget = "Invalid target.";
+          error = true;
+          this.showErrorMessage("Invalid Target");
+        }
+        let errorValue = "";
+        if (!param.value) {
+          errorValue = "Invalid value.";
+          error = true;
+          this.showErrorMessage("Invalid Value");
+        }
+        let errorSignature = "";
+        if (!param.signature) {
+          errorSignature = "Invalid signature.";
+          error = true;
+          this.showErrorMessage("Invalid Signature");
+        }
+
+        targetErrors.push(errorTarget);
+        valueErrors.push(errorValue);
+        signatureErrors.push(errorSignature);
+
+        const params = getSignature(param.signature);
+        const callData =
+          param.calldata && param.calldata.replace(/\s/g, "").split(",");
+
+        let encodedCalldata = null;
+        const abi = new AbiCoder();
+        try {
+          encodedCalldata = abi.encode(params, callData);
+        } catch (error) {
+          encodedCalldata = null;
+        }
+
+        let errorCalldata = "";
+        if (!param.calldata || !encodedCalldata) {
+          errorCalldata = "Invalid calldata.";
+          error = true;
+          this.showErrorMessage("Invalid Call Data");
+        }
+        calldataErrors.push(errorCalldata);
+
+        return {
+          target: param.target,
+          value: 0,
+          signature: param.signature,
+          calldata: encodedCalldata,
+        };
+      });
+      const targetsArray = proposeParameters.map((param) => param.target);
+      const valuesArray = proposeParameters.map((param) => param.value);
+      const signaturesArray = proposeParameters.map((param) => param.signature);
+      const calldatasArray = proposeParameters.map((param) => param.calldata);
+
+      if (!error) {
+        this.setState({ loading: true });
+        dispatcher.dispatch({
+          type: PROPOSE,
+          content: {
+            description,
+            parameters: {
+              targets: targetsArray,
+              values: valuesArray,
+              signatures: signaturesArray,
+              calldatas: calldatasArray,
+            },
+            type: "FUNCTION",
+          },
+        });
+      } else {
+        this.setState({
+          targetErrors,
+          valueErrors,
+          signatureErrors,
+          calldataErrors,
+        });
+      }
     }
   };
 
@@ -970,117 +1331,98 @@ class Vote extends Component {
 
   renderHeader = (screenType) => {
     const { classes } = this.props;
-    const { account } = this.state;
-    const wallet =
-      account.address &&
-      account.address.substring(0, 6) +
-        "..." +
-        account.address.substring(
-          account.address.length - 4,
-          account.address.length
-        );
+    const {
+      value,
+      account,
+      loading,
+      modalOpen,
+      snackbarMessage,
+      title,
+      titleError,
+      description,
+      descriptionError,
+      votingStatus,
+      governanceContractVersion
+    } = this.state
 
-    if (screenType === "DESKTOP") {
-      return (
-        <div className={classes.desktopHeaderContainer}>
-          <div className={classes.logoContainer}>
-            <HeaderLogo />
-          </div>
-          <div className={classes.linkContainer}>
-            {/* <HeaderLink text='STAKE' to={account && account.address ? '/staking' : '/account'} redirectedTo={'/staking'} /> */}
-            <HeaderLink
-              text="VOTE"
-              to={account && account.address ? "/vote" : "/account"}
-              redirectedTo={"/vote"}
-              selected={true}
-            />
-            <HeaderLink
-              text="BLOG"
-              to="https://blog.yflink.io"
-              externalLink={true}
-            />
-            <HeaderLink
-              text="BUY YFL"
-              to={
-                "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
-              }
-              externalLink={true}
-            />
-            <HeaderLink text="LINKSWAP" to="/" disabled tag="SOON" />
-            <HeaderLink text="WAFFLEHOUSE" to="/" disabled tag="SOON" />
-            {/* <HeaderLink text='PRODUCTS' to='/' disabled tag='SOON' /> */}
-          </div>
-          <div className={classes.walletContainer}>
-            {account && account.address && (
-              <Button
-                className={classes.walletButton}
-                variant="contained"
-                color="primary"
-                onClick={this.overlayClicked}
-                startIcon={
-                  <FiberManualRecordIcon style={{ color: colors.lightGreen }} />
-                }
-              >
-                <Typography
-                  variant={"h4"}
-                  className={classes.headerWalletAddress}
-                  noWrap
-                >
-                  {wallet}
-                </Typography>
-              </Button>
-            )}
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className={classes.mobileHeaderContainer}>
-          <div className={classes.logoContainer}>
-            <HeaderLogo />
-          </div>
-          <div className={classes.optionsContainer}>
-            <IconButton
-              onClick={() => {
-                this.setState({ navModalOpen: true });
-              }}
-            >
-              <OptionsIcon style={{ color: colors.white }} />
-            </IconButton>
-          </div>
-        </div>
-      );
-    }
-  };
+  renderVoteModal = () => {
+    const { voteProposal, voteType, account, pool, value } = this.state;
+    const token = this.getCurrentToken(pool, value);
+    const accBalance =
+      (token &&
+        token.stakedBalance &&
+        toFixed(token.stakedBalance, token.decimals, 3)) ||
+      "0";
+    const voteLockedValue =
+      (token &&
+        token.voteLocked &&
+        toFixed(token.voteLocked, token.decimals, 3)) ||
+      "0";
 
   renderNavigationModal = () => {
     const { account } = this.state;
-    return (
-      <RedirectModal
-        closeModal={this.closeNavModal}
-        modalOpen={this.state.navModalOpen}
-        account={account}
-      />
-    );
-  };
-
-  renderVoteModal = () => {
-    const { voteProposal, voteType, account, pool } = this.state;
-    const token = pool && pool.tokens && pool.tokens[0];
-    const accBalance =
-      (token && token.balance && toFixed(token.balance, token.decimals, 6)) ||
-      "0";
     return (
       <VoteModal
         closeModal={this.closeVoteModal}
         modalOpen={this.state.voteModalOpen}
         account={account}
         proposal={voteProposal}
+        proposalType={value}
         voteType={voteType}
         balance={accBalance}
+        voteLocked={voteLockedValue}
+        startLoading={this.startLoading}
+        decimals={token && token.decimals}
+        symbol={token && token.symbol}
+      />
+    );
+  };
+  renderStakeWithdrawModal = () => {
+    const {
+      pool,
+      value,
+      stakeOrWithdraw,
+      isStakeWithdrawModalShown,
+    } = this.state;
+    const yYFLToken = this.getCurrentToken(pool, 2);
+    const yflToken = this.getCurrentToken(pool, 0);
+    const walletBalance =
+      yflToken && yflToken.balance
+        ? toFixed(yflToken.balance, yflToken.decimals, 3)
+        : "0";
+    const stakedBalance =
+      yYFLToken && yYFLToken.balance
+        ? toFixed(yYFLToken.balance, yYFLToken.decimals, 3)
+        : "0";
+    const yflUsdPrice =
+      yflToken && yflToken.yflPrice ? yflToken.yflPrice.toFixed(3) : "0";
+    const yYFLPrice =
+      yYFLToken && yYFLToken.yYFLPrice
+        ? toFixed(yYFLToken.yYFLPrice, yYFLToken.decimals, 3)
+        : "0";
+    return (
+      <StakeWithdrawModal
+        closeModal={this.closeStakeWithdrawModal}
+        modalOpen={isStakeWithdrawModalShown}
+        stakeOrWithdraw={stakeOrWithdraw}
+        balance={walletBalance}
+        staked={stakedBalance}
+        asset={value === 2 ? yYFLToken : yflToken}
+        sourceAsset={yflToken}
+        price={stakeOrWithdraw === "Stake" ? yflUsdPrice : yYFLPrice}
+        secondPrice={stakeOrWithdraw === "Stake" ? yYFLPrice : yflUsdPrice}
+        decimals={
+          stakeOrWithdraw === "Stake"
+            ? yflToken && yflToken.decimals
+            : yYFLToken && yYFLToken.decimals
+        }
         startLoading={this.startLoading}
       />
     );
+  };
+
+  closeStakeWithdrawModal = () => {
+    this.setState({ isStakeWithdrawModalShown: false });
   };
 
   renderBackground = (screenType) => {
@@ -1100,345 +1442,921 @@ class Vote extends Component {
 
   renderGovernanceSection = (screenType) => {
     const { classes } = this.props;
-    const { pool } = this.state;
-    const token = pool && pool.tokens && pool.tokens[0];
+    const { pool, value } = this.state;
+    const token =
+      value === 0 || value === 1
+        ? pool && pool.tokens && pool.tokens[0]
+        : pool && pool.tokens && pool.tokens[1];
 
-    if (screenType === "DESKTOP") {
-      return (
-        <div className={classes.desktopSectionStyle}>
-          <div className={classes.cardHeaderSection}>
-            <Typography variant={"h1"} className={classes.cardHeading}>
-              Governance
-            </Typography>
-          </div>
-          <Card className={classes.governanceCard}>
-            <div className={classes.governanceCardHeadSection}>
-              <IconButton
-                onClick={() => {
-                  this.openInstructions();
-                }}
-              >
-                <Typography
-                  variant={"h4"}
-                  className={classes.governanceButtonSpan}
-                >
-                  Instructions
-                </Typography>
-                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  this.openContract();
-                }}
-              >
-                <Typography
-                  variant={"h4"}
-                  className={classes.governanceButtonSpan}
-                >
-                  Contract
-                </Typography>
-                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
-              </IconButton>
+    const yflToken = pool && pool.tokens && pool.tokens[0];
+    const yYFLToken = pool && pool.tokens && pool.tokens[1];
+
+    const walletBalance =
+      yflToken && yflToken.balance
+        ? toFixed(yflToken.balance, yflToken.decimals, 3)
+        : "0";
+    const stakedYYFLBalance =
+      yYFLToken && yYFLToken.balance
+        ? toFixed(yYFLToken.balance, yYFLToken.decimals, 3)
+        : "0";
+    const yflUsdPrice =
+      yflToken && yflToken.yflPrice ? yflToken.yflPrice.toFixed(3) : "0";
+    const yYFLPrice =
+      yYFLToken && yYFLToken.yYFLPrice
+        ? toFixed(yYFLToken.yYFLPrice, yYFLToken.decimals, 3)
+        : "0";
+    const totalSupply =
+      yYFLToken && yYFLToken.totalSupply
+        ? toFixed(yYFLToken.totalSupply, yYFLToken.decimals, 3) *
+          yYFLPrice *
+          yflUsdPrice
+        : "0";
+
+    const linkReward =
+      yYFLToken && yYFLToken.linkBalance
+        ? toFixed(yYFLToken.linkBalance, 18, 3)
+        : "0";
+    const wethReward =
+      yYFLToken && yYFLToken.wethBalance
+        ? toFixed(yYFLToken.wethBalance, 18, 3)
+        : "0";
+    const linkPrice = (yYFLToken && yYFLToken.linkPrice) || 0;
+    const wethPrice = (yYFLToken && yYFLToken.wethPrice) || 0;
+
+    const totalReward =
+      parseFloat(linkReward) * linkPrice + parseFloat(wethReward) * wethPrice;
+
+    if (value === 0 || value === 1) {
+      if (screenType === "DESKTOP") {
+        return (
+          <div className={classes.desktopSectionStyle}>
+            <div className={classes.cardHeaderSection}>
+              <Typography variant={"h1"} className={classes.cardHeading}>
+                Governance
+              </Typography>
             </div>
-            <div className={classes.governanceCardBodySection}>
-              <div className={classes.governanceCardBodyVault}>
+            <Card className={classes.governanceCard}>
+              <div className={classes.governanceCardHeadSection}>
                 <IconButton
                   onClick={() => {
-                    this.goToDashboard();
+                    this.openInstructions();
                   }}
                 >
-                  <img
-                    alt="logo"
-                    src={require("../../assets/YFLink-header-logo.svg")}
-                    className={classes.governanceVaultIcon}
-                  />
                   <Typography
-                    variant={"h3"}
-                    className={classes.governanceVaultButtonSpan}
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
                   >
-                    Governance Vault
+                    Instructions
                   </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
                 </IconButton>
-              </div>
-              <div className={classes.govStakeWithdrawContainer}>
-                <div className={classes.govStakeContainer}>
-                  <div className={classes.govStakeWithdrawHeaderContainer}>
-                    <Typography
-                      variant={"h4"}
-                      className={classes.govStakeWithdrawBalanceSpan}
-                    >
-                      Your Balance:&nbsp;
-                      {token && token.balance
-                        ? toFixed(token.balance, token.decimals, 6)
-                        : "Loading..."}{" "}
-                      {token && token.symbol}
-                    </Typography>
-                    <Typography
-                      variant={"h4"}
-                      className={classes.govStakeMinBalanceSpan}
-                    >
-                      Min: 0.1 YFL
-                    </Typography>
-                  </div>
-                  <div className={classes.govStakeWithdrawInputContainer}>
-                    <InputBase
-                      classes={{
-                        root: classes.customInputBoxRoot,
-                        input: classes.customInputBoxInput,
-                      }}
-                      onChange={(ev) => {
-                        this.setState({
-                          stakeAmount: ev.target.value,
-                        });
-                      }}
-                      placeholder="Enter amount you want to deposit."
-                      type="number"
-                      autoFocus
-                    />
-                  </div>
-                  <div className={classes.govStakeWithdrawButtonContainer}>
-                    <Button
-                      className={classes.actionButton}
-                      variant="outlined"
-                      onClick={() => {
-                        this.onStake();
-                      }}
-                      disabled={!token}
-                    >
-                      <Typography
-                        className={classes.actionButtonLabel}
-                        variant={"h4"}
-                        color={colors.white}
-                      >
-                        Deposit
-                      </Typography>
-                    </Button>
-                  </div>
-                </div>
-                <div className={classes.govWithdrawContainer}>
-                  <div className={classes.govStakeWithdrawHeaderContainer}>
-                    <Typography
-                      variant={"h4"}
-                      className={classes.govStakeWithdrawBalanceSpan}
-                    >
-                      Staked:&nbsp;
-                      {token && token.stakedBalance
-                        ? toFixed(token.stakedBalance, token.decimals, 6)
-                        : "Loading..."}{" "}
-                      {token && token.symbol}
-                    </Typography>
-                  </div>
-                  <div className={classes.govStakeWithdrawInputContainer}>
-                    <InputBase
-                      classes={{
-                        root: classes.customInputBoxRoot,
-                        input: classes.customInputBoxInput,
-                      }}
-                      onChange={(ev) => {
-                        this.setState({
-                          withdrawAmount: ev.target.value,
-                        });
-                      }}
-                      placeholder="Enter amount you want to withdraw."
-                      type="number"
-                      autoFocus
-                    />
-                  </div>
-                  <div className={classes.govStakeWithdrawButtonContainer}>
-                    <Button
-                      className={classes.actionButton}
-                      variant="outlined"
-                      onClick={() => {
-                        this.onWithdraw();
-                      }}
-                      disabled={!token}
-                    >
-                      <Typography
-                        className={classes.actionButtonLabel}
-                        variant={"h4"}
-                        color={colors.white}
-                      >
-                        Withdraw
-                      </Typography>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      );
-    } else if (screenType === "MOBILE") {
-      return (
-        <div className={classes.mobileSectionStyle}>
-          <div className={classes.cardHeaderSection}>
-            <Typography variant={"h1"} className={classes.cardHeading}>
-              Governance
-            </Typography>
-          </div>
-          <Card className={classes.governanceCard}>
-            <div className={classes.governanceCardHeadSection}>
-              <IconButton
-                onClick={() => {
-                  this.openInstructions();
-                }}
-              >
-                <Typography
-                  variant={"h4"}
-                  className={classes.governanceButtonSpan}
-                >
-                  Instructions
-                </Typography>
-                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  this.openContract();
-                }}
-              >
-                <Typography
-                  variant={"h4"}
-                  className={classes.governanceButtonSpan}
-                >
-                  Contract
-                </Typography>
-                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
-              </IconButton>
-            </div>
-            <div className={classes.governanceCardBodySection}>
-              <div className={classes.governanceCardBodyVault}>
                 <IconButton
                   onClick={() => {
-                    this.goToDashboard();
+                    this.openContract();
                   }}
                 >
-                  <img
-                    alt="logo"
-                    src={require("../../assets/YFLink-header-logo.svg")}
-                    className={classes.governanceVaultIcon}
-                  />
                   <Typography
-                    variant={"h3"}
-                    className={classes.governanceVaultButtonSpan}
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
                   >
-                    Governance Vault
+                    Contract
                   </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
                 </IconButton>
               </div>
-              <div className={classes.govStakeWithdrawContainer}>
-                <div className={classes.govStakeContainer}>
-                  <div className={classes.govStakeWithdrawHeaderContainer}>
-                    <Typography
-                      variant={"h4"}
-                      className={classes.govStakeWithdrawBalanceSpan}
-                    >
-                      Balance:&nbsp;
-                      {token && token.balance
-                        ? toFixed(token.balance, token.decimals, 6)
-                        : "Loading..."}{" "}
-                      {token && token.symbol}
-                    </Typography>
-                    <Typography
-                      variant={"h4"}
-                      className={classes.govStakeMinBalanceSpan}
-                    >
-                      Min: 0.1 YFL
-                    </Typography>
-                  </div>
-                  <div className={classes.govStakeWithdrawInputContainer}>
-                    <InputBase
-                      classes={{
-                        root: classes.customInputBoxRoot,
-                        input: classes.customInputBoxInput,
-                      }}
-                      onChange={(ev) => {
-                        this.setState({
-                          stakeAmount: ev.target.value,
-                        });
-                      }}
-                      placeholder="Enter amount you want to deposit."
-                      type="number"
-                      autoFocus
+              <div className={classes.governanceCardBodySection}>
+                <div className={classes.governanceCardBodyVault}>
+                  <IconButton
+                    onClick={() => {
+                      this.goToDashboard();
+                    }}
+                  >
+                    <img
+                      alt="logo"
+                      src={require("../../assets/YFLink-header-logo.svg")}
+                      className={classes.governanceVaultIcon}
                     />
-                  </div>
-                  <div className={classes.govStakeWithdrawButtonContainer}>
-                    <Button
-                      className={classes.actionButton}
-                      variant="outlined"
-                      onClick={() => {
-                        this.onStake();
-                      }}
-                      disabled={!token}
+                    <Typography
+                      variant={"h3"}
+                      className={classes.governanceVaultButtonSpan}
                     >
+                      Governance Vault
+                    </Typography>
+                  </IconButton>
+                </div>
+                <div className={classes.govStakeWithdrawContainer}>
+                  <div className={classes.govStakeContainer}>
+                    <div className={classes.govStakeWithdrawHeaderContainer}>
                       <Typography
-                        className={classes.actionButtonLabel}
                         variant={"h4"}
-                        color={colors.white}
+                        className={classes.govStakeWithdrawBalanceSpan}
                       >
-                        Deposit
+                        Your Balance:&nbsp;
+                        {token && token.balance
+                          ? toFixed(token.balance, token.decimals, 3)
+                          : "Loading..."}{" "}
+                        {token && token.symbol}
                       </Typography>
-                    </Button>
+                      <Typography
+                        variant={"h4"}
+                        className={classes.govStakeMinBalanceSpan}
+                      >
+                        Min: 0.1 {token && token.symbol}
+                      </Typography>
+                    </div>
+                    <div className={classes.govStakeWithdrawInputContainer}>
+                      <InputBase
+                        classes={{
+                          root: classes.customInputBoxRoot,
+                          input: classes.customInputBoxInput,
+                        }}
+                        onChange={(ev) => {
+                          this.setState({
+                            stakeAmount: ev.target.value,
+                          });
+                        }}
+                        placeholder="Enter amount you want to deposit."
+                        type="number"
+                        autoFocus
+                      />
+                    </div>
+                    <div className={classes.govStakeWithdrawButtonContainer}>
+                      <Button
+                        className={classes.actionButton}
+                        variant="outlined"
+                        onClick={() => {
+                          this.onStake();
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.actionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Deposit
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className={classes.govWithdrawContainer}>
+                    <div className={classes.govStakeWithdrawHeaderContainer}>
+                      <Typography
+                        variant={"h4"}
+                        className={classes.govStakeWithdrawBalanceSpan}
+                      >
+                        Staked:&nbsp;
+                        {token && token.stakedBalance
+                          ? toFixed(token.stakedBalance, token.decimals, 3)
+                          : "Loading..."}{" "}
+                        {token && token.symbol}
+                      </Typography>
+                    </div>
+                    <div className={classes.govStakeWithdrawInputContainer}>
+                      <InputBase
+                        classes={{
+                          root: classes.customInputBoxRoot,
+                          input: classes.customInputBoxInput,
+                        }}
+                        onChange={(ev) => {
+                          this.setState({
+                            withdrawAmount: ev.target.value,
+                          });
+                        }}
+                        placeholder="Enter amount you want to withdraw."
+                        type="number"
+                        autoFocus
+                      />
+                    </div>
+                    <div className={classes.govStakeWithdrawButtonContainer}>
+                      <Button
+                        className={classes.actionButton}
+                        variant="outlined"
+                        onClick={() => {
+                          this.onWithdraw();
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.actionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Withdraw
+                        </Typography>
+                      </Button>
+                    </div>
                   </div>
                 </div>
-                <div className={classes.govWithdrawContainer}>
-                  <div className={classes.govStakeWithdrawHeaderContainer}>
-                    <Typography
-                      variant={"h4"}
-                      className={classes.govStakeWithdrawBalanceSpan}
-                    >
-                      Staked:&nbsp;
-                      {token && token.stakedBalance
-                        ? toFixed(token.stakedBalance, token.decimals, 6)
-                        : "Loading..."}{" "}
-                      {token && token.symbol}
-                    </Typography>
-                  </div>
-                  <div className={classes.govStakeWithdrawInputContainer}>
-                    <InputBase
-                      classes={{
-                        root: classes.customInputBoxRoot,
-                        input: classes.customInputBoxInput,
-                      }}
-                      onChange={(ev) => {
-                        this.setState({
-                          withdrawAmount: ev.target.value,
-                        });
-                      }}
-                      placeholder="Enter amount you want to withdraw."
-                      type="number"
-                      autoFocus
+              </div>
+            </Card>
+          </div>
+        );
+      } else if (screenType === "MOBILE") {
+        return (
+          <div className={classes.mobileSectionStyle}>
+            <div className={classes.cardHeaderSection}>
+              <Typography variant={"h1"} className={classes.cardHeading}>
+                Governance
+              </Typography>
+            </div>
+            <Card className={classes.governanceCard}>
+              <div className={classes.governanceCardHeadSection}>
+                <IconButton
+                  onClick={() => {
+                    this.openInstructions();
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    Instructions
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    this.openContract();
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    Contract
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+              </div>
+              <div className={classes.governanceCardBodySection}>
+                <div className={classes.governanceCardBodyVault}>
+                  <IconButton
+                    onClick={() => {
+                      this.goToDashboard();
+                    }}
+                  >
+                    <img
+                      alt="logo"
+                      src={require("../../assets/YFLink-header-logo.svg")}
+                      className={classes.governanceVaultIcon}
                     />
-                  </div>
-                  <div className={classes.govStakeWithdrawButtonContainer}>
-                    <Button
-                      className={classes.actionButton}
-                      variant="outlined"
-                      onClick={() => {
-                        this.onWithdraw();
-                      }}
-                      disabled={!token}
+                    <Typography
+                      variant={"h3"}
+                      className={classes.governanceVaultButtonSpan}
                     >
+                      Governance Vault
+                    </Typography>
+                  </IconButton>
+                </div>
+                <div className={classes.govStakeWithdrawContainer}>
+                  <div className={classes.govStakeContainer}>
+                    <div className={classes.govStakeWithdrawHeaderContainer}>
                       <Typography
-                        className={classes.actionButtonLabel}
                         variant={"h4"}
-                        color={colors.white}
+                        className={classes.govStakeWithdrawBalanceSpan}
                       >
-                        Withdraw
+                        Balance:&nbsp;
+                        {token && token.balance
+                          ? toFixed(token.balance, token.decimals, 3)
+                          : "Loading..."}{" "}
+                        {token && token.symbol}
                       </Typography>
-                    </Button>
+                      <Typography
+                        variant={"h4"}
+                        className={classes.govStakeMinBalanceSpan}
+                      >
+                        Min: 0.1 {token && token.symbol}
+                      </Typography>
+                    </div>
+                    <div className={classes.govStakeWithdrawInputContainer}>
+                      <InputBase
+                        classes={{
+                          root: classes.customInputBoxRoot,
+                          input: classes.customInputBoxInput,
+                        }}
+                        onChange={(ev) => {
+                          this.setState({
+                            stakeAmount: ev.target.value,
+                          });
+                        }}
+                        placeholder="Enter amount you want to deposit."
+                        type="number"
+                        autoFocus
+                      />
+                    </div>
+                    <div className={classes.govStakeWithdrawButtonContainer}>
+                      <Button
+                        className={classes.actionButton}
+                        variant="outlined"
+                        onClick={() => {
+                          this.onStake();
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.actionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Deposit
+                        </Typography>
+                      </Button>
+                    </div>
                   </div>
+                  <div className={classes.govWithdrawContainer}>
+                    <div className={classes.govStakeWithdrawHeaderContainer}>
+                      <Typography
+                        variant={"h4"}
+                        className={classes.govStakeWithdrawBalanceSpan}
+                      >
+                        Staked:&nbsp;
+                        {token && token.stakedBalance
+                          ? toFixed(token.stakedBalance, token.decimals, 3)
+                          : "Loading..."}{" "}
+                        {token && token.symbol}
+                      </Typography>
+                    </div>
+                    <div className={classes.govStakeWithdrawInputContainer}>
+                      <InputBase
+                        classes={{
+                          root: classes.customInputBoxRoot,
+                          input: classes.customInputBoxInput,
+                        }}
+                        onChange={(ev) => {
+                          this.setState({
+                            withdrawAmount: ev.target.value,
+                          });
+                        }}
+                        placeholder="Enter amount you want to withdraw."
+                        type="number"
+                        autoFocus
+                      />
+                    </div>
+                    <div className={classes.govStakeWithdrawButtonContainer}>
+                      <Button
+                        className={classes.actionButton}
+                        variant="outlined"
+                        onClick={() => {
+                          this.onWithdraw();
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.actionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Withdraw
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+      }
+    } else if (value === 2) {
+      if (screenType === "DESKTOP") {
+        return (
+          <div className={classes.desktopSectionStyle}>
+            <div className={classes.cardHeaderSection}>
+              <Typography variant={"h1"} className={classes.cardHeading}>
+                Governance
+              </Typography>
+            </div>
+            <div className={classes.linkswapCardHeader}>
+              <div className={classes.linkswapInfoCard}>
+                <div className={classes.linkswapInfoIconWrapper}>
+                  <LockRoundedIcon style={{ color: colors.white }} />
+                </div>
+                <div className={classes.linkswapInfoTextWrapper}>
+                  <span>Total Value Locked</span>
+                  <span className={classes.linkswapValueText}>
+                    ${totalSupply.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              <div className={classes.linkswapInfoCard}>
+                <div className={classes.linkswapInfoIconWrapper}>
+                  <AttachMoneyRoundedIcon style={{ color: colors.white }} />
+                </div>
+                <div className={classes.linkswapInfoTextWrapper}>
+                  <span>YFL Price (USDT)</span>
+                  <span className={classes.linkswapValueText}>
+                    ${yflUsdPrice}
+                  </span>
+                </div>
+              </div>
+              <div className={classes.linkswapInfoCard}>
+                <div className={classes.linkswapInfoIconWrapper}>
+                  <AttachMoneyRoundedIcon style={{ color: colors.white }} />
+                </div>
+                <div className={classes.linkswapInfoTextWrapper}>
+                  <span>yYFL Price</span>
+                  <span className={classes.linkswapValueText}>
+                    {yYFLPrice} YFL
+                  </span>
                 </div>
               </div>
             </div>
-          </Card>
-        </div>
-      );
+            <Card className={classes.governanceCard}>
+              <div className={classes.governanceCardHeadSection}>
+                <IconButton
+                  onClick={() => {
+                    this.openInstructions();
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    Instructions
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    this.openContract();
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    Contract
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+              </div>
+              <div className={classes.governanceCardBodySection}>
+                <div className={classes.governanceCardBodyVault}>
+                  <IconButton onClick={() => {}}>
+                    <img
+                      alt="logo"
+                      src={require("../../assets/YFLink-header-logo.svg")}
+                      className={classes.governanceVaultIcon}
+                    />
+                    <Typography
+                      variant={"h3"}
+                      className={classes.governanceVaultButtonSpan}
+                    >
+                      My Vault
+                    </Typography>
+                  </IconButton>
+                </div>
+                <div className={classes.linkswapActionContainer}>
+                  <div className={classes.linkswapStakeContainer}>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapSWAHeaderContainer}
+                    >
+                      Wallet Balance (YFL)
+                    </Typography>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapStakeBodyText}
+                    >
+                      {walletBalance} YFL
+                    </Typography>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapStakeCommentText}
+                    >
+                      ≈ ${(walletBalance * yflUsdPrice).toFixed(3)}
+                    </Typography>
+                    <div
+                      className={classes.linkswapStakeWithdrawButtonContainer}
+                    >
+                      <Button
+                        className={classes.linkswapActionButton}
+                        variant="contained"
+                        onClick={() => {
+                          this.setState({
+                            stakeOrWithdraw: "Stake",
+                            isStakeWithdrawModalShown: true,
+                          });
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.linkswapActionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Stake
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className={classes.linkswapWithdrawContainer}>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapSWAHeaderContainer}
+                    >
+                      Staked yYFL
+                    </Typography>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapStakeBodyText}
+                    >
+                      {stakedYYFLBalance} yYFL
+                    </Typography>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapStakeCommentText}
+                    >
+                      ≈ {(stakedYYFLBalance * yYFLPrice).toFixed(3)} YFL
+                    </Typography>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapStakeCommentText}
+                    >
+                      ≈ $
+                      {(stakedYYFLBalance * yYFLPrice * yflUsdPrice)
+                        .toFixed(3)
+                        .toLocaleString()}
+                    </Typography>
+                    <div
+                      className={classes.linkswapStakeWithdrawButtonContainer}
+                    >
+                      <Button
+                        className={classes.linkswapActionButton}
+                        variant="contained"
+                        onClick={() => {
+                          this.setState({
+                            isStakeWithdrawModalShown: true,
+                            stakeOrWithdraw: "Unstake",
+                          });
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.linkswapActionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Unstake
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className={classes.linkswapConvertContainer}>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapSWAHeaderContainer}
+                    >
+                      Rewards
+                    </Typography>
+                    <div className={classes.linkswapConvertBody}>
+                      <div className={classes.linkswapRewardItem}>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardHeader}
+                        >
+                          Total Value
+                        </Typography>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapTotalReward}
+                        >
+                          ${totalReward.toLocaleString()}
+                        </Typography>
+                      </div>
+                      <div className={classes.linkswapRewardItem}>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardHeader}
+                        >
+                          LINK
+                        </Typography>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardValue}
+                        >
+                          {linkReward}
+                        </Typography>
+                      </div>
+                      <div className={classes.linkswapRewardItem}>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardHeader}
+                        >
+                          WETH
+                        </Typography>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardValue}
+                        >
+                          {wethReward}
+                        </Typography>
+                      </div>
+                    </div>
+                    <div
+                      className={classes.linkswapStakeWithdrawButtonContainer}
+                    >
+                      <Button
+                        className={classes.linkswapActionButton}
+                        variant="contained"
+                        onClick={() => {
+                          this.onConvert();
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.linkswapActionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Convert
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+      } else if (screenType === "MOBILE") {
+        return (
+          <div className={classes.mobileSectionStyle}>
+            <div className={classes.cardHeaderSection}>
+              <Typography variant={"h1"} className={classes.cardHeading}>
+                Governance
+              </Typography>
+            </div>
+            <div className={classes.mobileLinkswapCardHeader}>
+              <div className={classes.mobileLinkswapInfoCard}>
+                <div className={classes.linkswapInfoIconWrapper}>
+                  <LockRoundedIcon style={{ color: colors.white }} />
+                </div>
+                <div className={classes.linkswapInfoTextWrapper}>
+                  <span>Total Value Locked</span>
+                  <span className={classes.linkswapValueText}>
+                    ${totalSupply.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              <div className={classes.mobileLinkswapInfoCard}>
+                <div className={classes.linkswapInfoIconWrapper}>
+                  <AttachMoneyRoundedIcon style={{ color: colors.white }} />
+                </div>
+                <div className={classes.linkswapInfoTextWrapper}>
+                  <span>YFL Price (USDT)</span>
+                  <span className={classes.linkswapValueText}>
+                    ${yflUsdPrice}
+                  </span>
+                </div>
+              </div>
+              <div className={classes.mobileLinkswapInfoCard}>
+                <div className={classes.linkswapInfoIconWrapper}>
+                  <AttachMoneyRoundedIcon style={{ color: colors.white }} />
+                </div>
+                <div className={classes.linkswapInfoTextWrapper}>
+                  <span>yYFL Price</span>
+                  <span className={classes.linkswapValueText}>
+                    {yYFLPrice} YFL
+                  </span>
+                </div>
+              </div>
+            </div>
+            <Card className={classes.governanceCard}>
+              <div className={classes.governanceCardHeadSection}>
+                <IconButton
+                  onClick={() => {
+                    this.openInstructions();
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    Instructions
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    this.openContract();
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    Contract
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+              </div>
+              <div className={classes.governanceCardBodySection}>
+                <div className={classes.governanceCardBodyVault}>
+                  <IconButton
+                    onClick={() => {
+                      this.goToDashboard();
+                    }}
+                  >
+                    <img
+                      alt="logo"
+                      src={require("../../assets/YFLink-header-logo.svg")}
+                      className={classes.governanceVaultIcon}
+                    />
+                    <Typography
+                      variant={"h3"}
+                      className={classes.governanceVaultButtonSpan}
+                    >
+                      My Vault
+                    </Typography>
+                  </IconButton>
+                </div>
+                <div className={classes.linkswapActionContainer}>
+                  <div className={classes.linkswapStakeContainer}>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapSWAHeaderContainer}
+                    >
+                      Wallet Balance (YFL)
+                    </Typography>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapStakeBodyText}
+                    >
+                      {walletBalance} YFL
+                      <Typography
+                        variant={"h4"}
+                        className={classes.linkswapStakeCommentText}
+                      >
+                        ≈ ${(walletBalance * yflUsdPrice).toFixed(3)}
+                      </Typography>
+                    </Typography>
+                    <div
+                      className={classes.linkswapStakeWithdrawButtonContainer}
+                    >
+                      <Button
+                        className={classes.linkswapActionButton}
+                        variant="contained"
+                        onClick={() => {
+                          this.setState({
+                            stakeOrWithdraw: "Stake",
+                            isStakeWithdrawModalShown: true,
+                          });
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.linkswapActionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Stake
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className={classes.linkswapWithdrawContainer}>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapSWAHeaderContainer}
+                    >
+                      Staked yYFL
+                    </Typography>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapStakeBodyText}
+                    >
+                      {stakedYYFLBalance} yYFL
+                      <div>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapStakeCommentText}
+                        >
+                          ≈ {(stakedYYFLBalance * yYFLPrice).toFixed(3)} YFL
+                        </Typography>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapStakeCommentText}
+                        >
+                          ≈ $
+                          {(stakedYYFLBalance * yYFLPrice * yflUsdPrice)
+                            .toFixed(3)
+                            .toLocaleString()}
+                        </Typography>
+                      </div>
+                    </Typography>
+                    <div
+                      className={classes.linkswapStakeWithdrawButtonContainer}
+                    >
+                      <Button
+                        className={classes.linkswapActionButton}
+                        variant="contained"
+                        onClick={() => {
+                          this.setState({
+                            isStakeWithdrawModalShown: true,
+                            stakeOrWithdraw: "Unstake",
+                          });
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.linkswapActionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Unstake
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className={classes.linkswapConvertContainer}>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.linkswapSWAHeaderContainer}
+                    >
+                      Rewards
+                    </Typography>
+                    <div className={classes.linkswapConvertBody}>
+                      <div className={classes.linkswapRewardItem}>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapTotalReward}
+                        >
+                          ${totalReward.toLocaleString()}
+                        </Typography>
+                      </div>
+                      <div className={classes.linkswapRewardItem}>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardHeader}
+                        >
+                          LINK
+                        </Typography>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardValue}
+                        >
+                          {linkReward}
+                        </Typography>
+                      </div>
+                      <div className={classes.linkswapRewardItem}>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardHeader}
+                        >
+                          WETH
+                        </Typography>
+                        <Typography
+                          variant={"h4"}
+                          className={classes.linkswapRewardValue}
+                        >
+                          {wethReward}
+                        </Typography>
+                      </div>
+                    </div>
+                    <div
+                      className={classes.linkswapStakeWithdrawButtonContainer}
+                    >
+                      <Button
+                        className={classes.linkswapActionButton}
+                        variant="contained"
+                        onClick={() => {
+                          this.onConvert();
+                        }}
+                        disabled={!token}
+                      >
+                        <Typography
+                          className={classes.linkswapActionButtonLabel}
+                          variant={"h4"}
+                          color={colors.white}
+                        >
+                          Convert
+                        </Typography>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+      }
     }
   };
 
   renderNewProposalSection = (screenType) => {
     const { classes } = this.props;
-    const { urlError } = this.state;
+    const {
+      urlError,
+      descriptionError,
+      newProposalParams,
+      targetErrors,
+      valueErrors,
+      signatureErrors,
+      calldataErrors,
+      value,
+    } = this.state;
 
     if (screenType === "DESKTOP") {
       return (
@@ -1492,64 +2410,265 @@ class Vote extends Component {
                 <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
               </IconButton>
             </div>
-            <div className={classes.newProposalCardBodySection}>
-              <div className={classes.newProposalCardBodyVault}>
-                <Typography
-                  variant={"h3"}
-                  className={classes.newProposalVaultButtonSpan}
-                >
-                  Proposal URL
-                </Typography>
-              </div>
-              <div className={classes.newProposalActionContainer}>
-                <div className={classes.newProposalInputContainer}>
-                  <InputBase
-                    classes={{
-                      root: classes.newProposalInput,
-                      input: classes.customInputBoxInput,
-                      error: classes.newProposalError,
-                    }}
-                    onChange={(ev) => {
-                      this.setState({
-                        url: ev.target.value,
-                      });
-                    }}
-                    placeholder="Enter proposal URL from YFL Governance Forum"
-                    type="text"
-                    autoFocus
-                    error={urlError}
-                  />
-                </div>
-                <div className={classes.newProposalCommentContainer}>
+            {(value === 0 || value === 1) && (
+              <div className={classes.newProposalCardBodySection}>
+                <div className={classes.newProposalCardBodyVault}>
                   <Typography
-                    variant={"h4"}
-                    className={classes.newProposalComment}
+                    variant={"h3"}
+                    className={classes.newProposalVaultButtonSpan}
                   >
-                    Append ?meme to the proposal URL to submit in the memes
-                    category.
+                    Proposal URL
                   </Typography>
                 </div>
-                <div className={classes.newProposalButtonContainer}>
-                  <Button
-                    variant="contained"
-                    classes={{
-                      root: classes.voteCreateProposalButton,
-                      disabled: classes.voteCreateProposalButtonDisabled,
-                    }}
-                    onClick={() => {
-                      this.onPropose();
-                    }}
-                  >
+                <div className={classes.newProposalActionContainer}>
+                  <div className={classes.newProposalInputContainer}>
+                    <InputBase
+                      classes={{
+                        root: classes.newProposalInput,
+                        input: classes.customInputBoxInput,
+                        error: classes.newProposalError,
+                      }}
+                      onChange={(ev) => {
+                        this.setState({
+                          url: ev.target.value,
+                        });
+                      }}
+                      placeholder="Enter proposal URL from YFL Governance Forum"
+                      type="text"
+                      autoFocus
+                      error={urlError}
+                    />
+                  </div>
+                  <div className={classes.newProposalCommentContainer}>
                     <Typography
-                      variant="h4"
-                      className={classes.voteCreateProposalLabel}
+                      variant={"h4"}
+                      className={classes.newProposalComment}
                     >
-                      Create Proposal
+                      Append ?meme to the proposal URL to submit in the memes
+                      category.
                     </Typography>
-                  </Button>
+                  </div>
+                  <div className={classes.newProposalButtonContainer}>
+                    <Button
+                      variant="contained"
+                      classes={{
+                        root: classes.voteCreateProposalButton,
+                        disabled: classes.voteCreateProposalButtonDisabled,
+                      }}
+                      onClick={() => {
+                        this.onPropose();
+                      }}
+                    >
+                      <Typography
+                        variant="h4"
+                        className={classes.voteCreateProposalLabel}
+                      >
+                        Create Proposal
+                      </Typography>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+            {value === 2 && (
+              <div className={classes.newProposalCardBodySection}>
+                <div className={classes.newProposalCardBodyVault}>
+                  <Typography
+                    variant={"h3"}
+                    className={classes.newProposalVaultButtonSpan}
+                  >
+                    New Proposal
+                  </Typography>
+                </div>
+
+                <div className={classes.newProposalActionContainer}>
+                  <div className={classes.newProposalInputContainer}>
+                    <InputBase
+                      classes={{
+                        root: classes.newProposalInput,
+                        input: classes.customInputBoxInput,
+                        error: classes.newProposalError,
+                      }}
+                      onChange={(ev) => {
+                        this.setState({
+                          description: ev.target.value,
+                        });
+                      }}
+                      placeholder="Enter proposal description"
+                      type="text"
+                      autoFocus
+                      error={descriptionError}
+                    />
+                  </div>
+                  <div className={classes.newProposalParamsContainer}>
+                    {newProposalParams?.map((param, index) => (
+                      <div
+                        key={param.id}
+                        className={classes.newProposalParamRecord}
+                      >
+                        <div className={classes.newProposalParamRecordHeader}>
+                          <span
+                            className={classes.newProposalParamRecordHeaderText}
+                          >
+                            Functions - {index + 1}st Set
+                          </span>
+                          <IconButton
+                            onClick={(ev) => {
+                              let updatedProposalParams = newProposalParams.filter(
+                                (item, itrIndex) => itrIndex !== index
+                              );
+                              this.setState({
+                                newProposalParams: updatedProposalParams,
+                              });
+                            }}
+                          >
+                            <HighlightOffRoundedIcon
+                              style={{
+                                width: "24px",
+                                height: "24px",
+                                color: colors.white,
+                              }}
+                            />
+                          </IconButton>
+                        </div>
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              target: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="Target"
+                          type="text"
+                          error={targetErrors && targetErrors[index]}
+                        />
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              value: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="Value"
+                          type="number"
+                          error={valueErrors && valueErrors[index]}
+                        />
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              signature: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="signature"
+                          type="text"
+                          error={signatureErrors && signatureErrors[index]}
+                        />
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              calldata: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="Call Data"
+                          type="text"
+                          error={calldataErrors && calldataErrors[index]}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className={classes.newProposalAddParam}>
+                    <Button
+                      className={classes.anotherSetButton}
+                      variant="outlined"
+                      onClick={(ev) => {
+                        const updatedParams = [
+                          ...newProposalParams,
+                          {
+                            id: new Date().getTime(),
+                            target: "",
+                            value: 0,
+                            signature: "",
+                            calldata: "",
+                          },
+                        ];
+                        this.setState({ newProposalParams: updatedParams });
+                      }}
+                    >
+                      <AddIcon
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          color: colors.white,
+                        }}
+                      />
+                      <Typography
+                        variant="h4"
+                        className={classes.anotherSetLabel}
+                      >
+                        Another Set
+                      </Typography>
+                    </Button>
+                  </div>
+                  <div className={classes.newProposalButtonContainer}>
+                    <Button
+                      variant="contained"
+                      classes={{
+                        root: classes.voteCreateProposalButton,
+                        disabled: classes.voteCreateProposalButtonDisabled,
+                      }}
+                      onClick={() => {
+                        this.onPropose();
+                      }}
+                    >
+                      <Typography
+                        variant="h4"
+                        className={classes.voteCreateProposalLabel}
+                      >
+                        Create Proposal
+                      </Typography>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </Card>
         </div>
       );
@@ -1605,64 +2724,250 @@ class Vote extends Component {
                 <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
               </IconButton>
             </div>
-            <div className={classes.newProposalCardBodySection}>
-              <div className={classes.newProposalCardBodyVault}>
-                <Typography
-                  variant={"h3"}
-                  className={classes.newProposalVaultButtonSpan}
-                >
-                  Proposal URL
-                </Typography>
-              </div>
-              <div className={classes.newProposalActionContainer}>
-                <div className={classes.newProposalInputContainer}>
-                  <InputBase
-                    classes={{
-                      root: classes.newProposalInput,
-                      input: classes.customInputBoxInput,
-                      error: classes.newProposalError,
-                    }}
-                    onChange={(ev) => {
-                      this.setState({
-                        url: ev.target.value,
-                      });
-                    }}
-                    placeholder="Enter proposal URL from YFL Governance Forum"
-                    type="text"
-                    autoFocus
-                    error={urlError}
-                  />
-                </div>
-                <div className={classes.newProposalCommentContainer}>
+            {(value === 0 || value === 1) && (
+              <div className={classes.newProposalCardBodySection}>
+                <div className={classes.newProposalCardBodyVault}>
                   <Typography
-                    variant={"h4"}
-                    className={classes.newProposalComment}
+                    variant={"h3"}
+                    className={classes.newProposalVaultButtonSpan}
                   >
-                    Append ?meme to the proposal URL to submit in the memes
-                    category.
+                    Proposal URL
                   </Typography>
                 </div>
-                <div className={classes.newProposalButtonContainer}>
-                  <Button
-                    variant="contained"
-                    classes={{
-                      root: classes.voteCreateProposalButton,
-                      disabled: classes.voteCreateProposalButtonDisabled,
-                    }}
-                    onClick={() => {
-                      this.onPropose();
-                    }}
-                  >
+                <div className={classes.newProposalActionContainer}>
+                  <div className={classes.newProposalInputContainer}>
+                    <InputBase
+                      classes={{
+                        root: classes.newProposalInput,
+                        input: classes.customInputBoxInput,
+                        error: classes.newProposalError,
+                      }}
+                      onChange={(ev) => {
+                        this.setState({
+                          url: ev.target.value,
+                        });
+                      }}
+                      placeholder="Enter proposal URL from YFL Governance Forum"
+                      type="text"
+                      autoFocus
+                      error={urlError}
+                    />
+                  </div>
+                  <div className={classes.newProposalCommentContainer}>
                     <Typography
-                      variant="h4"
-                      className={classes.voteCreateProposalLabel}
+                      variant={"h4"}
+                      className={classes.newProposalComment}
                     >
-                      Generate New Proposal
+                      Append ?meme to the proposal URL to submit in the memes
+                      category.
                     </Typography>
-                  </Button>
+                  </div>
+                  <div className={classes.newProposalButtonContainer}>
+                    <Button
+                      variant="contained"
+                      classes={{
+                        root: classes.voteCreateProposalButton,
+                        disabled: classes.voteCreateProposalButtonDisabled,
+                      }}
+                      onClick={() => {
+                        this.onPropose();
+                      }}
+                    >
+                      <Typography
+                        variant="h4"
+                        className={classes.voteCreateProposalLabel}
+                      >
+                        Generate New Proposal
+                      </Typography>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+            {value === 2 && (
+              <div className={classes.newProposalCardBodySection}>
+                <div className={classes.newProposalCardBodyVault}>
+                  <Typography
+                    variant={"h3"}
+                    className={classes.newProposalVaultButtonSpan}
+                  >
+                    New Proposal
+                  </Typography>
+                </div>
+
+                <div className={classes.newProposalActionContainer}>
+                  <div className={classes.newProposalInputContainer}>
+                    <InputBase
+                      classes={{
+                        root: classes.newProposalInput,
+                        input: classes.customInputBoxInput,
+                        error: classes.newProposalError,
+                      }}
+                      onChange={(ev) => {
+                        this.setState({
+                          description: ev.target.value,
+                        });
+                      }}
+                      placeholder="Enter proposal description"
+                      type="text"
+                      autoFocus
+                      error={descriptionError}
+                    />
+                  </div>
+                  <div className={classes.newProposalParamsContainer}>
+                    {newProposalParams?.map((param, index) => (
+                      <div
+                        key={param.id}
+                        className={classes.newProposalParamRecord}
+                      >
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              target: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="Target"
+                          type="text"
+                          error={targetErrors && targetErrors[index]}
+                        />
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              value: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="Value"
+                          type="number"
+                          error={valueErrors && valueErrors[index]}
+                        />
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              signature: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="signature"
+                          type="text"
+                          error={signatureErrors && signatureErrors[index]}
+                        />
+                        <InputBase
+                          classes={{
+                            root: classes.newProposalParamInput,
+                            input: classes.customInputBoxInput,
+                            error: classes.newProposalError,
+                          }}
+                          onChange={(ev) => {
+                            let updatedProposalParams = [...newProposalParams];
+                            updatedProposalParams[index] = {
+                              ...updatedProposalParams[index],
+                              calldata: ev.target.value,
+                            };
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                          placeholder="callldata"
+                          type="text"
+                          error={calldataErrors && calldataErrors[index]}
+                        />
+                        <IconButton
+                          onClick={(ev) => {
+                            let updatedProposalParams = newProposalParams.filter(
+                              (item, itrIndex) => itrIndex !== index
+                            );
+                            this.setState({
+                              newProposalParams: updatedProposalParams,
+                            });
+                          }}
+                        >
+                          <HighlightOffRoundedIcon
+                            style={{
+                              width: "24px",
+                              height: "24px",
+                              color: colors.white,
+                            }}
+                          />
+                        </IconButton>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={classes.newProposalAddParam}>
+                    <IconButton
+                      onClick={(ev) => {
+                        const updatedParams = [
+                          ...newProposalParams,
+                          {
+                            id: new Date().getTime(),
+                            target: "",
+                            value: 0,
+                            signature: "",
+                            calldata: "",
+                          },
+                        ];
+                        this.setState({ newProposalParams: updatedParams });
+                      }}
+                    >
+                      <AddIcon
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          color: colors.white,
+                        }}
+                      />
+                    </IconButton>
+                  </div>
+                  <div className={classes.newProposalButtonContainer}>
+                    <Button
+                      variant="contained"
+                      classes={{
+                        root: classes.voteCreateProposalButton,
+                        disabled: classes.voteCreateProposalButtonDisabled,
+                      }}
+                      onClick={() => {
+                        this.onPropose();
+                      }}
+                    >
+                      <Typography
+                        variant="h4"
+                        className={classes.voteCreateProposalLabel}
+                      >
+                        Create Proposal
+                      </Typography>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </Card>
         </div>
       );
@@ -1672,16 +2977,33 @@ class Vote extends Component {
   renderVoteSection = (screenType) => {
     const { classes } = this.props;
     const { value, pool } = this.state;
-    const token = pool && pool.tokens && pool.tokens[0];
+    const token = this.getCurrentToken(pool, value);
     const stakedBalance =
       (token &&
         token.stakedBalance &&
-        toFixed(token.stakedBalance, token.decimals, 6)) ||
+        toFixed(token.stakedBalance, token.decimals, 3)) ||
       "0";
     const accBalance =
-      (token && token.balance && toFixed(token.balance, token.decimals, 6)) ||
+      (token && token.balance && toFixed(token.balance, token.decimals, 3)) ||
       "0";
-    const isGenPossible = stakedBalance >= 0.1 || accBalance >= 0.1;
+
+    const yYFLToken = this.getCurrentToken(pool, 2);
+
+    const yYFLBalance =
+      (yYFLToken &&
+        yYFLToken.balance &&
+        toFixed(yYFLToken.balance, yYFLToken.decimals, 3)) ||
+      "0";
+    const yflToken = this.getCurrentToken(pool, 0);
+    const yflBalance =
+      (yflToken &&
+        yflToken.balance &&
+        toFixed(yflToken.balance, yflToken.decimals, 3)) ||
+      "0";
+    const isGenPossible =
+      value === 2
+        ? yYFLBalance >= 0.01 || yflBalance >= 0.01
+        : stakedBalance >= 0.01 || accBalance >= 0.01;
 
     if (screenType === "DESKTOP") {
       return (
@@ -1701,7 +3023,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  GOV
+                  YFL
                 </Typography>
                 {value === 0 && (
                   <div className={classes.voteToggleSelectedMark} />
@@ -1721,10 +3043,24 @@ class Vote extends Component {
                   <div className={classes.voteToggleSelectedMark} />
                 )}
               </Button>
+              <Button
+                className={classes.voteToggleButton}
+                variant="text"
+                onClick={() => {
+                  this.handleTabChange(null, 2);
+                }}
+              >
+                <Typography variant="h4" className={classes.voteToggleText}>
+                  LINKSWAP
+                </Typography>
+                {value === 2 && (
+                  <div className={classes.voteToggleSelectedMark} />
+                )}
+              </Button>
             </div>
             <Tooltip
               TransitionComponent={Zoom}
-              title="Minimum of 0.1YFL is required in order to generate a new proposal"
+              title="Minimum of 0.01 YFL (Staked) is required in order to generate a new proposal"
               placement="top"
               classes={{
                 tooltip: classes.voteCreateProposalButtonTooltip,
@@ -1738,7 +3074,14 @@ class Vote extends Component {
                     disabled: classes.voteCreateProposalButtonDisabled,
                   }}
                   onClick={() => {
-                    this.setState({ proposalScreen: true });
+                    this.setState({
+                      proposalScreen: true,
+                      newProposalParams: [],
+                      targetErrors: [],
+                      valueErrors: [],
+                      signatureErrors: [],
+                      calldataErrors: [],
+                    });
                   }}
                 >
                   <Typography
@@ -1775,7 +3118,7 @@ class Vote extends Component {
               }}
             >
               <Typography variant="h4" className={classes.loadMoreText}>
-                Load More
+                Reload
               </Typography>
             </Button>
           </div>
@@ -1800,7 +3143,14 @@ class Vote extends Component {
                 variant="h4"
                 className={classes.voteCreateProposalLabel}
                 onClick={() => {
-                  this.setState({ proposalScreen: true });
+                  this.setState({
+                    proposalScreen: true,
+                    newProposalParams: [],
+                    targetErrors: [],
+                    valueErrors: [],
+                    signatureErrors: [],
+                    calldataErrors: [],
+                  });
                 }}
               >
                 Generate New Proposal
@@ -1817,7 +3167,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  GOV
+                  YFL
                 </Typography>
                 {value === 0 && (
                   <div className={classes.voteToggleSelectedMark} />
@@ -1837,6 +3187,20 @@ class Vote extends Component {
                   <div className={classes.voteToggleSelectedMark} />
                 )}
               </Button>
+              <Button
+                className={classes.voteToggleButton}
+                variant="text"
+                onClick={() => {
+                  this.handleTabChange(null, 2);
+                }}
+              >
+                <Typography variant="h4" className={classes.voteToggleText}>
+                  LINKSWAP
+                </Typography>
+                {value === 2 && (
+                  <div className={classes.voteToggleSelectedMark} />
+                )}
+              </Button>
             </div>
           </div>
           <div className={classes.voteProposalList}>
@@ -1849,7 +3213,7 @@ class Vote extends Component {
               }}
             >
               <Typography variant="h4" className={classes.loadMoreText}>
-                Load More
+                Reload
               </Typography>
             </Button>
           </div>
@@ -1887,12 +3251,12 @@ class Vote extends Component {
   };
 
   onStake = () => {
-    const { pool, stakeAmount } = this.state;
+    const { pool, stakeAmount, value } = this.state;
     if (!pool) {
       console.log("OnStake POOL error!");
       return;
     }
-    const asset = pool && pool.tokens && pool.tokens[0];
+    const asset = this.getCurrentToken(pool, value);
     if (!stakeAmount || stakeAmount < 0.1) {
       console.log("OnStake Invalid Amount!");
       return;
@@ -1906,17 +3270,21 @@ class Vote extends Component {
     this.setState({ loading: true });
     dispatcher.dispatch({
       type: STAKE,
-      content: { asset: asset, amount: amount },
+      content: {
+        asset: asset,
+        amount: amount,
+        type: value === 2 ? "LINKSWAP" : "GOV",
+      },
     });
   };
 
   onWithdraw = () => {
-    const { pool, withdrawAmount } = this.state;
+    const { pool, withdrawAmount, value } = this.state;
     if (!pool) {
       console.log("OnWithdraw POOL error!");
       return;
     }
-    const asset = pool && pool.tokens && pool.tokens[0];
+    const asset = this.getCurrentToken(pool, value);
     if (!withdrawAmount) {
       console.log("OnWithdraw Invalid Amount!");
       return;
@@ -1929,10 +3297,39 @@ class Vote extends Component {
     this.setState({ loading: true });
     dispatcher.dispatch({
       type: WITHDRAW,
-      content: { asset: asset, amount: amount },
+      content: {
+        asset: asset,
+        amount: amount,
+        type: value === 2 ? "LINKSWAP" : "GOV",
+      },
     });
   };
 
+  onConvert = () => {
+    const { pool } = this.state;
+    if (!pool) {
+      console.log("OnConvert POOL error!");
+      return;
+    }
+
+    const yYFLToken = this.getCurrentToken(pool, 2);
+
+    const tokens = [yYFLToken.linkAddress, yYFLToken.wethAddress];
+    const amounts = [
+      bigInt(yYFLToken.linkBalance).toString(),
+      bigInt(yYFLToken.wethBalance).toString(),
+    ];
+
+    this.setState({ loading: true });
+    dispatcher.dispatch({
+      type: CONVERT,
+      content: {
+        asset: yYFLToken,
+        tokens,
+        amounts,
+      },
+    });
+  };
   render() {
     const { classes } = this.props;
     const { loading, modalOpen, snackbarMessage, proposalScreen } = this.state;
@@ -1962,6 +3359,7 @@ class Vote extends Component {
         {modalOpen && this.renderModal()}
         {this.renderNavigationModal()}
         {this.renderVoteModal()}
+        {this.renderStakeWithdrawModal()}
       </div>
     );
   }
@@ -1975,16 +3373,20 @@ class Vote extends Component {
   };
 
   renderProposals = () => {
-    const { proposals, value } = this.state;
+    const { govProposals, yYFLProposals, value } = this.state;
     const { classes } = this.props;
 
-    const filteredProposals = proposals
-      .filter((proposal) => {
-        const isGov = proposal.url.includes("gov");
-        const isMeme = isLinkMeme(proposal.url);
-        return value === 0 ? isGov : isMeme;
-      })
-      .sort((prop1, prop2) => prop2.end - prop1.end);
+    const currentProposals =
+      value === 2
+        ? yYFLProposals
+        : govProposals.filter((proposal) => {
+            const isGov = proposal.url.includes("gov");
+            const isMeme = isLinkMeme(proposal.url);
+            return value === 0 ? isGov : isMeme;
+          });
+    const filteredProposals = currentProposals.sort((prop1, prop2) =>
+      value === 2 ? prop2.endBlock - prop1.endBlock : prop2.end - prop1.end
+    );
 
     if (filteredProposals.length === 0) {
       return (
@@ -1997,25 +3399,45 @@ class Vote extends Component {
     }
 
     return filteredProposals.map((proposal) => {
-      return (
-        <Button
-          classes={{
-            root: classes.proposalCard,
-            text: classes.proposalCardDetails,
-          }}
-          key={proposal.id + "_expand"}
-          onClick={() => {
-            this.openProposal(proposal.url);
-          }}
-        >
-          <Proposal
-            proposal={proposal}
-            startLoading={this.startLoading}
-            showSnackbar={this.showSnackbar}
-            onVote={this.onVote}
-          />
-        </Button>
-      );
+      if (value === 0 || value === 1) {
+        return (
+          <Button
+            classes={{
+              root: classes.proposalCard,
+              text: classes.proposalCardDetails,
+            }}
+            key={proposal.id + "_expand"}
+            onClick={() => {
+              this.openProposal(proposal.url);
+            }}
+          >
+            <Proposal
+              proposal={proposal}
+              startLoading={this.startLoading}
+              showSnackbar={this.showSnackbar}
+              onVote={this.onVote}
+            />
+          </Button>
+        );
+      }
+      if (value === 2) {
+        return (
+          <Paper
+            classes={{
+              root: classes.proposalCard,
+            }}
+            key={proposal.id + "_expand"}
+          >
+            <FunctionProposal
+              proposal={proposal}
+              startLoading={this.startLoading}
+              showSnackbar={this.showSnackbar}
+              onVote={this.onVote}
+            />
+          </Paper>
+        );
+      }
+      return <></>;
     });
   };
 

@@ -269,6 +269,10 @@ class Stake extends Component {
     if (pool && pool.id.startsWith("gov") && account && account.address) {
       dispatcher.dispatch({ type: GET_GOV_REQUIREMENTS, content: {} });
     }
+
+    if (pool && ["GovernanceV2"].includes(pool.id)) {
+      dispatcher.dispatch({ type: GET_GOVERNANCE_REQUIREMENTS, content: {} });
+    }
   }
 
   componentDidMount() {
