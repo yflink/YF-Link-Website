@@ -311,9 +311,10 @@ class Proposal extends Component {
               <Typography variant={ 'h3' }><a href={ hashURL } target="_blank">IPFS</a></Typography>
               <Typography variant={ 'h5' } className={ classes.grey }>Link</Typography>
             </div>
-            <div>
-              <Typography variant={ 'h3' }>{ (proposal.quorum / 100).toFixed(2) }% / { (proposal.quorumRequired / 100).toFixed(2) }%</Typography>
-              <Typography variant={ 'h5' } className={ classes.grey }>Quorum/Required</Typography>
+            <div className={classes.proposalAddressContainer}>
+              <Typography variant={"h5"} className={classes.proposalAddress}>
+                Proposer {proposerAddress}
+              </Typography>
             </div>
           </div>
           <div className={classes.heading}>
@@ -401,7 +402,36 @@ class Proposal extends Component {
                   </Button>
                 </div>
               </div>
-            }
+              <div className={classes.voteValueLineContainer}>
+                <div
+                  className={classes.voteGreenLine}
+                  style={{ width: `${votesForPercentage}%` }}
+                />
+                <div
+                  className={classes.voteRedLine}
+                  style={{ width: `${votesAgainstPercentage}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={classes.titleProperContainer}>
+            <div className={classes.proposalTitleContainer}>
+              {isLinkMeme(proposal.url) ? (
+                <div className={classes.memeHeading}>
+                  <img src={proposal.url} className={classes.memeImage} />
+                </div>
+              ) : (
+                <Typography variant={"h4"} className={classes.proposalTitle}>
+                  {title}
+                </Typography>
+              )}
+            </div>
+            <div className={classes.proposalAddressContainer}>
+              <Typography variant={"h5"} className={classes.proposalAddress}>
+                Proposer {proposerAddress}
+              </Typography>
+            </div>
           </div>
         }
       </div>

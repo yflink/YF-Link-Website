@@ -1,6 +1,6 @@
 import config from "../config";
-import async from 'async';
-import * as moment from 'moment';
+import async from "async";
+import bigInt from "big-integer";
 import {
   ERROR,
   CONFIGURE,
@@ -23,24 +23,16 @@ import {
   GET_PROPOSALS_RETURNED,
   VOTE_FOR,
   VOTE_FOR_RETURNED,
-  VOTE_AGAINST,
-  VOTE_AGAINST_RETURNED,
-  GET_CLAIMABLE_ASSET,
-  GET_CLAIMABLE_ASSET_RETURNED,
-  CLAIM,
-  CLAIM_RETURNED,
-  GET_CLAIMABLE,
-  GET_CLAIMABLE_RETURNED,
-  GET_YCRV_REQUIREMENTS,
-  GET_YCRV_REQUIREMENTS_RETURNED,
-  GET_GOVERNANCE_REQUIREMENTS,
-  GET_GOVERNANCE_REQUIREMENTS_RETURNED,
-  REGISTER_VOTE,
-  REGISTER_VOTE_RETURNED,
-  GET_VOTE_STATUS,
-  GET_VOTE_STATUS_RETURNED
-} from '../constants';
-import Web3 from 'web3';
+  WITHDRAW,
+  WITHDRAW_RETURNED,
+  WRAP,
+  WRAP_RETURNED,
+  UNWRAP,
+  UNWRAP_RETURNED,
+  CONVERT,
+  CONVERT_RETURNED,
+} from "../constants";
+import Web3 from "web3";
 
 import {
   injected,
@@ -53,28 +45,26 @@ import {
   portis,
   squarelink,
   torus,
-  authereum
+  trezor,
+  walletconnect,
+  walletlink,
 } from "./connectors";
 
-import getMyVotes from '../utils/voteFinder.js';
+const rp = require("request-promise");
 
-const rp = require('request-promise');
-const ethers = require('ethers');
-
-const Dispatcher = require('flux').Dispatcher;
-const Emitter = require('events').EventEmitter;
+const Dispatcher = require("flux").Dispatcher;
+const Emitter = require("events").EventEmitter;
 
 const dispatcher = new Dispatcher();
 const emitter = new Emitter();
 
 class Store {
   constructor() {
-
     this.store = {
       votingStatus: false,
       governanceContractVersion: 2,
       currentBlock: 0,
-      universalGasPrice: '70',
+      universalGasPrice: "70",
       account: {},
       web3: null,
       connectorsByName: {
@@ -89,156 +79,92 @@ class Store {
         Portis: portis,
         Squarelink: squarelink,
         Torus: torus,
-        Authereum: authereum
+        Authereum: authereum,
       },
       web3context: null,
       languages: [
         {
-          language: 'English',
-          code: 'en'
+          language: "English",
+          code: "en",
         },
         {
-          language: 'Japanese',
-          code: 'ja'
+          language: "Japanese",
+          code: "ja",
         },
         {
-          language: 'Chinese',
-          code: 'zh'
-        }
+          language: "Chinese",
+          code: "zh",
+        },
       ],
-      proposals: [
-      ],
-      claimableAsset: {
-        id: 'yfi',
-        name: 'yearn.finance',
-        address: config.yfiAddress,
-        abi: config.yfiABI,
-        symbol: 'YFI',
-        balance: 0,
-        decimals: 18,
-        rewardAddress: '0xfc1e690f61efd961294b3e1ce3313fbd8aa4f85d',
-        rewardSymbol: 'aDAI',
-        rewardDecimals: 18,
-        claimableBalance: 0
+      wrapping: {
+        raw: {
+          id: "yfl",
+          symbol: "YFL",
+          name: "YFLink",
+          decimals: 18,
+          address: config.yflAddress,
+          abi: config.yflABI,
+          balance: bigInt(),
+        },
+        wrapper: {
+          id: "wyfl",
+          symbol: "wYFL",
+          name: "Wrapped YFLink",
+          decimals: 18,
+          address: config.yflinkWrapperAddress,
+          abi: config.yflinkWrapperABI,
+          balance: bigInt(),
+        },
       },
+      govProposals: [],
+      yYFLProposals: [],
       rewardPools: [
         {
-          id: 'yearn',
-          name: 'yearn',
-          website: 'curve.fi/y',
-          link: 'https://curve.fi/y',
-          depositsEnabled: false,
+          id: "gov",
+          title: "Gov",
+          name: "Governance",
+          website: "YFLink Token",
+          link: "https://yflink.io",
+          instructionsLink:
+            "https://gov.yflink.io/t/staking-in-the-governance-contract/28",
+          depositsEnabled: true,
           tokens: [
             {
-              id: 'ycurvefi',
-              address: '0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8',
-              symbol: 'curve.fi',
-              abi: config.erc20ABI,
-              decimals: 18,
-              rewardsAddress: config.yCurveFiRewardsAddress,
-              rewardsABI: config.yCurveFiRewardsABI,
-              rewardsSymbol: 'YFI',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        },
-        {
-          id: 'Balancer',
-          name: 'Balancer',
-          website: 'pools.balancer.exchange',
-          link: 'https://pools.balancer.exchange/#/pool/0x60626db611a9957C1ae4Ac5b7eDE69e24A3B76c5',
-          depositsEnabled: false,
-          tokens: [
-            {
-              id: 'bpt',
-              address: '0x60626db611a9957C1ae4Ac5b7eDE69e24A3B76c5',
-              symbol: 'BPT',
-              abi: config.erc20ABI,
-              decimals: 18,
-              rewardsAddress: config.balancerRewardsAddress,
-              rewardsABI: config.balancerRewardsABI,
-              rewardsSymbol: 'YFI',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        },
-        {
-          id: 'Governance',
-          name: 'Governance',
-          website: 'pools.balancer.exchange',
-          link: 'https://pools.balancer.exchange/#/pool/0x95c4b6c7cff608c0ca048df8b81a484aa377172b',
-          depositsEnabled: false,
-          tokens: [
-            {
-              id: 'bpt',
-              address: '0x95c4b6c7cff608c0ca048df8b81a484aa377172b',
-              symbol: 'BPT',
-              abi: config.bpoolABI,
-              decimals: 18,
+              id: "yfl",
+              address: config.yflAddress,
+              symbol: "YFL",
+              abi: config.yflABI,
               rewardsAddress: config.governanceAddress,
               rewardsABI: config.governanceABI,
               rewardsSymbol: 'YFI',
               decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        },
-        {
-          id: 'FeeRewards',
-          name: 'Fee Rewards',
-          website: 'ygov.finance',
-          link: 'https://ygov.finance/',
-          depositsEnabled: false,
-          tokens: [
+              balance: bigInt(),
+              stakedBalance: bigInt(),
+              rewardsAvailable: bigInt(),
+              voteLocked: bigInt(),
+            },
             {
-              id: 'yfi',
-              address: config.yfiAddress,
-              symbol: 'YFI',
-              abi: config.yfiABI,
+              id: "yYFL",
+              address: config.yYFLAddress,
+              symbol: "yYFL",
+              abi: config.yYFLABI,
+              rewardsAddress: config.yYFLGovAddress,
+              rewardsABI: config.yYFLGovABI,
+              rewardsSymbol: null, // No rewards
               decimals: 18,
-              rewardsAddress: config.feeRewardsAddress,
-              rewardsABI: config.feeRewardsABI,
-              rewardsSymbol: '$',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
+              balance: bigInt(),
+              stakedBalance: bigInt(),
+              rewardsAvailable: bigInt(),
+              voteLocked: bigInt(),
+              linkAddress: config.linkAddress,
+              linkABI: config.linkABI,
+              wethAddress: config.wethAddress,
+              wethABI: config.wethABI,
+            },
+          ],
         },
-        {
-          id: 'GovernanceV2',
-          name: 'Governance V2',
-          website: 'ygov.finance',
-          link: 'https://ygov.finance/',
-          depositsEnabled: true,
-          tokens: [
-            {
-              id: 'yfi',
-              address: config.yfiAddress,
-              symbol: 'YFI',
-              abi: config.yfiABI,
-              decimals: 18,
-              rewardsAddress: config.governanceV2Address,
-              rewardsABI: config.governanceV2ABI,
-              rewardsSymbol: '$',
-              decimals: 18,
-              balance: 0,
-              stakedBalance: 0,
-              rewardsAvailable: 0
-            }
-          ]
-        }
-      ]
-    }
+      ],
+    };
 
     dispatcher.register(
       function (payload) {
@@ -265,10 +191,10 @@ class Store {
             this.exit(payload);
             break;
           case PROPOSE:
-            this.propose(payload)
+            this.propose(payload);
             break;
           case GET_PROPOSALS:
-            this.getProposals(payload)
+            this.getProposals(payload);
             break;
           case REGISTER_VOTE:
             this.registerVote(payload)
@@ -277,22 +203,34 @@ class Store {
             this.getVoteStatus(payload)
             break;
           case VOTE_FOR:
-            this.voteFor(payload)
+            this.voteFor(payload);
             break;
           case VOTE_AGAINST:
-            this.voteAgainst(payload)
+            this.voteAgainst(payload);
             break;
           case GET_CLAIMABLE_ASSET:
-            this.getClaimableAsset(payload)
+            this.getClaimableAsset(payload);
             break;
           case CLAIM:
-            this.claim(payload)
+            this.claim(payload);
             break;
           case GET_CLAIMABLE:
-            this.getClaimable(payload)
+            this.getClaimable(payload);
             break;
-          case GET_YCRV_REQUIREMENTS:
-            this.getYCRVRequirements(payload)
+          case GET_GOV_REQUIREMENTS:
+            this.getGovRequirements(payload);
+            break;
+          case GET_WRAPPED:
+            this.getWrapped(payload);
+            break;
+          case WRAP:
+            this.doWrap(payload);
+            break;
+          case UNWRAP:
+            this.doUnwrap(payload);
+            break;
+          case CONVERT:
+            this.convert(payload);
             break;
           case GET_GOVERNANCE_REQUIREMENTS:
             this.getGovernanceV2Requirements(payload)
@@ -304,145 +242,220 @@ class Store {
   }
 
   getStore(index) {
-    return(this.store[index]);
-  };
+    return this.store[index];
+  }
 
   setStore(obj) {
-    this.store = {...this.store, ...obj}
-    // console.log(this.store)
-    return emitter.emit('StoreUpdated');
-  };
+    this.store = { ...this.store, ...obj };
+    return emitter.emit("StoreUpdated");
+  }
 
   configure = async () => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
-    const currentBlock = await web3.eth.getBlockNumber()
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const currentBlock = await web3.eth.getBlockNumber();
 
-    store.setStore({ currentBlock: currentBlock })
+    store.setStore({ currentBlock: currentBlock });
 
     window.setTimeout(() => {
-      emitter.emit(CONFIGURE_RETURNED)
-    }, 100)
-  }
+      emitter.emit(CONFIGURE_RETURNED);
+    }, 100);
+  };
 
   getBalancesPerpetual = async () => {
-    const pools = store.getStore('rewardPools')
-    const account = store.getStore('account')
+    try {
+      const pools = store.getStore("rewardPools");
+      const account = store.getStore("account");
+      const web3 = new Web3(store.getStore("web3context").library.provider);
 
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+      const currentBlock = await web3.eth.getBlockNumber();
+      store.setStore({ currentBlock: currentBlock });
 
-    const currentBlock = await web3.eth.getBlockNumber()
-    store.setStore({ currentBlock: currentBlock })
+      async.map(
+        pools,
+        (pool, callback) => {
+          async.map(
+            pool.tokens,
+            (token, callbackInner) => {
+              async.parallel(
+                [
+                  (callbackInnerInner) => {
+                    this._getERC20Balance(
+                      web3,
+                      token,
+                      account,
+                      callbackInnerInner
+                    );
+                  },
+                  (callbackInnerInner) => {
+                    this._getStakedBalance(
+                      web3,
+                      token,
+                      account,
+                      callbackInnerInner
+                    );
+                  },
+                  (callbackInnerInner) => {
+                    this._getGovBalance(
+                      web3,
+                      token,
+                      account,
+                      callbackInnerInner
+                    );
+                  },
+                  (callbackInnerInner) => {
+                    this._getRewardBalance(
+                      web3,
+                      token,
+                      account,
+                      callbackInnerInner
+                    );
+                  },
+                ],
+                (err, data) => {
+                  if (err) {
+                    console.log(err);
+                    return callbackInner(err);
+                  }
 
-    async.map(pools, (pool, callback) => {
+                  token.balance = data[0];
+                  token.stakedBalance = data[1];
+                  token = { ...token, ...data[2], ...data[3] };
+                  callbackInner(null, token);
+                }
+              );
+            },
+            (err, tokensData) => {
+              if (err) {
+                console.log(err);
+                return callback(err);
+              }
 
-      async.map(pool.tokens, (token, callbackInner) => {
-
-        async.parallel([
-          (callbackInnerInner) => { this._getERC20Balance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getstakedBalance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getRewardsAvailable(web3, token, account, callbackInnerInner) }
-        ], (err, data) => {
-          if(err) {
-            console.log(err)
-            return callbackInner(err)
+              pool.tokens = tokensData;
+              callback(null, pool);
+            }
+          );
+        },
+        (err, poolData) => {
+          if (err) {
+            console.log(err);
+            return emitter.emit(ERROR, err);
           }
-
-          token.balance = data[0]
-          token.stakedBalance = data[1]
-          token.rewardsAvailable = data[2]
-
-          callbackInner(null, token)
-        })
-      }, (err, tokensData) => {
-        if(err) {
-          console.log(err)
-          return callback(err)
+          store.setStore({ rewardPools: poolData });
+          emitter.emit(GET_BALANCES_PERPETUAL_RETURNED);
+          emitter.emit(GET_BALANCES_RETURNED);
         }
-
-        pool.tokens = tokensData
-        callback(null, pool)
-      })
-
-    }, (err, poolData) => {
-      if(err) {
-        console.log(err)
-        return emitter.emit(ERROR, err)
-      }
-      store.setStore({rewardPools: poolData})
-      emitter.emit(GET_BALANCES_PERPETUAL_RETURNED)
-      emitter.emit(GET_BALANCES_RETURNED)
-    })
-  }
+      );
+    } catch (error) {
+      console.error("GET_BALANCES_PERPETUAL", error);
+    }
+  };
 
   getBalances = () => {
-    const pools = store.getStore('rewardPools')
-    const account = store.getStore('account')
+    const pools = store.getStore("rewardPools");
+    const account = store.getStore("account");
+    const web3 = new Web3(store.getStore("web3context").library.provider);
 
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+    async.map(
+      pools,
+      (pool, callback) => {
+        async.map(
+          pool.tokens,
+          (token, callbackInner) => {
+            async.parallel(
+              [
+                (callbackInnerInner) => {
+                  this._getERC20Balance(
+                    web3,
+                    token,
+                    account,
+                    callbackInnerInner
+                  );
+                },
+                (callbackInnerInner) => {
+                  this._getStakedBalance(
+                    web3,
+                    token,
+                    account,
+                    callbackInnerInner
+                  );
+                },
+                (callbackInnerInner) => {
+                  this._getRewardsAvailable(
+                    web3,
+                    token,
+                    account,
+                    callbackInnerInner
+                  );
+                },
+              ],
+              (err, data) => {
+                if (err) {
+                  console.log(err);
+                  return callbackInner(err);
+                }
 
-    async.map(pools, (pool, callback) => {
+                token.balance = data[0];
+                token.stakedBalance = data[1];
+                token.rewardsAvailable = data[2];
 
-      async.map(pool.tokens, (token, callbackInner) => {
+                callbackInner(null, token);
+              }
+            );
+          },
+          (err, tokensData) => {
+            if (err) {
+              console.log(err);
+              return callback(err);
+            }
 
-        async.parallel([
-          (callbackInnerInner) => { this._getERC20Balance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getstakedBalance(web3, token, account, callbackInnerInner) },
-          (callbackInnerInner) => { this._getRewardsAvailable(web3, token, account, callbackInnerInner) }
-        ], (err, data) => {
-          if(err) {
-            console.log(err)
-            return callbackInner(err)
+            pool.tokens = tokensData;
+            callback(null, pool);
           }
-
-          token.balance = data[0]
-          token.stakedBalance = data[1]
-          token.rewardsAvailable = data[2]
-
-          callbackInner(null, token)
-        })
-      }, (err, tokensData) => {
-        if(err) {
-          console.log(err)
-          return callback(err)
+        );
+      },
+      (err, poolData) => {
+        if (err) {
+          console.log(err);
+          return emitter.emit(ERROR, err);
         }
-
-        pool.tokens = tokensData
-        callback(null, pool)
-      })
-
-    }, (err, poolData) => {
-      if(err) {
-        console.log(err)
-        return emitter.emit(ERROR, err)
+        store.setStore({ rewardPools: poolData });
+        emitter.emit(GET_BALANCES_RETURNED);
       }
-      store.setStore({rewardPools: poolData})
-      emitter.emit(GET_BALANCES_RETURNED)
-    })
-  }
+    );
+  };
 
   _checkApproval = async (asset, account, amount, contract, callback) => {
     try {
-      const web3 = new Web3(store.getStore('web3context').library.provider);
+      const web3 = new Web3(store.getStore("web3context").library.provider);
+      const erc20Contract = new web3.eth.Contract(asset.abi, asset.address);
 
-      const erc20Contract = new web3.eth.Contract(asset.abi, asset.address)
-      const allowance = await erc20Contract.methods.allowance(account.address, contract).call({ from: account.address })
+      if (!erc20Contract.methods.allowance) {
+        return callback(); // Doesn't need approval
+      }
+      const allowance = await erc20Contract.methods
+        .allowance(account.address, contract)
+        .call({ from: account.address });
 
-      const ethAllowance = web3.utils.fromWei(allowance, "ether")
-
-      if(parseFloat(ethAllowance) < parseFloat(amount)) {
-        await erc20Contract.methods.approve(contract, web3.utils.toWei("999999999999999", "ether")).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-        callback()
+      console.log("allowance", allowance, asset, contract);
+      if (bigInt(allowance).lesser(amount)) {
+        await erc20Contract.methods
+          .approve(contract, web3.utils.toWei("999999999999999999", "ether"))
+          .send({
+            from: account.address,
+            gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+          });
+        callback();
       } else {
-        callback()
+        callback();
       }
-    } catch(error) {
-      console.log(error)
-      if(error.message) {
-        return callback(error.message)
+    } catch (error) {
+      console.log(error);
+      if (error.message) {
+        return callback(error.message);
       }
-      callback(error)
+      callback(error);
     }
-  }
+  };
 
   _checkApprovalWaitForConfirmation = async (asset, account, amount, contract, callback) => {
     const web3 = new Web3(store.getStore('web3context').library.provider);
@@ -470,40 +483,197 @@ class Store {
   }
 
   _getERC20Balance = async (web3, asset, account, callback) => {
-    let erc20Contract = new web3.eth.Contract(config.erc20ABI, asset.address)
-
+    let erc20Contract = new web3.eth.Contract(asset.abi, asset.address);
     try {
-      var balance = await erc20Contract.methods.balanceOf(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
-      callback(null, parseFloat(balance))
-    } catch(ex) {
-      return callback(ex)
+      let balance = await erc20Contract.methods
+        .balanceOf(account.address)
+        .call({ from: account.address });
+      callback(null, bigInt(balance));
+    } catch (ex) {
+      return callback(ex);
     }
-  }
+  };
 
-  _getstakedBalance = async (web3, asset, account, callback) => {
-    let erc20Contract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
-
-    try {
-      var balance = await erc20Contract.methods.balanceOf(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
-      callback(null, parseFloat(balance))
-    } catch(ex) {
-      return callback(ex)
+  _getStakedBalance = async (web3, asset, account, callback) => {
+    if (asset.symbol === "yYFL") {
+      let yYFLContract = new web3.eth.Contract(
+        asset.rewardsABI,
+        asset.rewardsAddress
+      );
+      try {
+        let balance = await yYFLContract.methods
+          .balanceOf(account.address)
+          .call({ from: account.address });
+        callback(null, bigInt(balance));
+      } catch (ex) {
+        return callback(ex);
+      }
+    } else {
+      let erc20Contract = new web3.eth.Contract(
+        asset.rewardsABI,
+        asset.rewardsAddress
+      );
+      try {
+        let balance = await erc20Contract.methods
+          .balanceOf(account.address)
+          .call({ from: account.address });
+        callback(null, bigInt(balance));
+      } catch (ex) {
+        return callback(ex);
+      }
     }
-  }
+  };
+
+  _getGovBalance = async (web3, asset, account, callback) => {
+    if (asset.symbol === "yYFL") {
+      let yYFLContract = new web3.eth.Contract(asset.abi, asset.address);
+      try {
+        let totalSupply = await yYFLContract.methods
+          .totalSupply()
+          .call({ from: account.address });
+        let yYFLPrice = await yYFLContract.methods
+          .getPricePerFullShare()
+          .call({ from: account.address });
+
+        let voteLockAmount = 0;
+        if (yYFLContract.methods.voteLockAmount) {
+          voteLockAmount = await yYFLContract.methods
+            .voteLockAmount(account.address)
+            .call({ from: account.address });
+        }
+
+        const balances = {
+          totalSupply: bigInt(totalSupply),
+          yYFLPrice: bigInt(yYFLPrice),
+          voteLocked: bigInt(voteLockAmount),
+        };
+        callback(null, balances);
+      } catch (ex) {
+        return callback(ex);
+      }
+    } else if (asset.symbol === "YFL") {
+      let yYFLContract = new web3.eth.Contract(asset.abi, asset.address);
+      try {
+        let totalSupply = await yYFLContract.methods
+          .totalSupply()
+          .call({ from: account.address });
+        let yflinkValue = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=yflink&vs_currencies=usd"
+        ).then((resp) => {
+          return resp.json();
+        });
+        let voteLockAmount = 0;
+        if (yYFLContract.methods.voteLockAmount) {
+          voteLockAmount = await yYFLContract.methods
+            .voteLockAmount(account.address)
+            .call({ from: account.address });
+        }
+
+        const balances = {
+          totalSupply: bigInt(totalSupply),
+          yflPrice:
+            (yflinkValue && yflinkValue.yflink && yflinkValue.yflink.usd) || 0,
+          voteLocked: bigInt(voteLockAmount),
+        };
+        callback(null, balances);
+      } catch (ex) {
+        return callback(ex);
+      }
+    } else {
+      const balances = {
+        totalSupply: bigInt(),
+        yYFLPrice: bigInt(),
+      };
+      callback(null, balances);
+    }
+  };
+  _getRewardBalance = async (web3, asset, account, callback) => {
+    if (asset.symbol === "yYFL") {
+      try {
+        const linkContract = new web3.eth.Contract(
+          asset.linkABI,
+          asset.linkAddress
+        );
+        const wethContract = new web3.eth.Contract(
+          asset.wethABI,
+          asset.wethAddress
+        );
+
+        const linkBalance = await linkContract.methods
+          .balanceOf(asset.address)
+          .call({ from: account.address });
+        const wethBalance = await wethContract.methods
+          .balanceOf(asset.address)
+          .call({ from: account.address });
+
+        const {
+          chainlink: { usd: linkPrice },
+        } = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=chainlink&vs_currencies=usd"
+        ).then((resp) => {
+          return resp.json();
+        });
+
+        const {
+          weth: { usd: wethPrice },
+        } = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=weth&vs_currencies=usd"
+        ).then((resp) => {
+          return resp.json();
+        });
+
+        const balances = {
+          linkBalance: bigInt(linkBalance),
+          wethBalance: bigInt(wethBalance),
+          linkPrice,
+          wethPrice,
+        };
+        callback(null, balances);
+      } catch (ex) {
+        return callback(ex);
+      }
+    } else {
+      const balances = {};
+      callback(null, balances);
+    }
+  };
 
   _getRewardsAvailable = async (web3, asset, account, callback) => {
-    let erc20Contract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
-
-    try {
-      var earned = await erc20Contract.methods.earned(account.address).call({ from: account.address });
-      earned = parseFloat(earned)/10**asset.decimals
-      callback(null, parseFloat(earned))
-    } catch(ex) {
-      return callback(ex)
+    if (!asset.rewardsSymbol) {
+      callback(null, bigInt(0));
+      return;
     }
-  }
+    let erc20Contract = new web3.eth.Contract(
+      asset.rewardsABI,
+      asset.rewardsAddress
+    );
+    try {
+      let earned = await erc20Contract.methods
+        .earned(account.address)
+        .call({ from: account.address });
+      callback(null, bigInt(earned));
+    } catch (ex) {
+      return callback(ex);
+    }
+  };
+
+  _getVoteLockAmount = async (web3, asset, account, callback) => {
+    let rewardsContract = new web3.eth.Contract(
+      asset.rewardsABI,
+      asset.rewardsAddress
+    );
+    try {
+      if (!rewardsContract.methods.voteLockAmount) {
+        return callback(null, bigInt(0));
+      }
+      let balance = await rewardsContract.methods
+        .voteLockAmount(account.address)
+        .call({ from: account.address });
+      callback(null, bigInt(balance));
+    } catch (ex) {
+      return callback(ex);
+    }
+  };
 
   _checkIfApprovalIsNeeded = async (asset, account, amount, contract, callback, overwriteAddress) => {
     const web3 = new Web3(store.getStore('web3context').library.provider);
@@ -549,375 +719,548 @@ class Store {
   }
 
   stake = (payload) => {
-    const account = store.getStore('account')
-    const { asset, amount } = payload.content
+    const account = store.getStore("account");
+    const { asset, amount, type } = payload.content;
 
-    this._checkApproval(asset, account, amount, asset.rewardsAddress, (err) => {
-      if(err) {
+    if (type === "LINKSWAP") {
+      const { yflAsset } = payload.content;
+      this._checkApproval(
+        yflAsset,
+        account,
+        amount,
+        asset.rewardsAddress,
+        (err) => {
+          if (err) {
+            return emitter.emit(ERROR, err);
+          }
+
+          this._callStake(asset, account, amount, (err, res) => {
+            if (err) {
+              return emitter.emit(ERROR, err);
+            }
+
+            return emitter.emit(STAKE_RETURNED, res);
+          });
+        }
+      );
+    } else {
+      this._checkApproval(
+        asset,
+        account,
+        amount,
+        asset.rewardsAddress,
+        (err) => {
+          if (err) {
+            return emitter.emit(ERROR, err);
+          }
+
+          this._callStake(asset, account, amount, (err, res) => {
+            if (err) {
+              return emitter.emit(ERROR, err);
+            }
+
+            return emitter.emit(STAKE_RETURNED, res);
+          });
+        }
+      );
+    }
+  };
+
+  _callStake = async (asset, account, amount, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const rewardsContract = new web3.eth.Contract(
+      asset.rewardsABI,
+      asset.rewardsAddress
+    );
+
+    console.debug(amount.toString());
+    rewardsContract.methods
+      .stake(amount.toString())
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_BALANCES, content: {} });
+        }
+      })
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
+
+  withdraw = (payload) => {
+    const account = store.getStore("account");
+    const { asset, amount } = payload.content;
+
+    this._callWithdraw(asset, account, amount, (err, res) => {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
-      this._callStake(asset, account, amount, (err, res) => {
-        if(err) {
+      return emitter.emit(WITHDRAW_RETURNED, res);
+    });
+  };
+
+  _callWithdraw = async (asset, account, amount, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const rewardsContract = new web3.eth.Contract(
+      asset.rewardsABI,
+      asset.rewardsAddress
+    );
+
+    rewardsContract.methods
+      .withdraw(amount.toString())
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_BALANCES, content: {} });
+        }
+      })
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
+
+  getReward = (payload) => {
+    const account = store.getStore("account");
+    const { asset } = payload.content;
+
+    this._callGetReward(asset, account, (err, res) => {
+      if (err) {
+        return emitter.emit(ERROR, err);
+      }
+
+      return emitter.emit(GET_REWARDS_RETURNED, res);
+    });
+  };
+
+  _callGetReward = async (asset, account, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const rewardsContract = new web3.eth.Contract(
+      asset.rewardsABI,
+      asset.rewardsAddress
+    );
+
+    rewardsContract.methods
+      .getReward()
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_BALANCES, content: {} });
+        }
+      })
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
+
+  exit = (payload) => {
+    const account = store.getStore("account");
+    const { asset } = payload.content;
+
+    this._callExit(asset, account, (err, res) => {
+      if (err) {
+        return emitter.emit(ERROR, err);
+      }
+
+      return emitter.emit(EXIT_RETURNED, res);
+    });
+  };
+
+  _callExit = async (asset, account, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const rewardsContract = new web3.eth.Contract(
+      asset.rewardsABI,
+      asset.rewardsAddress
+    );
+
+    rewardsContract.methods
+      .exit()
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_BALANCES, content: {} });
+        }
+      })
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
+
+  propose = (payload) => {
+    const account = store.getStore("account");
+    const { type } = payload.content;
+
+    if (type === "URL") {
+      const { url } = payload.content;
+      this._callUrlPropose(account, url, (err, res) => {
+        if (err) {
           return emitter.emit(ERROR, err);
         }
 
-        return emitter.emit(STAKE_RETURNED, res)
-      })
-    })
-  }
+        return emitter.emit(PROPOSE_RETURNED, res);
+      });
+    } else if (type === "FUNCTION") {
+      const { description, parameters } = payload.content;
 
-  _callStake = async (asset, account, amount, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+      this._callFunctionPropose(
+        account,
+        description,
+        parameters,
+        (err, res) => {
+          if (err) {
+            return emitter.emit(ERROR, err);
+          }
 
-    const yCurveFiContract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
-
-    var amountToSend = web3.utils.toWei(amount, "ether")
-    if (asset.decimals != 18) {
-      amountToSend = (amount*10**asset.decimals).toFixed(0);
+          return emitter.emit(PROPOSE_RETURNED, res);
+        }
+      );
     }
+  };
 
-    yCurveFiContract.methods.stake(amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
+  _callUrlPropose = async (account, url, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const governanceContract = new web3.eth.Contract(
+      config.governanceABI,
+      config.governanceAddress
+    );
+    const call = governanceContract.methods.propose(url);
+
+    call
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_BALANCES, content: {} })
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_BALANCES, content: {} });
         }
       })
-      .on('receipt', function(receipt){
+      .on("receipt", function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on("error", function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
         }
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
         }
+      });
+  };
+
+  _callFunctionPropose = async (account, description, parameters, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const yYFLContract = new web3.eth.Contract(
+      config.yYFLGovABI,
+      config.yYFLGovAddress
+    );
+    const call = yYFLContract.methods.propose(
+      parameters.targets,
+      parameters.values,
+      parameters.signatures,
+      parameters.calldatas,
+      description
+    );
+
+    call
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
       })
-  }
-
-  withdraw = (payload) => {
-    const account = store.getStore('account')
-    const { asset, amount } = payload.content
-
-    this._callWithdraw(asset, account, amount, (err, res) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
-      }
-
-      return emitter.emit(WITHDRAW_RETURNED, res)
-    })
-  }
-
-  _callWithdraw = async (asset, account, amount, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
-
-    const yCurveFiContract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
-
-    var amountToSend = web3.utils.toWei(amount, "ether")
-    if (asset.decimals != 18) {
-      amountToSend = (amount*10**asset.decimals).toFixed(0);
-    }
-
-    yCurveFiContract.methods.withdraw(amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on("confirmation", function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_BALANCES, content: {} })
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_BALANCES, content: {} });
         }
       })
-      .on('receipt', function(receipt){
+      .on("receipt", function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on("error", function (error) {
+        console.log("propose error", error);
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
         }
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
         }
-      })
-  }
-
-  getReward = (payload) => {
-    const account = store.getStore('account')
-    const { asset } = payload.content
-
-    this._callGetReward(asset, account, (err, res) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
-      }
-
-      return emitter.emit(GET_REWARDS_RETURNED, res)
-    })
-  }
-
-  _callGetReward = async (asset, account, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
-
-    const yCurveFiContract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
-
-    yCurveFiContract.methods.getReward().send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
-      })
-      .on('confirmation', function(confirmationNumber, receipt){
-        console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_BALANCES, content: {} })
-        }
-      })
-      .on('receipt', function(receipt){
-        console.log(receipt);
-      })
-      .on('error', function(error) {
-        if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
-          }
-          callback(error)
-        }
-      })
-      .catch((error) => {
-        if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
-          }
-          callback(error)
-        }
-      })
-  }
-
-  exit = (payload) => {
-    const account = store.getStore('account')
-    const { asset } = payload.content
-
-    this._callExit(asset, account, (err, res) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
-      }
-
-      return emitter.emit(EXIT_RETURNED, res)
-    })
-  }
-
-  _callExit = async (asset, account, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
-
-    const yCurveFiContract = new web3.eth.Contract(asset.rewardsABI, asset.rewardsAddress)
-
-    yCurveFiContract.methods.exit().send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
-      })
-      .on('confirmation', function(confirmationNumber, receipt){
-        console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_BALANCES, content: {} })
-        }
-      })
-      .on('receipt', function(receipt){
-        console.log(receipt);
-      })
-      .on('error', function(error) {
-        if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
-          }
-          callback(error)
-        }
-      })
-      .catch((error) => {
-        if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
-          }
-          callback(error)
-        }
-      })
-  }
-
-  propose = (payload) => {
-    const account = store.getStore('account')
-    const { executor, hash } = payload.content
-
-    this._callPropose(account, executor, hash, (err, res) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
-      }
-
-      return emitter.emit(PROPOSE_RETURNED, res)
-    })
-  }
-
-  _callPropose = async (account, executor, hash, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
-
-    const governanceContractVersion = store.getStore('governanceContractVersion')
-    const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-    const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
-
-    const governanceContract = new web3.eth.Contract(abi,address)
-
-    let call = null
-    if(governanceContractVersion === 1) {
-      call = governanceContract.methods.propose()
-    } else {
-      call = governanceContract.methods.propose(executor, hash)
-    }
-
-    call.send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
-      })
-      .on('confirmation', function(confirmationNumber, receipt){
-        console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_BALANCES, content: {} })
-        }
-      })
-      .on('receipt', function(receipt){
-        console.log(receipt);
-      })
-      .on('error', function(error) {
-        if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
-          }
-          callback(error)
-        }
-      })
-      .catch((error) => {
-        if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
-          }
-          callback(error)
-        }
-      })
-  }
+      });
+  };
 
   getProposals = (payload) => {
     // emitter.emit(GET_PROPOSALS_RETURNED)
-    const account = store.getStore('account')
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+    const account = store.getStore("account");
+    const web3 = new Web3(store.getStore("web3context").library.provider);
 
-    this._getProposalCount(web3, account, (err, proposalCount) => {
-      if(err) {
+    this._getGovProposalCount(web3, account, (err, proposalCount) => {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
-      let arr = Array.from(Array(parseInt(proposalCount)).keys())
+      let arr = Array.from(Array(parseInt(proposalCount)).keys());
 
-      if(proposalCount == 0) {
-        arr = []
+      if (proposalCount === 0) {
+        arr = [];
       }
 
-      async.map(arr, (proposal, callback) => {
-        this._getProposals(web3, account, proposal, callback)
-      }, (err, proposalsData) => {
-        if(err) {
+      async.map(
+        arr,
+        (proposal, callback) => {
+          this._getGovProposals(web3, account, proposal, callback);
+        },
+        (err, proposalsData) => {
+          if (err) {
+            return emitter.emit(ERROR, err);
+          }
+
+          store.setStore({ govProposals: proposalsData });
+          emitter.emit(GET_PROPOSALS_RETURNED);
+        }
+      );
+    });
+
+    this._getYYFLProposalCreatedEvents(web3, (err, proposalData) => {
+      if (err) {
+        return emitter.emit(ERROR, err);
+      }
+      this._getYYFLProposalCount(web3, account, (err, proposalCount) => {
+        if (err) {
           return emitter.emit(ERROR, err);
         }
 
-        store.setStore({ proposals: proposalsData })
-        emitter.emit(GET_PROPOSALS_RETURNED)
-      })
+        let arr = Array.from(Array(parseInt(proposalCount)).keys());
 
-    })
-  }
+        if (proposalCount === 0) {
+          arr = [];
+        }
 
-  _getProposalCount = async (web3, account, callback) => {
+        async.map(
+          arr,
+          (proposal, callback) => {
+            this._getYYFLProposals(web3, account, proposal, callback);
+          },
+          (err, proposals) => {
+            if (err) {
+              return emitter.emit(ERROR, err);
+            }
+            const updatedProposals = proposals.map((item, index) => {
+              return { ...item, ...proposalData[index] };
+            });
+            store.setStore({ yYFLProposals: updatedProposals });
+            emitter.emit(GET_PROPOSALS_RETURNED);
+          }
+        );
+      });
+    });
+  };
+
+  _getGovProposalCount = async (web3, account, callback) => {
     try {
-
-      const governanceContractVersion = store.getStore('governanceContractVersion')
-      const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-      const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
-
-      const governanceContract = new web3.eth.Contract(abi, address)
-      var proposals = await governanceContract.methods.proposalCount().call({ from: account.address });
-      callback(null, proposals)
-    } catch(ex) {
-      return callback(ex)
+      const governanceContract = new web3.eth.Contract(
+        config.governanceABI,
+        config.governanceAddress
+      );
+      let proposals = await governanceContract.methods
+        .proposalCount()
+        .call({ from: account.address });
+      callback(null, proposals);
+    } catch (ex) {
+      return callback(ex);
     }
-  }
+  };
 
-  _getProposals = async (web3, account, number, callback) => {
+  _getYYFLProposalCount = async (web3, account, callback) => {
     try {
-
-      const governanceContractVersion = store.getStore('governanceContractVersion')
-      const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-      const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
-
-      const governanceContract = new web3.eth.Contract(abi, address)
-      var proposal = await governanceContract.methods.proposals(number).call({ from: account.address });
-
-      /*
-        Get the current votes from the govContract of the current wallet and set some fields on the proposal which can be used easily in the frontend.
-
-        The govContract allows to re-vote at any time while the proposal is still open, so it's okay to first vote FOR and at a later time
-        to vote AGAINST as all votes are shifted either into the FOR or the AGAINST bucket which is taken care of by the contract.
-        When people increase or decrease the amount of YFI they're staking into ygov, they can re-vote with more or less votes as long as the
-        proposal is still pending.
-      */
-      const {
-        myVotes,
-        direction
-      } = await getMyVotes(web3, address, account.address, proposal.id);
-      const totalVotes = Number(proposal.totalForVotes) + Number(proposal.totalAgainstVotes);
-      const myVotesRatio = Number(totalVotes) === 0 ? 0 : myVotes / totalVotes;
-
-      // myTotalVotes represents the currently staked votes for a wallet
-      const myTotalVotes = await governanceContract.methods.votesOf(account.address).call({ from: account.address });
-
-      // calculate the available votes that could be used for voting
-      const availableVotes = Math.max(myTotalVotes - myVotes, 0);
-      const currentBlock = await web3.eth.getBlockNumber();
-      const isPendingVote = Number(proposal.start) <= currentBlock && currentBlock <= Number(proposal.end);
-
-      proposal.myVotes = myVotes;
-      proposal.direction = direction;
-      proposal.myVotesRatio = myVotesRatio;
-      proposal.availableVotes = availableVotes;
-      proposal.canStillVote = isPendingVote && availableVotes > 0;
-      proposal.executor = governanceContractVersion === 1 ? '0x0000000000000000000000000000000000000000' : proposal.executor
-      proposal.hash = governanceContractVersion === 1 ? 'na' : proposal.hash
-      proposal.quorum = governanceContractVersion === 1 ? 'na' : proposal.quorum
-      proposal.quorumRequired = governanceContractVersion === 1 ? 'na' : proposal.quorumRequired
-
-      callback(null, proposal)
-    } catch(ex) {
-      return callback(ex)
+      const yYFLContract = new web3.eth.Contract(
+        config.yYFLGovABI,
+        config.yYFLGovAddress
+      );
+      let proposals = await yYFLContract.methods
+        .proposalCount()
+        .call({ from: account.address });
+      callback(null, proposals);
+    } catch (err) {
+      return callback(err);
     }
-  }
+  };
+
+  _getGovProposals = async (web3, account, number, callback) => {
+    try {
+      const governanceContract = new web3.eth.Contract(
+        config.governanceABI,
+        config.governanceAddress
+      );
+      let proposal = await governanceContract.methods
+        .proposals(number)
+        .call({ from: account.address });
+      callback(null, proposal);
+    } catch (ex) {
+      return callback(ex);
+    }
+  };
+  _getYYFLProposals = async (web3, account, number, callback) => {
+    try {
+      const yYFLContract = new web3.eth.Contract(
+        config.yYFLGovABI,
+        config.yYFLGovAddress
+      );
+      let proposal = await yYFLContract.methods
+        .proposals(number)
+        .call({ from: account.address });
+      callback(null, proposal);
+    } catch (ex) {
+      return callback(ex);
+    }
+  };
+
+  _getYYFLProposalCreatedEvents = async (web3, callback) => {
+    try {
+      const yYFLContract = new web3.eth.Contract(
+        config.yYFLGovABI,
+        config.yYFLGovAddress
+      );
+      const proposalEvents = await yYFLContract.getPastEvents(
+        "ProposalCreated",
+        {
+          fromBlock: 0,
+          toBlock: "latest",
+        }
+      );
+
+      const proposals = proposalEvents.reduce((data, event) => {
+        let newData = { ...data };
+        newData[event.returnValues.id] = {
+          ...event.returnValues,
+          address: event.address,
+        };
+        return newData;
+      }, {});
+      callback(null, proposals);
+    } catch (ex) {
+      return callback(ex);
+    }
+  };
 
   getVoteStatus = async (payload) => {
     try {
@@ -985,255 +1328,500 @@ class Store {
   }
 
   voteFor = (payload) => {
-    const account = store.getStore('account')
-    const { proposal } = payload.content
+    const account = store.getStore("account");
+    const { proposal, amount, type } = payload.content;
 
-    this._callVoteFor(proposal, account, (err, res) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
-      }
+    if (type === "GOV") {
+      this._callGovVoteFor(proposal, account, (err, res) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
 
-      return emitter.emit(VOTE_FOR_RETURNED, res)
-    })
-  }
+        return emitter.emit(VOTE_FOR_RETURNED, res);
+      });
+    } else if (type === "LINKSWAP") {
+      this._callLinkswapVoteFor(proposal, amount, account, (err, res) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
 
-  _callVoteFor = async (proposal, account, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+        return emitter.emit(VOTE_FOR_RETURNED, res);
+      });
+    }
+  };
 
-    const governanceContractVersion = store.getStore('governanceContractVersion')
-    const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-    const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
+  _callGovVoteFor = async (proposal, account, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const governanceContract = new web3.eth.Contract(
+      config.governanceABI,
+      config.governanceAddress
+    );
 
-    const governanceContract = new web3.eth.Contract(abi,address)
-
-    governanceContract.methods.voteFor(proposal.id).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
+    governanceContract.methods
+      .voteFor(proposal.id)
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_PROPOSALS, content: {} })
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
         }
       })
-      .on('receipt', function(receipt){
+      .on("receipt", function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on("error", function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
         }
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
+        }
+      });
+  };
+
+  _callLinkswapVoteFor = async (proposal, amount, account, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const yYFLContract = new web3.eth.Contract(
+      config.yYFLGovABI,
+      config.yYFLGovAddress
+    );
+
+    yYFLContract.methods
+      .vote(proposal.id, true, amount.toString())
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
         }
       })
-  }
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
 
   voteAgainst = (payload) => {
-    const account = store.getStore('account')
-    const { proposal } = payload.content
+    const account = store.getStore("account");
+    const { proposal, amount, type } = payload.content;
 
-    this._callVoteAgainst(proposal, account, (err, res) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
-      }
+    if (type === "GOV") {
+      this._callGovVoteAgainst(proposal, account, (err, res) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
 
-      return emitter.emit(VOTE_AGAINST_RETURNED, res)
-    })
-  }
+        return emitter.emit(VOTE_AGAINST_RETURNED, res);
+      });
+    } else if (type === "LINKSWAP") {
+      this._callLinkswapVoteAgainst(proposal, amount, account, (err, res) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
 
-  _callVoteAgainst = async (proposal, account, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+        return emitter.emit(VOTE_FOR_RETURNED, res);
+      });
+    }
+  };
 
-    const governanceContractVersion = store.getStore('governanceContractVersion')
-    const abi = governanceContractVersion === 1 ? config.governanceABI  : config.governanceV2ABI
-    const address = governanceContractVersion === 1 ? config.governanceAddress  : config.governanceV2Address
+  _callGovVoteAgainst = async (proposal, account, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const governanceContract = new web3.eth.Contract(
+      config.governanceABI,
+      config.governanceAddress
+    );
 
-    const governanceContract = new web3.eth.Contract(abi,address)
-
-    governanceContract.methods.voteAgainst(proposal.id).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
+    governanceContract.methods
+      .voteAgainst(proposal.id)
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_PROPOSALS, content: {} })
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
         }
       })
-      .on('receipt', function(receipt){
+      .on("receipt", function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on("error", function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
         }
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
+        }
+      });
+  };
+
+  _callLinkswapVoteAgainst = async (proposal, amount, account, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const yYFLContract = new web3.eth.Contract(
+      config.yYFLGovABI,
+      config.yYFLGovAddress
+    );
+
+    yYFLContract.methods
+      .vote(proposal.id, false, amount.toString())
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
         }
       })
-  }
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
 
-  getClaimableAsset = (payload) => {
-    const account = store.getStore('account')
-    const asset = store.getStore('claimableAsset')
+  getClaimableAsset = (_payload) => {
+    const account = store.getStore("account");
+    const asset = store.getStore("claimableAsset");
 
-    const web3 = new Web3(store.getStore('web3context').library.provider);
+    const web3 = new Web3(store.getStore("web3context").library.provider);
 
-    async.parallel([
-      (callbackInnerInner) => { this._getClaimableBalance(web3, asset, account, callbackInnerInner) },
-      (callbackInnerInner) => { this._getClaimable(web3, asset, account, callbackInnerInner) },
-    ], (err, data) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
+    async.parallel(
+      [
+        (callbackInnerInner) => {
+          this._getClaimableBalance(web3, asset, account, callbackInnerInner);
+        },
+        (callbackInnerInner) => {
+          this._getClaimable(web3, asset, account, callbackInnerInner);
+        },
+      ],
+      (err, data) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
+
+        asset.balance = data[0];
+        asset.claimableBalance = data[1];
+
+        store.setStore({ claimableAsset: asset });
+        emitter.emit(GET_CLAIMABLE_ASSET_RETURNED);
       }
-
-      asset.balance = data[0]
-      asset.claimableBalance = data[1]
-
-      store.setStore({claimableAsset: asset})
-      emitter.emit(GET_CLAIMABLE_ASSET_RETURNED)
-    })
-  }
+    );
+  };
 
   _getClaimableBalance = async (web3, asset, account, callback) => {
-    let erc20Contract = new web3.eth.Contract(asset.abi, asset.address)
+    let erc20Contract = new web3.eth.Contract(asset.abi, asset.address);
 
     try {
-      var balance = await erc20Contract.methods.balanceOf(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
-      callback(null, parseFloat(balance))
-    } catch(ex) {
-      return callback(ex)
+      let balance = await erc20Contract.methods
+        .balanceOf(account.address)
+        .call({ from: account.address });
+      callback(null, bigInt(balance));
+    } catch (ex) {
+      return callback(ex);
     }
-  }
+  };
 
   _getClaimable = async (web3, asset, account, callback) => {
-    let claimContract = new web3.eth.Contract(config.claimABI, config.claimAddress)
+    let claimContract = new web3.eth.Contract(
+      config.claimABI,
+      config.claimAddress
+    );
 
     try {
-      var balance = await claimContract.methods.claimable(account.address).call({ from: account.address });
-      balance = parseFloat(balance)/10**asset.decimals
-      callback(null, parseFloat(balance))
-    } catch(ex) {
-      return callback(ex)
+      let balance = await claimContract.methods
+        .claimable(account.address)
+        .call({ from: account.address });
+      callback(null, bigInt(balance));
+    } catch (ex) {
+      return callback(ex);
     }
-  }
+  };
+  convert = (payload) => {
+    const account = store.getStore("account");
+    const { asset, tokens, amounts } = payload.content;
+    console.log("asset, tokens, amounts", asset, tokens, amounts, account);
+    this._callConvert(asset, account, tokens, amounts, (err, res) => {
+      if (err) {
+        return emitter.emit(ERROR, err);
+      }
+      return emitter.emit(CONVERT_RETURNED, res);
+    });
+  };
+
+  _callConvert = async (asset, account, tokens, amounts, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const yYFLContract = new web3.eth.Contract(asset.abi, asset.address);
+    try {
+      const result = await yYFLContract.methods
+        .convertTokensToYfl(tokens, amounts)
+        .call({ from: account.address });
+      callback(null, result);
+    } catch (error) {
+      console.log("CONVERT ERROR", error);
+      callback(error);
+    }
+  };
 
   claim = (payload) => {
-    const account = store.getStore('account')
-    const asset = store.getStore('claimableAsset')
-    const { amount } = payload.content
+    const account = store.getStore("account");
+    const asset = store.getStore("claimableAsset");
+    const { amount } = payload.content;
 
     this._checkApproval(asset, account, amount, config.claimAddress, (err) => {
-      if(err) {
+      if (err) {
         return emitter.emit(ERROR, err);
       }
 
       this._callClaim(asset, account, amount, (err, res) => {
-        if(err) {
+        if (err) {
           return emitter.emit(ERROR, err);
         }
 
-        return emitter.emit(CLAIM_RETURNED, res)
-      })
-    })
-  }
+        return emitter.emit(CLAIM_RETURNED, res);
+      });
+    });
+  };
 
   _callClaim = async (asset, account, amount, callback) => {
-    const web3 = new Web3(store.getStore('web3context').library.provider);
-
-    const claimContract = new web3.eth.Contract(config.claimABI, config.claimAddress)
-
-    var amountToSend = web3.utils.toWei(amount, "ether")
-    if (asset.decimals != 18) {
-      amountToSend = (amount*10**asset.decimals).toFixed(0);
-    }
-
-    claimContract.methods.claim(amountToSend).send({ from: account.address, gasPrice: web3.utils.toWei(await this._getGasPrice(), 'gwei') })
-      .on('transactionHash', function(hash){
-        console.log(hash)
-        callback(null, hash)
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const claimContract = new web3.eth.Contract(
+      config.claimABI,
+      config.claimAddress
+    );
+    claimContract.methods
+      .claim(amount.toString())
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
       })
-      .on('confirmation', function(confirmationNumber, receipt){
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
         console.log(confirmationNumber, receipt);
-        if(confirmationNumber == 2) {
-          dispatcher.dispatch({ type: GET_CLAIMABLE_ASSET, content: {} })
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_CLAIMABLE_ASSET, content: {} });
         }
       })
-      .on('receipt', function(receipt){
+      .on("receipt", function (receipt) {
         console.log(receipt);
       })
-      .on('error', function(error) {
+      .on("error", function (error) {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
         }
       })
       .catch((error) => {
         if (!error.toString().includes("-32601")) {
-          if(error.message) {
-            return callback(error.message)
+          if (error.message) {
+            return callback(error.message);
           }
-          callback(error)
+          callback(error);
+        }
+      });
+  };
+
+  getClaimable = (_payload) => {
+    const account = store.getStore("account");
+    const asset = store.getStore("claimableAsset");
+
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+
+    async.parallel(
+      [
+        (callbackInnerInner) => {
+          this._getClaimableBalance(web3, asset, account, callbackInnerInner);
+        },
+        (callbackInnerInner) => {
+          this._getClaimable(web3, asset, account, callbackInnerInner);
+        },
+      ],
+      (err, data) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
+
+        asset.balance = data[0];
+        asset.claimableBalance = data[1];
+
+        store.setStore({ claimableAsset: asset });
+        emitter.emit(GET_CLAIMABLE_RETURNED);
+      }
+    );
+  };
+
+  getWrapped = () => {
+    const account = store.getStore("account");
+    const wrapping = store.getStore("wrapping");
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+
+    async.parallel(
+      [
+        (cb) => {
+          this._getERC20Balance(web3, wrapping.raw, account, cb);
+        },
+        (cb) => {
+          this._getERC20Balance(web3, wrapping.wrapper, account, cb);
+        },
+      ],
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          return emitter.emit(ERROR, err);
+        }
+        wrapping.raw.balance = data[0];
+        wrapping.wrapper.balance = data[1];
+        store.setStore({ wrapping: wrapping });
+        emitter.emit(GET_WRAPPED_RETURNED, wrapping);
+      }
+    );
+  };
+
+  doWrap = (payload) => {
+    const account = store.getStore("account");
+    const wrapping = store.getStore("wrapping");
+    const { amount } = payload.content;
+
+    this._checkApproval(
+      wrapping.raw,
+      account,
+      amount,
+      wrapping.wrapper.address,
+      (err) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
+
+        this._callWrap(wrapping.wrapper, account, amount, (err, res) => {
+          if (err) {
+            return emitter.emit(ERROR, err);
+          }
+
+          return emitter.emit(WRAP_RETURNED, res);
+        });
+      }
+    );
+  };
+
+  _callWrap = async (wrapper, account, amount, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const wrapperContract = new web3.eth.Contract(wrapper.abi, wrapper.address);
+
+    wrapperContract.methods
+      .wrap(amount.toString())
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_WRAPPED, content: {} });
         }
       })
-  }
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
 
-  getClaimable = (payload) => {
-    const account = store.getStore('account')
-    const asset = store.getStore('claimableAsset')
-
-    const web3 = new Web3(store.getStore('web3context').library.provider);
-
-    async.parallel([
-      (callbackInnerInner) => { this._getClaimableBalance(web3, asset, account, callbackInnerInner) },
-      (callbackInnerInner) => { this._getClaimable(web3, asset, account, callbackInnerInner) },
-    ], (err, data) => {
-      if(err) {
-        return emitter.emit(ERROR, err);
-      }
-
-      asset.balance = data[0]
-      asset.claimableBalance = data[1]
-
-      store.setStore({claimableAsset: asset})
-      emitter.emit(GET_CLAIMABLE_RETURNED)
-    })
-  }
-
-  getYCRVRequirements = async (payload) => {
-    try {
-      const account = store.getStore('account')
-      const web3 = new Web3(store.getStore('web3context').library.provider);
-
-      const governanceContract = new web3.eth.Contract(config.governanceABI,config.governanceAddress)
-
-      let balance = await governanceContract.methods.balanceOf(account.address).call({ from: account.address })
-      balance = parseFloat(balance)/10**18
-
-      const voteLock = await governanceContract.methods.voteLock(account.address).call({ from: account.address })
-      const currentBlock = await web3.eth.getBlockNumber()
+  doUnwrap = (payload) => {
+    const account = store.getStore("account");
+    const wrapping = store.getStore("wrapping");
+    const { amount } = payload.content;
 
       const returnOBJ = {
         balanceValid: (balance > 1000),
@@ -1241,51 +1829,94 @@ class Store {
         voteLock: voteLock
       }
 
-      emitter.emit(GET_YCRV_REQUIREMENTS_RETURNED, returnOBJ)
+      return emitter.emit(UNWRAP_RETURNED, res);
+    });
+  };
 
-    } catch(ex) {
-      return emitter.emit(ERROR, ex);
-    }
-  }
+  _callUnwrap = async (wrapper, account, amount, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const wrapperContract = new web3.eth.Contract(wrapper.abi, wrapper.address);
+
+    wrapperContract.methods
+      .unwrap(amount.toString())
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_WRAPPED, content: {} });
+        }
+      })
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
+  };
 
   getGovernanceV2Requirements = async (payload) => {
     try {
-      const account = store.getStore('account')
-      const web3 = new Web3(store.getStore('web3context').library.provider);
+      const account = store.getStore("account");
+      const web3 = new Web3(store.getStore("web3context").library.provider);
+      const governanceContract = new web3.eth.Contract(
+        config.governanceABI,
+        config.governanceAddress
+      );
 
-      const governanceContract = new web3.eth.Contract(config.governanceV2ABI,config.governanceV2Address)
-      
-      const breaker = await governanceContract.methods.breaker().call()
-      const voteLock = await governanceContract.methods.voteLock(account.address).call({ from: account.address })
-      const currentBlock = await web3.eth.getBlockNumber()
-    
+      // let balance = await governanceContract.methods.balanceOf(account.address).call({ from: account.address })
+      // balance = bigInt(balance)
+
+      const voteLock = await governanceContract.methods
+        .voteLock(account.address)
+        .call({ from: account.address });
+      const currentBlock = await web3.eth.getBlockNumber();
+
       const returnOBJ = {
         breakerEnabled: breaker,
         voteLockValid: voteLock > currentBlock,
-        voteLock: voteLock
-      }
+        voteLock: voteLock,
+      };
 
-      emitter.emit(GET_GOVERNANCE_REQUIREMENTS_RETURNED, returnOBJ)
-
-    } catch(ex) {
+      emitter.emit(GET_GOV_REQUIREMENTS_RETURNED, returnOBJ);
+    } catch (ex) {
       return emitter.emit(ERROR, ex);
     }
-  }
+  };
 
   _getGasPrice = async () => {
     try {
-      const url = 'https://gasprice.poa.network/'
+      const url = "https://gasprice.poa.network/";
       const priceString = await rp(url);
-      const priceJSON = JSON.parse(priceString)
-      if(priceJSON) {
-        return priceJSON.fast.toFixed(0)
+      const priceJSON = JSON.parse(priceString);
+      if (priceJSON) {
+        return priceJSON.fast.toFixed(0);
       }
-      return store.getStore('universalGasPrice')
-    } catch(e) {
-      console.log(e)
-      return store.getStore('universalGasPrice')
+      return store.getStore("universalGasPrice");
+    } catch (e) {
+      console.log(e);
+      return store.getStore("universalGasPrice");
     }
-  }
+  };
 }
 
 var store = new Store();
@@ -1293,5 +1924,5 @@ var store = new Store();
 export default {
   store: store,
   dispatcher: dispatcher,
-  emitter: emitter
+  emitter: emitter,
 };
