@@ -214,7 +214,6 @@ const styles = (theme) => ({
     background: colors.yellowBackground,
     borderRadius: "3px",
     padding: "2px 6px",
-    width: "fit-content",
     marginLeft: "6px",
     position: "absolute",
     left: "90px",
@@ -225,7 +224,8 @@ const styles = (theme) => ({
     fontStyle: "normal",
     fontWeight: "bold",
     fontSize: "12px",
-    lineHeight: "14pxpx",
+    lineHeight: "14px",
+    textAlign: "center",
 
     display: "flex",
     alignItems: "center",
