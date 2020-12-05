@@ -79,7 +79,7 @@ class RedirectModal extends Component {
             <HeaderLink
               screenType="MOBILE"
               text="LINKSWAP"
-              to={"https://linkswap.vercel.app/"}
+              to={"https://linkswap.app/"}
               externalLink={true}
             />
             <HeaderLink
@@ -87,7 +87,7 @@ class RedirectModal extends Component {
               text="STAKE"
               to={account && account.address ? "/stake" : "/account"}
               redirectedTo={"/stake"}
-            />            
+            />
             <HeaderLink
               screenType="MOBILE"
               text="VOTE"

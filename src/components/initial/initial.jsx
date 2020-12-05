@@ -504,7 +504,7 @@ class Initial extends Component {
                   <IconButton
                     className={classes.linkButton}
                     onClick={() => {
-                      window.open("https://linkswap.vercel.app");
+                      window.open("https://linkswap.app");
                     }}
                   >
                     <LinkswapIcon style={{ color: colors.white }} />

@@ -1364,10 +1364,10 @@ class Vote extends Component {
                 "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
               }
               externalLink={true}
-            />            
+            />
             <HeaderLink
               text="LINKSWAP"
-              to={"https://linkswap.vercel.app/"}
+              to={"https://linkswap.app/"}
               externalLink={true}
             />
             <HeaderLink
@@ -1600,7 +1600,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract('GOV');
+                    this.openContract("GOV");
                   }}
                 >
                   <Typography
@@ -1765,7 +1765,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract('GOV');
+                    this.openContract("GOV");
                   }}
                 >
                   <Typography
@@ -1967,7 +1967,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract('LINKSWAP');
+                    this.openContract("LINKSWAP");
                   }}
                 >
                   <Typography
@@ -2228,7 +2228,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract('LINKSWAP');
+                    this.openContract("LINKSWAP");
                   }}
                 >
                   <Typography
@@ -3317,12 +3317,14 @@ class Vote extends Component {
   };
 
   openContract = (type) => {
-    if (type === 'GOV') {
+    if (type === "GOV") {
       window.open(
         "https://etherscan.io/address/0xc150eade946079033c3b840bd7e81cdd5354e467"
       );
     } else {
-      window.open("https://etherscan.io/address/0x75D1aA733920b14fC74c9F6e6faB7ac1EcE8482E")
+      window.open(
+        "https://etherscan.io/address/0x75D1aA733920b14fC74c9F6e6faB7ac1EcE8482E"
+      );
     }
   };
 
