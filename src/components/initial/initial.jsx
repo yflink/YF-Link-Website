@@ -498,7 +498,7 @@ class Initial extends Component {
                   >
                     <BuyIcon style={{ color: colors.white }} />
                   </IconButton>
-                  <span className={classes.linkButtonSpan}>Buy</span>
+                  <span className={classes.linkButtonSpan}>BUY</span>
                 </div>
                 <div className={classes.linkButtonWrapper}>
                   <IconButton
