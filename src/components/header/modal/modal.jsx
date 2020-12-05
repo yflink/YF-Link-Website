@@ -70,18 +70,6 @@ class RedirectModal extends Component {
           <div className={classes.linkContainer}>
             <HeaderLink
               screenType="MOBILE"
-              text="VOTE"
-              to={account && account.address ? "/vote" : "/account"}
-              redirectedTo={"/vote"}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="BLOG"
-              to="https://blog.yflink.io"
-              externalLink={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
               text="BUY YFL"
               to={
                 "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
@@ -91,9 +79,20 @@ class RedirectModal extends Component {
             <HeaderLink
               screenType="MOBILE"
               text="LINKSWAP"
-              to="/"
-              disabled
-              tag="SOON"
+              to={"https://linkswap.vercel.app/"}
+              externalLink={true}
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="STAKE"
+              to={account && account.address ? "/stake" : "/account"}
+              redirectedTo={"/stake"}
+            />            
+            <HeaderLink
+              screenType="MOBILE"
+              text="VOTE"
+              to={account && account.address ? "/vote" : "/account"}
+              redirectedTo={"/vote"}
             />
             <HeaderLink
               screenType="MOBILE"

@@ -206,6 +206,9 @@ class Store {
           case VOTE_AGAINST:
             this.voteAgainst(payload);
             break;
+          case STAKE:
+            this.stake(payload);
+            break;
           case GET_CLAIMABLE_ASSET:
             this.getClaimableAsset(payload);
             break;

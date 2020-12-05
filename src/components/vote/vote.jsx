@@ -1358,28 +1358,29 @@ class Vote extends Component {
             <HeaderLogo />
           </div>
           <div className={classes.linkContainer}>
-            {/* <HeaderLink text='STAKE' to={account && account.address ? '/staking' : '/account'} redirectedTo={'/staking'} /> */}
-            <HeaderLink
-              text="VOTE"
-              to={account && account.address ? "/vote" : "/account"}
-              redirectedTo={"/vote"}
-              selected={true}
-            />
-            <HeaderLink
-              text="BLOG"
-              to="https://blog.yflink.io"
-              externalLink={true}
-            />
             <HeaderLink
               text="BUY YFL"
               to={
                 "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
               }
               externalLink={true}
+            />            
+            <HeaderLink
+              text="LINKSWAP"
+              to={"https://linkswap.vercel.app/"}
+              externalLink={true}
             />
-            <HeaderLink text="LINKSWAP" to="/" disabled tag="SOON" />
-            <HeaderLink text="WAFFLEHOUSE" to="/" disabled tag="SOON" />
-            {/* <HeaderLink text='PRODUCTS' to='/' disabled tag='SOON' /> */}
+            <HeaderLink
+              text="STAKE"
+              to={account && account.address ? "/stake" : "/account"}
+              redirectedTo={"/stake"}
+            />
+            <HeaderLink
+              text="VOTE"
+              to={account && account.address ? "/vote" : "/account"}
+              redirectedTo={"/vote"}
+              selected={true}
+            />
           </div>
           <div className={classes.walletContainer}>
             {account && account.address && (
@@ -1599,7 +1600,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract();
+                    this.openContract('GOV');
                   }}
                 >
                   <Typography
@@ -1648,7 +1649,7 @@ class Vote extends Component {
                         variant={"h4"}
                         className={classes.govStakeMinBalanceSpan}
                       >
-                        Min: 0.1 {token && token.symbol}
+                        Min: 0.01 {token && token.symbol}
                       </Typography>
                     </div>
                     <div className={classes.govStakeWithdrawInputContainer}>
@@ -1764,7 +1765,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract();
+                    this.openContract('GOV');
                   }}
                 >
                   <Typography
@@ -1813,7 +1814,7 @@ class Vote extends Component {
                         variant={"h4"}
                         className={classes.govStakeMinBalanceSpan}
                       >
-                        Min: 0.1 {token && token.symbol}
+                        Min: 0.01 {token && token.symbol}
                       </Typography>
                     </div>
                     <div className={classes.govStakeWithdrawInputContainer}>
@@ -1966,7 +1967,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract();
+                    this.openContract('LINKSWAP');
                   }}
                 >
                   <Typography
@@ -2227,7 +2228,7 @@ class Vote extends Component {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    this.openContract();
+                    this.openContract('LINKSWAP');
                   }}
                 >
                   <Typography
@@ -3315,10 +3316,14 @@ class Vote extends Component {
     );
   };
 
-  openContract = () => {
-    window.open(
-      "https://etherscan.io/address/0xc150eade946079033c3b840bd7e81cdd5354e467"
-    );
+  openContract = (type) => {
+    if (type === 'GOV') {
+      window.open(
+        "https://etherscan.io/address/0xc150eade946079033c3b840bd7e81cdd5354e467"
+      );
+    } else {
+      window.open("https://etherscan.io/address/0x75D1aA733920b14fC74c9F6e6faB7ac1EcE8482E")
+    }
   };
 
   openForumSite = () => {
@@ -3344,7 +3349,7 @@ class Vote extends Component {
       return;
     }
     const asset = this.getCurrentToken(pool, value);
-    if (!stakeAmount || stakeAmount < 0.1) {
+    if (!stakeAmount || stakeAmount < 0.01) {
       console.log("OnStake Invalid Amount!");
       return;
     }

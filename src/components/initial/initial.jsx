@@ -18,6 +18,13 @@ import Store from "../../stores";
 import MailchimpSubscribe from "react-mailchimp-subscribe";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
 import RedirectModal from "../header/modal/modal";
+import { ReactComponent as BuyIcon } from "../../assets/buy.svg";
+import { ReactComponent as LinkswapIcon } from "../../assets/linkswap.svg";
+import { ReactComponent as StakeIcon } from "../../assets/stake.svg";
+import { ReactComponent as VoteIcon } from "../../assets/vote.svg";
+import { ReactComponent as WaffleIcon } from "../../assets/waffle.svg";
+import { ReactComponent as LinkpadIcon } from "../../assets/linkpad.svg";
+import { ReactComponent as LinkcheckIcon } from "../../assets/linkcheck.svg";
 
 const styles = (theme) => ({
   root: {
@@ -50,7 +57,7 @@ const styles = (theme) => ({
     zIndex: "1",
     position: "absolute",
     top: "-30%",
-    left: "300px",
+    left: "200px",
     width: "100%",
     height: "200%",
     transform: `skew(-0.03turn, 15deg)`,
@@ -66,7 +73,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     top: "15%",
     left: "-100px",
-    width: "470px",
+    width: "370px",
     height: "560px",
     "@media (max-width: 768px)": {
       display: "none",
@@ -163,6 +170,7 @@ const styles = (theme) => ({
     "@media (max-width: 768px)": {
       display: "none",
     },
+    marginBottom: "90px",
   },
 
   mobileBodyContainer: {
@@ -180,9 +188,12 @@ const styles = (theme) => ({
     minWidth: "400px",
   },
   bodyRightContainer: {
-    flex: 2,
+    flex: 3,
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   bodyRightSpace: {
     flex: 1,
@@ -196,6 +207,8 @@ const styles = (theme) => ({
       padding: "30px",
       flex: 7,
     },
+    alignItems: "center",
+    justifyContent: "center",
   },
   comingSoonTagContainer: {
     background: colors.yellowBackground,
@@ -203,13 +216,16 @@ const styles = (theme) => ({
     padding: "2px 6px",
     width: "fit-content",
     marginLeft: "6px",
+    position: "absolute",
+    left: "90px",
+    top: "-8px",
   },
 
   comingSoonTagText: {
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "16px",
-    lineHeight: "20px",
+    fontSize: "12px",
+    lineHeight: "14pxpx",
 
     display: "flex",
     alignItems: "center",
@@ -218,13 +234,87 @@ const styles = (theme) => ({
   },
 
   linkSwapIconContainer: {
-    marginBottom: "30px",
+    marginBottom: "70px",
     width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
     "@media (min-width: 768px)": {
-      height: "80px",
+      height: "160px",
+      flexDirection: "row",
     },
   },
+  doubleIconsWrapper: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "30px",
+    "@media (min-width: 768px)": {
+      marginBottom: "0px",
+      "&:first-child": {
+        marginRight: "40px",
+      },
+    },
+  },
+  linkButtonWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "124px",
+    marginRight: "40px",
+    "&:last-child": {
+      marginRight: "0px",
+    },
+    position: "relative",
+  },
+  linkButtonDisabledWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "124px",
+    marginRight: "40px",
+    "&:last-child": {
+      marginRight: "0px",
+    },
+    opacity: "0.3",
+  },
 
+  linkButtonSpan: {
+    color: colors.white,
+    fontSize: "18px",
+    lineHeight: "21px",
+    textAlign: "center",
+    letterSpacing: "0.06em",
+    marginTop: "16px",
+  },
+  linkDisabledButtonSpan: {
+    color: colors.white,
+    fontSize: "18px",
+    lineHeight: "21px",
+    textAlign: "center",
+    letterSpacing: "0.06em",
+    marginTop: "16px",
+    opacity: 0.3,
+  },
+  linkButton: {
+    width: "124px",
+    height: "124px",
+    borderRadius: "8px",
+    border: "solid 2px rgba(255, 255, 255, 1)",
+    "&:hover": {
+      opacity: "0.7",
+    },
+  },
+  linkDisabledButton: {
+    width: "124px",
+    height: "124px",
+    borderRadius: "8px",
+    border: "solid 2px rgba(255, 255, 255, 1)",
+    opacity: "0.3",
+    "&:hover": {
+      opacity: "0.3",
+    },
+  },
   emailInputContainer: {
     marginLeft: "6px",
     width: "350px",
@@ -300,7 +390,7 @@ const styles = (theme) => ({
     display: "flex",
     width: "100%",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     "@media (max-width: 768px)": {
       justifyContent: "center",
     },
@@ -360,29 +450,7 @@ class Initial extends Component {
           <div className={classes.logoContainer}>
             <HeaderLogo />
           </div>
-          <div className={classes.linkContainer}>
-            <HeaderLink
-              text="VOTE"
-              to={account && account.address ? "/vote" : "/account"}
-              redirectedTo={"/vote"}
-            />
-            <HeaderLink
-              text="BLOG"
-              to={"https://blog.yflink.io"}
-              externalLink={true}
-            />
-
-            <HeaderLink
-              text="BUY YFL"
-              to={
-                "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
-              }
-              externalLink={true}
-            />
-            <HeaderLink text="LINKSWAP" to="/" disabled tag="SOON" />
-            <HeaderLink text="WAFFLEHOUSE" to="/" disabled tag="SOON" />
-            {/* <HeaderLink text='PRODUCTS' to='/' disabled tag='SOON' /> */}
-          </div>
+          <div className={classes.linkContainer} />
         </div>
       );
     } else {
@@ -407,7 +475,6 @@ class Initial extends Component {
 
   renderBody = (screenType) => {
     const { classes } = this.props;
-    const { inputEmail, error } = this.state;
     return (
       <div
         className={
@@ -416,110 +483,131 @@ class Initial extends Component {
             : classes.mobileBodyContainer
         }
       >
-        {screenType === "DESKTOP" && (
-          <div className={classes.bodyLeftContainer} />
-        )}
         <div className={classes.bodyRightContainer}>
-          <div className={classes.bodyRightSpace} />
           <div className={classes.bodyRightMain}>
-            <div className={classes.comingSoonTagContainer}>
-              <Typography variant="h6" className={classes.comingSoonTagText}>
-                COMING SOON
-              </Typography>
+            <div className={classes.linkSwapIconContainer}>
+              <div className={classes.doubleIconsWrapper}>
+                <div className={classes.linkButtonWrapper}>
+                  <IconButton
+                    className={classes.linkButton}
+                    onClick={() => {
+                      window.open(
+                        "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+                      );
+                    }}
+                  >
+                    <BuyIcon style={{ color: colors.white }} />
+                  </IconButton>
+                  <span className={classes.linkButtonSpan}>Buy</span>
+                </div>
+                <div className={classes.linkButtonWrapper}>
+                  <IconButton
+                    className={classes.linkButton}
+                    onClick={() => {
+                      window.open("https://linkswap.vercel.app");
+                    }}
+                  >
+                    <LinkswapIcon style={{ color: colors.white }} />
+                  </IconButton>
+                  <span className={classes.linkButtonSpan}>LINKSWAP</span>
+                </div>
+              </div>
+              <div className={classes.doubleIconsWrapper}>
+                <div className={classes.linkButtonWrapper}>
+                  <IconButton
+                    className={classes.linkDisabledButton}
+                    onClick={() => {
+                      // this.nav("/stake");
+                    }}
+                  >
+                    <StakeIcon style={{ color: colors.white }} />
+                  </IconButton>
+                  <span className={classes.linkDisabledButtonSpan}>STAKE</span>
+                  <div className={classes.comingSoonTagContainer}>
+                    <Typography
+                      variant="h6"
+                      className={classes.comingSoonTagText}
+                    >
+                      SOON
+                    </Typography>
+                  </div>
+                </div>
+                <div className={classes.linkButtonWrapper}>
+                  <IconButton
+                    className={classes.linkButton}
+                    onClick={() => {
+                      this.nav("/vote");
+                    }}
+                  >
+                    <VoteIcon style={{ color: colors.white }} />
+                  </IconButton>
+                  <span className={classes.linkButtonSpan}>VOTE</span>
+                </div>
+              </div>
             </div>
             <div className={classes.linkSwapIconContainer}>
-              {screenType === "MOBILE" ? (
-                <img
-                  alt="linkswap"
-                  src={require("../../assets/YFLink-linkswap-logo.svg")}
-                  width="100%"
-                />
-              ) : (
-                <img
-                  alt="linkswap"
-                  src={require("../../assets/YFLink-linkswap-logo.svg")}
-                  height="80px"
-                />
-              )}
-            </div>
-            <MailchimpSubscribe
-              url={mailchimpUrl}
-              render={({ subscribe, status, message }) => (
-                <>
-                  <div
-                    className={
-                      error
-                        ? classes.emailInputError
-                        : classes.emailInputContainer
-                    }
+              <div className={classes.doubleIconsWrapper}>
+                <div className={classes.linkButtonWrapper}>
+                  <IconButton
+                    className={classes.linkDisabledButton}
+                    onClick={() => {}}
                   >
-                    <InputBase
-                      classes={{
-                        root: classes.customInputBoxRoot,
-                      }}
-                      onChange={(ev) => {
-                        if (error) {
-                          this.setState({
-                            inputEmail: ev.target.value,
-                            error: ValidateEmail(ev.target.value),
-                          });
-                        } else {
-                          this.setState({
-                            inputEmail: ev.target.value,
-                          });
-                        }
-                      }}
-                      onKeyPress={(ev) => {
-                        if (ev.key === "Enter") {
-                          subscribe({ EMAIL: inputEmail });
-                        }
-                      }}
-                      placeholder="Enter email for updates"
-                      autoFocus
-                    />
-                    <IconButton
-                      onClick={(ev) => {
-                        subscribe({ EMAIL: inputEmail });
-                      }}
+                    <WaffleIcon style={{ color: colors.white }} />
+                  </IconButton>
+                  <span className={classes.linkDisabledButtonSpan}>
+                    WAFFLEHOUSE
+                  </span>
+                  <div className={classes.comingSoonTagContainer}>
+                    <Typography
+                      variant="h6"
+                      className={classes.comingSoonTagText}
                     >
-                      <ArrowRightAltOutlinedIcon
-                        style={{ color: colors.white }}
-                      />
-                    </IconButton>
+                      SOON
+                    </Typography>
                   </div>
-                  <div className={classes.emailErrorContainer}>
-                    {status === "error" && (
-                      <Typography
-                        variant="h6"
-                        className={classes.emailErrorText}
-                      >
-                        <div dangerouslySetInnerHTML={{ __html: message }} />
-                      </Typography>
-                    )}
-                    {status === "sending" && (
-                      <CircularProgress color="secondary" size="20px" />
-                    )}
-                    {status === "success" && (
-                      <Typography
-                        variant="h6"
-                        className={classes.emailSuccessText}
-                      >
-                        <div dangerouslySetInnerHTML={{ __html: message }} />
-                      </Typography>
-                    )}
-
-                    {!message && error && (
-                      <Typography
-                        variant="h6"
-                        className={classes.emailErrorText}
-                      >
-                        {error}
-                      </Typography>
-                    )}
+                </div>
+                <div className={classes.linkButtonWrapper}>
+                  <IconButton
+                    className={classes.linkDisabledButton}
+                    onClick={() => {}}
+                  >
+                    <LinkpadIcon style={{ color: colors.white }} />
+                  </IconButton>
+                  <span className={classes.linkDisabledButtonSpan}>
+                    LINKPAD
+                  </span>
+                  <div className={classes.comingSoonTagContainer}>
+                    <Typography
+                      variant="h6"
+                      className={classes.comingSoonTagText}
+                    >
+                      SOON
+                    </Typography>
                   </div>
-                </>
-              )}
-            />
+                </div>
+              </div>
+              <div className={classes.doubleIconsWrapper}>
+                <div className={classes.linkButtonWrapper}>
+                  <IconButton
+                    className={classes.linkDisabledButton}
+                    onClick={() => {}}
+                  >
+                    <LinkcheckIcon style={{ color: colors.white }} />
+                  </IconButton>
+                  <span className={classes.linkDisabledButtonSpan}>
+                    LINKCHECK
+                  </span>
+                  <div className={classes.comingSoonTagContainer}>
+                    <Typography
+                      variant="h6"
+                      className={classes.comingSoonTagText}
+                    >
+                      SOON
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className={classes.socialMediaContainer}>
               <SocialShare
                 twitterUrl="https://twitter.com/YFLinkio"
