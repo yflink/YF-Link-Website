@@ -72,7 +72,7 @@ class RedirectModal extends Component {
               screenType="MOBILE"
               text="BUY YFL"
               to={
-                "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+                "http://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
               }
               externalLink={true}
             />

@@ -492,7 +492,7 @@ class Initial extends Component {
                     className={classes.linkButton}
                     onClick={() => {
                       window.open(
-                        "https://app.uniswap.org/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+                        "http://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
                       );
                     }}
                   >
@@ -515,22 +515,14 @@ class Initial extends Component {
               <div className={classes.doubleIconsWrapper}>
                 <div className={classes.linkButtonWrapper}>
                   <IconButton
-                    className={classes.linkDisabledButton}
+                    className={classes.linkButton}
                     onClick={() => {
-                      // this.nav("/stake");
+                      window.open("https://staking.linkswap.app");
                     }}
                   >
                     <StakeIcon style={{ color: colors.white }} />
                   </IconButton>
-                  <span className={classes.linkDisabledButtonSpan}>STAKE</span>
-                  <div className={classes.comingSoonTagContainer}>
-                    <Typography
-                      variant="h6"
-                      className={classes.comingSoonTagText}
-                    >
-                      SOON
-                    </Typography>
-                  </div>
+                  <span className={classes.linkButtonSpan}>STAKE</span>
                 </div>
                 <div className={classes.linkButtonWrapper}>
                   <IconButton
