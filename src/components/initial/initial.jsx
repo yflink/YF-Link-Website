@@ -614,7 +614,7 @@ class Initial extends Component {
                 githubUrl="https://github.com/yflink"
                 mediumUrl="https://blog.yflink.io/"
                 telegramUrl="https://t.me/YFLinkGroup"
-                discordUrl="https://discord.gg/nQWEx88"
+                discordUrl="https://discord.gg/VGp7qw46fc"
               />
             </div>
           </div>
@@ -699,7 +699,12 @@ class Initial extends Component {
   }
 
   nav = (screen) => {
-    this.props.history.push(screen);
+    const account = store.getStore("account");
+    if (account && account.address) {
+      this.props.history.push(screen);
+    } else {
+      this.props.history.push('/account');
+    }
   };
 }
 
