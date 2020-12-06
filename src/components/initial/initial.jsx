@@ -703,7 +703,8 @@ class Initial extends Component {
     if (account && account.address) {
       this.props.history.push(screen);
     } else {
-      this.props.history.push('/account');
+      store.setStore({ redirect: screen });
+      this.props.history.push("/account");
     }
   };
 }
