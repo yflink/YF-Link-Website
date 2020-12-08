@@ -38,7 +38,7 @@ import Store from "../../stores";
 import { colors } from "../../theme";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
 import { isLinkMeme, getSignature } from "../../utils";
-import { AbiCoder } from "ethers";
+import { AbiCoder } from "ethers/utils";
 
 import {
   ERROR,
