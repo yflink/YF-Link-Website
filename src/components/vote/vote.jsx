@@ -57,6 +57,9 @@ import {
   CONVERT,
   CONVERT_RETURNED,
   PROPOSE,
+  CONNECTION_CONNECTED,
+  CONNECTION_DISCONNECTED,
+  CONFIGURE,
 } from "../../constants";
 
 const styles = (theme) => ({
@@ -1100,8 +1103,19 @@ class Vote extends Component {
     const govProposals = store.getStore("govProposals");
     const yYFLProposals = store.getStore("yYFLProposals");
     const pool = store.getStore("currentPool");
-    if (!account || !account.address) {
-      props.history.push("/");
+
+    const location = props?.location || {};
+    const newUrlParam = new URLSearchParams(location?.search || "");
+    let stakingType = 2;
+    if (newUrlParam.has("type")) {
+      const typeParam = newUrlParam.get("type");
+      if (typeParam === "LINKSWAP") {
+        stakingType = 2;
+      } else if (typeParam === "GOV") {
+        stakingType = 0;
+      } else if (typeParam === "MEME") {
+        stakingType = 1;
+      }
     }
 
     this.state = {
@@ -1110,7 +1124,7 @@ class Vote extends Component {
       pool: pool,
       govProposals: govProposals,
       yYFLProposals: yYFLProposals,
-      value: 0,
+      value: stakingType,
       voteLockValid: false,
       balanceValid: false,
       voteLock: null,
@@ -1123,6 +1137,24 @@ class Vote extends Component {
       dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
     }
   }
+  connectionConnected = () => {
+    console.log("connectionConnected");
+    const newAccount = store.getStore("account");
+    this.setState({ account: newAccount });
+    if (newAccount && newAccount.address) {
+      dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
+    }
+    dispatcher.dispatch({ type: CONFIGURE, content: {} });
+  };
+
+  connectionDisconnected = () => {
+    console.log("connectionDisconnected");
+    const newAccount = store.getStore("account");
+    this.setState({ account: store.getStore("account") });
+    if (!newAccount || !newAccount.address) {
+      this.props.history.push("/");
+    }
+  };
 
   componentDidMount() {
     emitter.on(ERROR, this.errorReturned);
@@ -1134,6 +1166,8 @@ class Vote extends Component {
     emitter.on(VOTE_AGAINST_RETURNED, this.showHash);
     emitter.on(STAKE_RETURNED, this.stakeReturned);
     emitter.on(WITHDRAW_RETURNED, this.withdrawReturned);
+    emitter.on(CONNECTION_CONNECTED, this.connectionConnected);
+    emitter.on(CONNECTION_DISCONNECTED, this.connectionDisconnected);
     window.scrollTo(0, 0);
 
     const pools = store.getStore("rewardPools");
@@ -1141,6 +1175,13 @@ class Vote extends Component {
       store.setStore({ currentPool: pools[0] });
       this.setState({ pool: pools[0] });
     }
+
+    setTimeout(() => {
+      const account = store.getStore("account");
+      if (!account || !account.address) {
+        this.props.history.push("/account");
+      }
+    }, 5000)
   }
 
   componentWillUnmount() {
@@ -1371,14 +1412,14 @@ class Vote extends Component {
               externalLink={true}
             />
             <HeaderLink
+              text="LP REWARDS"
+              to={"https://rewards.linkswap.app"}
+              externalLink={true}
+            />
+            <HeaderLink
               text="STAKE"
               to={account && account.address ? "/stake" : "/account"}
               redirectedTo={"/stake"}
-            />
-            <HeaderLink
-              text="VOTE"
-              to={account && account.address ? "/vote" : "/account"}
-              redirectedTo={"/vote"}
               selected={true}
             />
           </div>
@@ -3541,6 +3582,13 @@ class Vote extends Component {
   };
 
   handleTabChange = (event, newValue) => {
+    if (newValue === 0) {
+      this.props.history.push("/stake?type=GOV");
+    } else if (newValue === 1) {
+      this.props.history.push("/stake?type=MEME");
+    } else if (newValue === 2) {
+      this.props.history.push("/stake?type=LINKSWAP");
+    }
     this.setState({ value: newValue });
   };
 

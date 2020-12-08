@@ -57,7 +57,7 @@ const styles = (theme) => ({
     zIndex: "1",
     position: "absolute",
     top: "-30%",
-    left: "200px",
+    left: "230px",
     width: "100%",
     height: "200%",
     transform: `skew(-0.03turn, 15deg)`,
@@ -286,6 +286,7 @@ const styles = (theme) => ({
     textAlign: "center",
     letterSpacing: "0.06em",
     marginTop: "16px",
+    whiteSpace: "nowrap",
   },
   linkDisabledButtonSpan: {
     color: colors.white,
@@ -517,23 +518,23 @@ class Initial extends Component {
                   <IconButton
                     className={classes.linkButton}
                     onClick={() => {
-                      window.open("https://staking.linkswap.app");
+                      window.open("https://rewards.linkswap.app");
                     }}
                   >
                     <StakeIcon style={{ color: colors.white }} />
                   </IconButton>
-                  <span className={classes.linkButtonSpan}>STAKE</span>
+                  <span className={classes.linkButtonSpan}>LP REWARDS</span>
                 </div>
                 <div className={classes.linkButtonWrapper}>
                   <IconButton
                     className={classes.linkButton}
                     onClick={() => {
-                      this.nav("/vote");
+                      this.nav("/stake");
                     }}
                   >
                     <VoteIcon style={{ color: colors.white }} />
                   </IconButton>
-                  <span className={classes.linkButtonSpan}>VOTE</span>
+                  <span className={classes.linkButtonSpan}>STAKE</span>
                 </div>
               </div>
             </div>

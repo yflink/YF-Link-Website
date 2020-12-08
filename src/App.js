@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import { Switch, HashRouter, Route } from "react-router-dom";
+import { Switch, BrowserRouter, Route } from "react-router-dom";
 
 import "./i18n";
 import interestTheme from "./theme";
@@ -103,7 +103,7 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={createMuiTheme(interestTheme)}>
         <CssBaseline />
-        <HashRouter>
+        <BrowserRouter>
           <div
             style={{
               display: "flex",
@@ -114,15 +114,7 @@ class App extends Component {
             }}
           >
             <Switch>
-              <Route path="/wrap">
-                <Footer />
-                <Wrap />
-              </Route>
-              <Route path="/staking">
-                <Footer />
-                <RewardsPools />
-              </Route>
-              <Route path="/vote">
+              <Route path="/stake">
                 <Vote />
               </Route>
               <Route path="/propose">
@@ -140,7 +132,7 @@ class App extends Component {
               </Route>
             </Switch>
           </div>
-        </HashRouter>
+        </BrowserRouter>
       </MuiThemeProvider>
     );
   }

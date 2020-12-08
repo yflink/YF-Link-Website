@@ -84,15 +84,15 @@ class RedirectModal extends Component {
             />
             <HeaderLink
               screenType="MOBILE"
-              text="STAKE"
-              to={account && account.address ? "/stake" : "/account"}
-              redirectedTo={"/stake"}
+              text="LP REWARDS"
+              externalLink={true}
+              to={"https://rewards.linkswap.app"}
             />
             <HeaderLink
               screenType="MOBILE"
-              text="VOTE"
-              to={account && account.address ? "/vote" : "/account"}
-              redirectedTo={"/vote"}
+              text="STAKE"
+              to={account && account.address ? "/stake" : "/account"}
+              redirectedTo={"/stake"}
             />
             <HeaderLink
               screenType="MOBILE"
