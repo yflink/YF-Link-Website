@@ -303,7 +303,7 @@ const styles = (theme) => ({
     borderRadius: "8px",
     border: "solid 2px rgba(255, 255, 255, 1)",
     "&:hover": {
-      opacity: "0.7",
+      backgroundColor: "rgba(255, 255, 255, 0.2);",
     },
   },
   linkDisabledButton: {
