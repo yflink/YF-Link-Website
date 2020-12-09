@@ -1181,7 +1181,7 @@ class Vote extends Component {
       if (!account || !account.address) {
         this.props.history.push("/account");
       }
-    }, 5000)
+    }, 5000);
   }
 
   componentWillUnmount() {
@@ -2059,25 +2059,34 @@ class Vote extends Component {
                     <div
                       className={classes.linkswapStakeWithdrawButtonContainer}
                     >
-                      <Button
-                        className={classes.linkswapActionButton}
-                        variant="contained"
-                        onClick={() => {
-                          this.setState({
-                            stakeOrWithdraw: "Stake",
-                            isStakeWithdrawModalShown: true,
-                          });
+                      <Tooltip
+                        TransitionComponent={Zoom}
+                        title="Stake your YFL in the vault to vote and earn rewards. Your YFL will be converted to yYFL"
+                        placement="top"
+                        classes={{
+                          tooltip: classes.voteCreateProposalButtonTooltip,
                         }}
-                        disabled={!token}
                       >
-                        <Typography
-                          className={classes.linkswapActionButtonLabel}
-                          variant={"h4"}
-                          color={colors.white}
+                        <Button
+                          className={classes.linkswapActionButton}
+                          variant="contained"
+                          onClick={() => {
+                            this.setState({
+                              stakeOrWithdraw: "Stake",
+                              isStakeWithdrawModalShown: true,
+                            });
+                          }}
+                          disabled={!token}
                         >
-                          Stake
-                        </Typography>
-                      </Button>
+                          <Typography
+                            className={classes.linkswapActionButtonLabel}
+                            variant={"h4"}
+                            color={colors.white}
+                          >
+                            Stake
+                          </Typography>
+                        </Button>
+                      </Tooltip>
                     </div>
                   </div>
                   <div className={classes.linkswapWithdrawContainer}>
@@ -2111,25 +2120,34 @@ class Vote extends Component {
                     <div
                       className={classes.linkswapStakeWithdrawButtonContainer}
                     >
-                      <Button
-                        className={classes.linkswapActionButton}
-                        variant="contained"
-                        onClick={() => {
-                          this.setState({
-                            isStakeWithdrawModalShown: true,
-                            stakeOrWithdraw: "Unstake",
-                          });
+                      <Tooltip
+                        TransitionComponent={Zoom}
+                        title="Unstake your YFL. Note that there is a 1% unstaking fee for before 26 days, which will go to the treasury. Your staked yYFL will be converted back to YFL"
+                        placement="top"
+                        classes={{
+                          tooltip: classes.voteCreateProposalButtonTooltip,
                         }}
-                        disabled={!token}
                       >
-                        <Typography
-                          className={classes.linkswapActionButtonLabel}
-                          variant={"h4"}
-                          color={colors.white}
+                        <Button
+                          className={classes.linkswapActionButton}
+                          variant="contained"
+                          onClick={() => {
+                            this.setState({
+                              isStakeWithdrawModalShown: true,
+                              stakeOrWithdraw: "Unstake",
+                            });
+                          }}
+                          disabled={!token}
                         >
-                          Unstake
-                        </Typography>
-                      </Button>
+                          <Typography
+                            className={classes.linkswapActionButtonLabel}
+                            variant={"h4"}
+                            color={colors.white}
+                          >
+                            Unstake
+                          </Typography>
+                        </Button>
+                      </Tooltip>
                     </div>
                   </div>
                   <div className={classes.linkswapConvertContainer}>
@@ -2186,22 +2204,31 @@ class Vote extends Component {
                     <div
                       className={classes.linkswapStakeWithdrawButtonContainer}
                     >
-                      <Button
-                        className={classes.linkswapActionButton}
-                        variant="contained"
-                        onClick={() => {
-                          this.onConvert();
+                      <Tooltip
+                        TransitionComponent={Zoom}
+                        title="Convert rewards into YFL so that it can be distributed proportionately to all yYFL holders"
+                        placement="top"
+                        classes={{
+                          tooltip: classes.voteCreateProposalButtonTooltip,
                         }}
-                        disabled={!token}
                       >
-                        <Typography
-                          className={classes.linkswapActionButtonLabel}
-                          variant={"h4"}
-                          color={colors.white}
+                        <Button
+                          className={classes.linkswapActionButton}
+                          variant="contained"
+                          onClick={() => {
+                            this.onConvert();
+                          }}
+                          disabled={!token}
                         >
-                          Convert
-                        </Typography>
-                      </Button>
+                          <Typography
+                            className={classes.linkswapActionButtonLabel}
+                            variant={"h4"}
+                            color={colors.white}
+                          >
+                            Convert
+                          </Typography>
+                        </Button>
+                      </Tooltip>
                     </div>
                   </div>
                 </div>
