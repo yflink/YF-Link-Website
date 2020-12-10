@@ -24,6 +24,7 @@ import bigInt from "big-integer";
 
 import HeaderLogo from "../header/logo/logo";
 import HeaderLink from "../header/link/link";
+import HeaderDropLink from "../header/link/dropLink";
 import RedirectModal from "../header/modal/modal";
 import Loader from "../loader";
 import Snackbar from "../snackbar";
@@ -305,7 +306,7 @@ const styles = (theme) => ({
     },
   },
   desktopHeaderContainer: {
-    zIndex: "2",
+    zIndex: "999",
     width: "100%",
     height: "90px",
     paddingLeft: "30px",
@@ -318,7 +319,7 @@ const styles = (theme) => ({
     },
   },
   mobileHeaderContainer: {
-    zIndex: "2",
+    zIndex: "999",
     width: "100%",
     height: "90px",
     display: "flex",
@@ -1417,10 +1418,23 @@ class Vote extends Component {
               externalLink={true}
             />
             <HeaderLink
-              text="STAKE"
+              text="STAKE & VOTE"
               to={account && account.address ? "/stake" : "/account"}
               redirectedTo={"/stake"}
               selected={true}
+            />
+            <HeaderDropLink
+              text="TOOLS"
+              to={[
+                "https://learn.yflink.io/",
+                "https://apycalc.yflink.io/",
+                "https://calculator.yflink.io/",
+              ]}
+              menu={[
+                "HELP CENTER",
+                "APY CALCULATOR: LP REWARDS",
+                "APY CALCULATOR: STAKE & VOTE",
+              ]}
             />
           </div>
           <div className={classes.walletContainer}>
@@ -2061,7 +2075,7 @@ class Vote extends Component {
                     >
                       <Tooltip
                         TransitionComponent={Zoom}
-                        title="Stake your YFL in the vault to vote and earn rewards. Your YFL will be converted to yYFL"
+                        title="Stake your YFL. Your YFL will be converted to yYFL. Note that there is a 1% unstaking fee if you unstake before 172800 blocks (approximately 26 days) from your time of staking, which will go to the treasury."
                         placement="top"
                         classes={{
                           tooltip: classes.voteCreateProposalButtonTooltip,
@@ -2094,19 +2108,19 @@ class Vote extends Component {
                       variant={"h4"}
                       className={classes.linkswapSWAHeaderContainer}
                     >
-                      Staked yYFL
+                      Staked YFL
                     </Typography>
                     <Typography
                       variant={"h4"}
                       className={classes.linkswapStakeBodyText}
                     >
-                      {stakedYYFLBalance} yYFL
+                      {(stakedYYFLBalance * yYFLPrice).toFixed(3)} YFL
                     </Typography>
                     <Typography
                       variant={"h4"}
                       className={classes.linkswapStakeCommentText}
                     >
-                      ≈ {(stakedYYFLBalance * yYFLPrice).toFixed(3)} YFL
+                      ≈ {stakedYYFLBalance} yYFL
                     </Typography>
                     <Typography
                       variant={"h4"}
@@ -2122,7 +2136,7 @@ class Vote extends Component {
                     >
                       <Tooltip
                         TransitionComponent={Zoom}
-                        title="Unstake your YFL. Note that there is a 1% unstaking fee for before 26 days, which will go to the treasury. Your staked yYFL will be converted back to YFL"
+                        title="Unstake your YFL. Your yYFL will be converted back to YFL. Note that there is a 1% unstaking fee if you unstake before 172800 blocks (approximately 26 days) from your time of staking, which will go to the treasury."
                         placement="top"
                         classes={{
                           tooltip: classes.voteCreateProposalButtonTooltip,
@@ -2377,19 +2391,19 @@ class Vote extends Component {
                       variant={"h4"}
                       className={classes.linkswapSWAHeaderContainer}
                     >
-                      Staked yYFL
+                      Staked YFL
                     </Typography>
                     <Typography
                       variant={"h4"}
                       className={classes.linkswapStakeBodyText}
                     >
-                      {stakedYYFLBalance} yYFL
+                      {(stakedYYFLBalance * yYFLPrice).toFixed(3)} YFL
                       <div>
                         <Typography
                           variant={"h4"}
                           className={classes.linkswapStakeCommentText}
                         >
-                          ≈ {(stakedYYFLBalance * yYFLPrice).toFixed(3)} YFL
+                          ≈ {stakedYYFLBalance} yYFL
                         </Typography>
                         <Typography
                           variant={"h4"}
@@ -3175,34 +3189,6 @@ class Vote extends Component {
                 className={classes.voteToggleButton}
                 variant="text"
                 onClick={() => {
-                  this.handleTabChange(null, 0);
-                }}
-              >
-                <Typography variant="h4" className={classes.voteToggleText}>
-                  YFL
-                </Typography>
-                {value === 0 && (
-                  <div className={classes.voteToggleSelectedMark} />
-                )}
-              </Button>
-              <Button
-                className={classes.voteToggleButton}
-                variant="text"
-                onClick={() => {
-                  this.handleTabChange(null, 1);
-                }}
-              >
-                <Typography variant="h4" className={classes.voteToggleText}>
-                  MEMES
-                </Typography>
-                {value === 1 && (
-                  <div className={classes.voteToggleSelectedMark} />
-                )}
-              </Button>
-              <Button
-                className={classes.voteToggleButton}
-                variant="text"
-                onClick={() => {
                   this.handleTabChange(null, 2);
                 }}
               >
@@ -3315,34 +3301,6 @@ class Vote extends Component {
           </div>
           <div className={classes.voteActionContainer}>
             <div className={classes.voteProposalFilters}>
-              <Button
-                className={classes.voteToggleButton}
-                variant="text"
-                onClick={() => {
-                  this.handleTabChange(null, 0);
-                }}
-              >
-                <Typography variant="h4" className={classes.voteToggleText}>
-                  YFL
-                </Typography>
-                {value === 0 && (
-                  <div className={classes.voteToggleSelectedMark} />
-                )}
-              </Button>
-              <Button
-                className={classes.voteToggleButton}
-                variant="text"
-                onClick={() => {
-                  this.handleTabChange(null, 1);
-                }}
-              >
-                <Typography variant="h4" className={classes.voteToggleText}>
-                  MEMES
-                </Typography>
-                {value === 1 && (
-                  <div className={classes.voteToggleSelectedMark} />
-                )}
-              </Button>
               <Button
                 className={classes.voteToggleButton}
                 variant="text"
@@ -3609,13 +3567,6 @@ class Vote extends Component {
   };
 
   handleTabChange = (event, newValue) => {
-    if (newValue === 0) {
-      this.props.history.push("/stake?type=GOV");
-    } else if (newValue === 1) {
-      this.props.history.push("/stake?type=MEME");
-    } else if (newValue === 2) {
-      this.props.history.push("/stake?type=LINKSWAP");
-    }
     this.setState({ value: newValue });
   };
 

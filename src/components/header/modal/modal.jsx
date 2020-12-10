@@ -90,7 +90,7 @@ class RedirectModal extends Component {
             />
             <HeaderLink
               screenType="MOBILE"
-              text="STAKE"
+              text="STAKE & VOTE"
               to={account && account.address ? "/stake" : "/account"}
               redirectedTo={"/stake"}
             />
@@ -101,7 +101,41 @@ class RedirectModal extends Component {
               disabled
               tag="SOON"
             />
-            {/* <HeaderLink screenType='MOBILE' text='PRODUCTS' to='/' disabled tag='SOON' /> */}
+            <HeaderLink
+              screenType="MOBILE"
+              text="LINKPAD"
+              to="/"
+              disabled
+              tag="SOON"
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="LINKCHECK"
+              to="/"
+              disabled
+              tag="SOON"
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="HELP CENTER"
+              to="https://learn.yflink.io/"
+              externalLink={true}
+              arrow={true}
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="LP REWARDS APY"
+              to="https://apycalc.yflink.io/"
+              externalLink={true}
+              arrow={true}
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="STAKE & VOTE APY"
+              to="https://calculator.yflink.io/"
+              externalLink={true}
+              arrow={true}
+            />
           </div>
         </DialogContent>
       </Dialog>

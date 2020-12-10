@@ -5,6 +5,7 @@ import { Typography } from "@material-ui/core";
 import { withNamespaces } from "react-i18next";
 import { colors } from "../../../theme/theme";
 import Store from "../../../stores";
+import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
 
 const styles = (theme) => ({
   root: {
@@ -60,11 +61,17 @@ const styles = (theme) => ({
   activeSpan: {
     position: "relative",
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 
   disabledSpan: {
     opacity: 0.5,
     cursor: "not-allowed",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 
   linkText: {
@@ -109,6 +116,7 @@ class Link extends Component {
       redirectedTo,
       screenType,
       selected,
+      arrow,
     } = this.props;
 
     if (screenType === "MOBILE") {
@@ -126,6 +134,9 @@ class Link extends Component {
             <Typography variant="h4" className={classes.linkText}>
               {text}
             </Typography>
+            {arrow && (
+              <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+            )}
           </div>
           {tag && (
             <div
@@ -165,6 +176,9 @@ class Link extends Component {
               {text}
               {selected && <div className={classes.linkTextSelectedMark} />}
               {!disabled && <div className={classes.linkTextMarkHover} />}
+              {arrow && (
+                <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+              )}
             </Typography>
           </div>
         </div>

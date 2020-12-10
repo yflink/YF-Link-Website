@@ -161,6 +161,9 @@ const styles = (theme) => ({
     [theme.breakpoints.up("ms")]: {
       marginBottom: "12px",
     },
+    "& > a": {
+      color: colors.white,
+    },
   },
   proposalTitle: {
     fontWeight: "normal",
@@ -552,6 +555,13 @@ class FunctionProposal extends Component {
           onChange={(event, isExpanded) => {
             if (isExpanded) {
               this.setState({ expanded: true });
+            } else {
+              if (
+                proposal.description &&
+                proposal.description.includes("https://")
+              ) {
+                window.open(proposal.description);
+              }
             }
           }}
         >
@@ -581,9 +591,14 @@ class FunctionProposal extends Component {
             </div>
             <div className={classes.titleProperContainer}>
               <div className={classes.proposalTitleContainer}>
-                <Typography variant={"h4"} className={classes.proposalTitle}>
-                  {proposal.description}
-                </Typography>
+                {proposal.description &&
+                proposal.description.includes("https://") ? (
+                  <a>{proposal.description}</a>
+                ) : (
+                  <Typography variant={"h4"} className={classes.proposalTitle}>
+                    {proposal.description}
+                  </Typography>
+                )}
               </div>
               <div className={classes.proposalAddressContainer}>
                 <Typography variant={"h5"} className={classes.proposalAddress}>
@@ -714,6 +729,13 @@ class FunctionProposal extends Component {
           onChange={(event, isExpanded) => {
             if (isExpanded) {
               this.setState({ expanded: true });
+            } else {
+              if (
+                proposal.description &&
+                proposal.description.includes("https://")
+              ) {
+                window.open(proposal.description);
+              }
             }
           }}
         >
@@ -813,9 +835,17 @@ class FunctionProposal extends Component {
 
               <div className={classes.titleProperContainer}>
                 <div className={classes.proposalTitleContainer}>
-                  <Typography variant={"h4"} className={classes.proposalTitle}>
-                    {proposal.description}
-                  </Typography>
+                  {proposal.description &&
+                  proposal.description.includes("https://") ? (
+                    <a>{proposal.description}</a>
+                  ) : (
+                    <Typography
+                      variant={"h4"}
+                      className={classes.proposalTitle}
+                    >
+                      {proposal.description}
+                    </Typography>
+                  )}
                 </div>
                 <div className={classes.proposalAddressContainer}>
                   <Typography

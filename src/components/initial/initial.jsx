@@ -12,10 +12,8 @@ import { withNamespaces } from "react-i18next";
 import { colors } from "../../theme";
 
 import HeaderLogo from "../header/logo/logo";
-import HeaderLink from "../header/link/link";
 import SocialShare from "../social/social";
 import Store from "../../stores";
-import MailchimpSubscribe from "react-mailchimp-subscribe";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
 import RedirectModal from "../header/modal/modal";
 import { ReactComponent as BuyIcon } from "../../assets/buy.svg";
@@ -216,7 +214,7 @@ const styles = (theme) => ({
     padding: "2px 6px",
     marginLeft: "6px",
     position: "absolute",
-    left: "90px",
+    right: "-17px",
     top: "-8px",
   },
 
@@ -234,7 +232,7 @@ const styles = (theme) => ({
   },
 
   linkSwapIconContainer: {
-    marginBottom: "70px",
+    marginBottom: "48px",
     width: "100%",
     display: "flex",
     alignItems: "center",
@@ -245,6 +243,28 @@ const styles = (theme) => ({
       flexDirection: "row",
     },
   },
+
+  linkSwapDisabledIconContainer: {
+    marginBottom: "40px",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    "@media (min-width: 768px)": {
+      flexDirection: "row",
+    },
+  },
+
+  linkSwapToolsContainer: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    marginBottom: "40px",
+    marginLeft: "30px",
+  },
+
   doubleIconsWrapper: {
     display: "flex",
     alignItems: "center",
@@ -271,12 +291,17 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "124px",
+    width: "200px",
     marginRight: "40px",
+    marginBottom: "0px",
     "&:last-child": {
       marginRight: "0px",
     },
-    opacity: "0.3",
+    "@media (max-width: 768px)": {
+      marginRight: "0px",
+      marginBottom: "40px",
+    },
+    position: "relative",
   },
 
   linkButtonSpan: {
@@ -290,12 +315,11 @@ const styles = (theme) => ({
   },
   linkDisabledButtonSpan: {
     color: colors.white,
-    fontSize: "18px",
-    lineHeight: "21px",
+    fontSize: "14px",
+    lineHeight: "17px",
     textAlign: "center",
     letterSpacing: "0.06em",
-    marginTop: "16px",
-    opacity: 0.3,
+    marginLeft: "12px",
   },
   linkButton: {
     width: "124px",
@@ -307,14 +331,30 @@ const styles = (theme) => ({
     },
   },
   linkDisabledButton: {
-    width: "124px",
-    height: "124px",
+    width: "200px",
+    height: "48px",
     borderRadius: "8px",
     border: "solid 2px rgba(255, 255, 255, 1)",
     opacity: "0.3",
     "&:hover": {
       opacity: "0.3",
     },
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  linkToolButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: "3px",
+    paddingBottom: "3px",
+  },
+  linkToolButtonSpan: {
+    color: colors.white,
+    fontSize: "14px",
+    lineHeight: "17px",
+    letterSpacing: "0.06rem",
   },
   emailInputContainer: {
     marginLeft: "6px",
@@ -534,72 +574,125 @@ class Initial extends Component {
                   >
                     <VoteIcon style={{ color: colors.white }} />
                   </IconButton>
-                  <span className={classes.linkButtonSpan}>STAKE</span>
+                  <span className={classes.linkButtonSpan}>STAKE & VOTE</span>
                 </div>
               </div>
             </div>
-            <div className={classes.linkSwapIconContainer}>
-              <div className={classes.doubleIconsWrapper}>
-                <div className={classes.linkButtonWrapper}>
-                  <IconButton
-                    className={classes.linkDisabledButton}
-                    onClick={() => {}}
-                  >
-                    <WaffleIcon style={{ color: colors.white }} />
-                  </IconButton>
+            <div className={classes.linkSwapDisabledIconContainer}>
+              <div className={classes.linkButtonDisabledWrapper}>
+                <IconButton
+                  className={classes.linkDisabledButton}
+                  onClick={() => {}}
+                >
+                  <WaffleIcon
+                    style={{
+                      color: colors.white,
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  />
                   <span className={classes.linkDisabledButtonSpan}>
                     WAFFLEHOUSE
                   </span>
-                  <div className={classes.comingSoonTagContainer}>
-                    <Typography
-                      variant="h6"
-                      className={classes.comingSoonTagText}
-                    >
-                      SOON
-                    </Typography>
-                  </div>
-                </div>
-                <div className={classes.linkButtonWrapper}>
-                  <IconButton
-                    className={classes.linkDisabledButton}
-                    onClick={() => {}}
+                </IconButton>
+                <div className={classes.comingSoonTagContainer}>
+                  <Typography
+                    variant="h6"
+                    className={classes.comingSoonTagText}
                   >
-                    <LinkpadIcon style={{ color: colors.white }} />
-                  </IconButton>
+                    SOON
+                  </Typography>
+                </div>
+              </div>
+              <div className={classes.linkButtonDisabledWrapper}>
+                <IconButton
+                  className={classes.linkDisabledButton}
+                  onClick={() => {}}
+                >
+                  <LinkpadIcon
+                    style={{
+                      color: colors.white,
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  />
                   <span className={classes.linkDisabledButtonSpan}>
                     LINKPAD
                   </span>
-                  <div className={classes.comingSoonTagContainer}>
-                    <Typography
-                      variant="h6"
-                      className={classes.comingSoonTagText}
-                    >
-                      SOON
-                    </Typography>
-                  </div>
+                </IconButton>
+                <div className={classes.comingSoonTagContainer}>
+                  <Typography
+                    variant="h6"
+                    className={classes.comingSoonTagText}
+                  >
+                    SOON
+                  </Typography>
                 </div>
               </div>
-              <div className={classes.doubleIconsWrapper}>
-                <div className={classes.linkButtonWrapper}>
-                  <IconButton
-                    className={classes.linkDisabledButton}
-                    onClick={() => {}}
-                  >
-                    <LinkcheckIcon style={{ color: colors.white }} />
-                  </IconButton>
+              <div className={classes.linkButtonDisabledWrapper}>
+                <IconButton
+                  className={classes.linkDisabledButton}
+                  onClick={() => {}}
+                >
+                  <LinkcheckIcon
+                    style={{
+                      color: colors.white,
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  />
                   <span className={classes.linkDisabledButtonSpan}>
                     LINKCHECK
                   </span>
-                  <div className={classes.comingSoonTagContainer}>
-                    <Typography
-                      variant="h6"
-                      className={classes.comingSoonTagText}
-                    >
-                      SOON
-                    </Typography>
-                  </div>
+                </IconButton>
+                <div className={classes.comingSoonTagContainer}>
+                  <Typography
+                    variant="h6"
+                    className={classes.comingSoonTagText}
+                  >
+                    SOON
+                  </Typography>
                 </div>
               </div>
+            </div>
+            <div className={classes.linkSwapToolsContainer}>
+              <IconButton
+                className={classes.linkToolButton}
+                onClick={() => {
+                  window.open("https://learn.yflink.io/");
+                }}
+              >
+                <span className={classes.linkToolButtonSpan}>HELP CENTER</span>
+                <ArrowRightAltOutlinedIcon
+                  style={{ color: colors.white, marginLeft: "8px" }}
+                />
+              </IconButton>
+              <IconButton
+                className={classes.linkToolButton}
+                onClick={() => {
+                  window.open("https://apycalc.yflink.io/");
+                }}
+              >
+                <span className={classes.linkToolButtonSpan}>
+                  APY CALCULATOR: LP REWARDS
+                </span>
+                <ArrowRightAltOutlinedIcon
+                  style={{ color: colors.white, marginLeft: "8px" }}
+                />
+              </IconButton>
+              <IconButton
+                className={classes.linkToolButton}
+                onClick={() => {
+                  window.open("https://calculator.yflink.io/");
+                }}
+              >
+                <span className={classes.linkToolButtonSpan}>
+                  APY CALCULATOR: STAKE & VOTE
+                </span>
+                <ArrowRightAltOutlinedIcon
+                  style={{ color: colors.white, marginLeft: "8px" }}
+                />
+              </IconButton>
             </div>
             <div className={classes.socialMediaContainer}>
               <SocialShare
