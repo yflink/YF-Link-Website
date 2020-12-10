@@ -3193,7 +3193,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  GOV
+                  VAULT v1
                 </Typography>
                 {value === 0 && (
                   <div className={classes.voteToggleSelectedMark} />
@@ -3207,7 +3207,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  LINKSWAP
+                  VAULT v2
                 </Typography>
                 {value === 2 && (
                   <div className={classes.voteToggleSelectedMark} />
@@ -3323,7 +3323,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  GOV
+                  VAULT v1
                 </Typography>
                 {value === 0 && (
                   <div className={classes.voteToggleSelectedMark} />
@@ -3337,7 +3337,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  LINKSWAP
+                  VAULT v2
                 </Typography>
                 {value === 2 && (
                   <div className={classes.voteToggleSelectedMark} />
