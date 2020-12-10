@@ -3189,6 +3189,20 @@ class Vote extends Component {
                 className={classes.voteToggleButton}
                 variant="text"
                 onClick={() => {
+                  this.handleTabChange(null, 0);
+                }}
+              >
+                <Typography variant="h4" className={classes.voteToggleText}>
+                  GOV
+                </Typography>
+                {value === 0 && (
+                  <div className={classes.voteToggleSelectedMark} />
+                )}
+              </Button>
+              <Button
+                className={classes.voteToggleButton}
+                variant="text"
+                onClick={() => {
                   this.handleTabChange(null, 2);
                 }}
               >
@@ -3301,6 +3315,20 @@ class Vote extends Component {
           </div>
           <div className={classes.voteActionContainer}>
             <div className={classes.voteProposalFilters}>
+              <Button
+                className={classes.voteToggleButton}
+                variant="text"
+                onClick={() => {
+                  this.handleTabChange(null, 0);
+                }}
+              >
+                <Typography variant="h4" className={classes.voteToggleText}>
+                  GOV
+                </Typography>
+                {value === 0 && (
+                  <div className={classes.voteToggleSelectedMark} />
+                )}
+              </Button>
               <Button
                 className={classes.voteToggleButton}
                 variant="text"
