@@ -262,7 +262,10 @@ const styles = (theme) => ({
     justifyContent: "flex-start",
     flexDirection: "column",
     marginBottom: "40px",
-    marginLeft: "30px",
+    marginLeft: "0px",
+    "@media (min-width: 768px)": {
+      marginLeft: "30px",
+    },
   },
 
   doubleIconsWrapper: {
@@ -355,6 +358,7 @@ const styles = (theme) => ({
     fontSize: "14px",
     lineHeight: "17px",
     letterSpacing: "0.06rem",
+    whiteSpace: "nowrap",
   },
   emailInputContainer: {
     marginLeft: "6px",
