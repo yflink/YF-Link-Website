@@ -447,6 +447,15 @@ class FunctionProposal extends Component {
     emitter.removeListener(ERROR, this.errorReturned);
   }
 
+  getProposalTitle = (title) => {
+    if (!title.includes("gov.yflink.io")) {
+      return title;
+    }
+    const subSections = title.split("/");
+    const propDescription = subSections[4];
+    return propDescription.replace(/-/g, " ");
+  };
+
   balancesUpdated = () => {
     let now = store.getStore("currentBlock");
     this.setState({ currentBlock: now });
@@ -593,7 +602,9 @@ class FunctionProposal extends Component {
               <div className={classes.proposalTitleContainer}>
                 {proposal.description &&
                 proposal.description.includes("https://") ? (
-                  <a>{proposal.description}</a>
+                  <Typography variant={"h4"} className={classes.proposalTitle}>
+                    {this.getProposalTitle(proposal.description)}
+                  </Typography>
                 ) : (
                   <Typography variant={"h4"} className={classes.proposalTitle}>
                     {proposal.description}
@@ -837,7 +848,12 @@ class FunctionProposal extends Component {
                 <div className={classes.proposalTitleContainer}>
                   {proposal.description &&
                   proposal.description.includes("https://") ? (
-                    <a>{proposal.description}</a>
+                    <Typography
+                      variant={"h4"}
+                      className={classes.proposalTitle}
+                    >
+                      {this.getProposalTitle(proposal.description)}
+                    </Typography>
                   ) : (
                     <Typography
                       variant={"h4"}

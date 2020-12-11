@@ -413,6 +413,9 @@ const StakeWithdrawModal = ({
   classes,
   asset,
   sourceAsset,
+  isLegacy,
+  onStakeLegacy,
+  onWithdrawLegacy,
 }) => {
   const [loading, setLoading] = React.useState(false);
   const [inputAmount, setInputAmount] = React.useState(0);
@@ -456,6 +459,10 @@ const StakeWithdrawModal = ({
   const onUnstake = () => {
     if (inputAmount < 0 || inputAmount > staked) {
       setError("Invalid Amount!");
+      return;
+    }
+    if (isLegacy) {
+      onWithdrawLegacy(inputAmount);
       return;
     }
     const unstakeAmount = bigInt(
@@ -610,13 +617,15 @@ const StakeWithdrawModal = ({
                     className={classes.stakeWithdrawAvailableText}
                     variant={"h6"}
                   >
-                    Currently Staked: {staked} yYFL
-                    <Typography
-                      className={classes.stakeWithdrawAvailableValue}
-                      variant={"h6"}
-                    >
-                      ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
-                    </Typography>
+                    Currently Staked: {staked} {isLegacy ? "YFL" : "yYFL"}
+                    {!isLegacy && (
+                      <Typography
+                        className={classes.stakeWithdrawAvailableValue}
+                        variant={"h6"}
+                      >
+                        ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
+                      </Typography>
+                    )}
                   </Typography>
                   <Button
                     className={classes.stakeWithdrawMaxButton}
@@ -633,13 +642,15 @@ const StakeWithdrawModal = ({
                     className={classes.stakeWithdrawAvailableText}
                     variant={"h6"}
                   >
-                    Staked: {staked} yYFL
-                    <Typography
-                      className={classes.stakeWithdrawAvailableValue}
-                      variant={"h6"}
-                    >
-                      ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
-                    </Typography>
+                    Staked: {staked} {isLegacy ? "YFL" : "yYFL"}
+                    {!isLegacy && (
+                      <Typography
+                        className={classes.stakeWithdrawAvailableValue}
+                        variant={"h6"}
+                      >
+                        ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
+                      </Typography>
+                    )}
                   </Typography>
                   <Button
                     className={classes.stakeWithdrawMaxButton}

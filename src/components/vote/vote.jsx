@@ -521,7 +521,10 @@ const styles = (theme) => ({
       fontSize: "16px",
     },
   },
-
+  governanceIconButton: {
+    paddingLeft: "0px",
+    paddingRight: "0px",
+  },
   newProposalButtonSpan: {
     color: colors.white,
     marginRight: "8px",
@@ -1132,6 +1135,7 @@ class Vote extends Component {
       proposalScreen: false,
       voteModalOpen: false,
       newProposalParams: [],
+      isLegacyVault: false,
     };
 
     if (account && account.address) {
@@ -1526,6 +1530,7 @@ class Vote extends Component {
       value,
       stakeOrWithdraw,
       isStakeWithdrawModalShown,
+      isLegacyVault,
     } = this.state;
     const yYFLToken = this.getCurrentToken(pool, 2);
     const yflToken = this.getCurrentToken(pool, 0);
@@ -1543,29 +1548,56 @@ class Vote extends Component {
       yYFLToken && yYFLToken.yYFLPrice
         ? toFixed(yYFLToken.yYFLPrice, yYFLToken.decimals, 3)
         : "0";
-    return (
-      <StakeWithdrawModal
-        closeModal={this.closeStakeWithdrawModal}
-        modalOpen={isStakeWithdrawModalShown}
-        stakeOrWithdraw={stakeOrWithdraw}
-        balance={walletBalance}
-        staked={stakedBalance}
-        asset={value === 2 ? yYFLToken : yflToken}
-        sourceAsset={yflToken}
-        price={stakeOrWithdraw === "Stake" ? yflUsdPrice : yYFLPrice}
-        secondPrice={stakeOrWithdraw === "Stake" ? yYFLPrice : yflUsdPrice}
-        decimals={
-          stakeOrWithdraw === "Stake"
-            ? yflToken && yflToken.decimals
-            : yYFLToken && yYFLToken.decimals
-        }
-        startLoading={this.startLoading}
-      />
-    );
+
+    if (isLegacyVault) {
+      const legacyStakedBalance =
+        yflToken && yflToken.stakedBalance
+          ? toFixed(yflToken.stakedBalance, yflToken.decimals, 3)
+          : "0";
+
+      return (
+        <StakeWithdrawModal
+          closeModal={this.closeStakeWithdrawModal}
+          modalOpen={isStakeWithdrawModalShown}
+          stakeOrWithdraw={stakeOrWithdraw}
+          balance={walletBalance}
+          staked={legacyStakedBalance}
+          asset={yflToken}
+          sourceAsset={yflToken}
+          price={yflUsdPrice}
+          secondPrice={1}
+          decimals={yflToken && yflToken.decimals}
+          startLoading={this.startLoading}
+          onStakeLegacy={this.onStakeLegacy}
+          onWithdrawLegacy={this.onWithdrawLegacy}
+          isLegacy={true}
+        />
+      );
+    } else {
+      return (
+        <StakeWithdrawModal
+          closeModal={this.closeStakeWithdrawModal}
+          modalOpen={isStakeWithdrawModalShown}
+          stakeOrWithdraw={stakeOrWithdraw}
+          balance={walletBalance}
+          staked={stakedBalance}
+          asset={value === 2 ? yYFLToken : yflToken}
+          sourceAsset={yflToken}
+          price={stakeOrWithdraw === "Stake" ? yflUsdPrice : yYFLPrice}
+          secondPrice={stakeOrWithdraw === "Stake" ? yYFLPrice : yflUsdPrice}
+          decimals={
+            stakeOrWithdraw === "Stake"
+              ? yflToken && yflToken.decimals
+              : yYFLToken && yYFLToken.decimals
+          }
+          startLoading={this.startLoading}
+        />
+      );
+    }
   };
 
   closeStakeWithdrawModal = () => {
-    this.setState({ isStakeWithdrawModalShown: false });
+    this.setState({ isStakeWithdrawModalShown: false, isLegacy: false });
   };
 
   renderBackground = (screenType) => {
@@ -2033,6 +2065,23 @@ class Vote extends Component {
                   </Typography>
                   <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
                 </IconButton>
+                <IconButton
+                  onClick={() => {
+                    this.setState({
+                      isLegacyVault: true,
+                      stakeOrWithdraw: "Unstake",
+                      isStakeWithdrawModalShown: true,
+                    });
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    Unstake from legacy vault
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
               </div>
               <div className={classes.governanceCardBodySection}>
                 <div className={classes.governanceCardBodyVault}>
@@ -2087,6 +2136,7 @@ class Vote extends Component {
                           onClick={() => {
                             this.setState({
                               stakeOrWithdraw: "Stake",
+                              isLegacyVault: false,
                               isStakeWithdrawModalShown: true,
                             });
                           }}
@@ -2147,6 +2197,7 @@ class Vote extends Component {
                           variant="contained"
                           onClick={() => {
                             this.setState({
+                              isLegacyVault: false,
                               isStakeWithdrawModalShown: true,
                               stakeOrWithdraw: "Unstake",
                             });
@@ -2296,6 +2347,7 @@ class Vote extends Component {
             <Card className={classes.governanceCard}>
               <div className={classes.governanceCardHeadSection}>
                 <IconButton
+                  className={classes.governanceIconButton}
                   onClick={() => {
                     this.openInstructions();
                   }}
@@ -2309,6 +2361,7 @@ class Vote extends Component {
                   <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
                 </IconButton>
                 <IconButton
+                  className={classes.governanceIconButton}
                   onClick={() => {
                     this.openContract("LINKSWAP");
                   }}
@@ -2318,6 +2371,24 @@ class Vote extends Component {
                     className={classes.governanceButtonSpan}
                   >
                     Contract
+                  </Typography>
+                  <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
+                </IconButton>
+                <IconButton
+                  className={classes.governanceIconButton}
+                  onClick={() => {
+                    this.setState({
+                      isLegacyVault: true,
+                      isStakeWithdrawModalShown: true,
+                      stakeOrWithdraw: "Unstake",
+                    });
+                  }}
+                >
+                  <Typography
+                    variant={"h4"}
+                    className={classes.governanceButtonSpan}
+                  >
+                    legacy vault
                   </Typography>
                   <ArrowRightAltOutlinedIcon style={{ color: colors.white }} />
                 </IconButton>
@@ -2371,6 +2442,7 @@ class Vote extends Component {
                         onClick={() => {
                           this.setState({
                             stakeOrWithdraw: "Stake",
+                            isLegacyVault: false,
                             isStakeWithdrawModalShown: true,
                           });
                         }}
@@ -2424,8 +2496,9 @@ class Vote extends Component {
                         variant="contained"
                         onClick={() => {
                           this.setState({
-                            isStakeWithdrawModalShown: true,
                             stakeOrWithdraw: "Unstake",
+                            isLegacyVault: false,
+                            isStakeWithdrawModalShown: true,
                           });
                         }}
                         disabled={!token}
@@ -3185,7 +3258,7 @@ class Vote extends Component {
           </div>
           <div className={classes.voteActionContainer}>
             <div className={classes.voteProposalFilters}>
-              <Button
+              {/* <Button
                 className={classes.voteToggleButton}
                 variant="text"
                 onClick={() => {
@@ -3198,7 +3271,7 @@ class Vote extends Component {
                 {value === 0 && (
                   <div className={classes.voteToggleSelectedMark} />
                 )}
-              </Button>
+              </Button> */}
               <Button
                 className={classes.voteToggleButton}
                 variant="text"
@@ -3315,7 +3388,7 @@ class Vote extends Component {
           </div>
           <div className={classes.voteActionContainer}>
             <div className={classes.voteProposalFilters}>
-              <Button
+              {/* <Button
                 className={classes.voteToggleButton}
                 variant="text"
                 onClick={() => {
@@ -3328,7 +3401,7 @@ class Vote extends Component {
                 {value === 0 && (
                   <div className={classes.voteToggleSelectedMark} />
                 )}
-              </Button>
+              </Button> */}
               <Button
                 className={classes.voteToggleButton}
                 variant="text"
@@ -3449,6 +3522,61 @@ class Vote extends Component {
         asset: asset,
         amount: amount,
         type: value === 2 ? "LINKSWAP" : "GOV",
+      },
+    });
+  };
+
+  onStakeLegacy = (stakeAmount) => {
+    const { pool } = this.state;
+    if (!pool) {
+      console.log("OnStake POOL error!");
+      return;
+    }
+    const asset = this.getCurrentToken(pool, 0);
+    if (!stakeAmount || stakeAmount < 0.01) {
+      console.log("OnStake Invalid Amount!");
+      return;
+    }
+
+    const amountString = stakeAmount;
+    const amount = bigInt(
+      (parseFloat(amountString) * 10 ** asset.decimals).toString()
+    );
+
+    this.setState({ loading: true });
+    dispatcher.dispatch({
+      type: STAKE,
+      content: {
+        asset: asset,
+        amount: amount,
+        type: "GOV",
+      },
+    });
+  };
+
+  onWithdrawLegacy = (withdrawAmount) => {
+    const { pool } = this.state;
+    if (!pool) {
+      console.log("OnWithdraw POOL error!");
+      return;
+    }
+    const asset = this.getCurrentToken(pool, 0);
+    if (!withdrawAmount) {
+      console.log("OnWithdraw Invalid Amount!");
+      return;
+    }
+    const amountString = withdrawAmount;
+    const amount = bigInt(
+      (parseFloat(amountString) * 10 ** asset.decimals).toString()
+    );
+
+    this.setState({ loading: true });
+    dispatcher.dispatch({
+      type: WITHDRAW,
+      content: {
+        asset: asset,
+        amount: amount,
+        type: "GOV",
       },
     });
   };
