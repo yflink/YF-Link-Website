@@ -3280,7 +3280,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  VAULT v2
+                  LINKSWAP
                 </Typography>
                 {value === 2 && (
                   <div className={classes.voteToggleSelectedMark} />
@@ -3410,7 +3410,7 @@ class Vote extends Component {
                 }}
               >
                 <Typography variant="h4" className={classes.voteToggleText}>
-                  VAULT v2
+                  LINKSWAP
                 </Typography>
                 {value === 2 && (
                   <div className={classes.voteToggleSelectedMark} />
