@@ -155,7 +155,7 @@ const styles = (theme) => ({
 
   voteActionCard: {
     width: "100%",
-    height: "230px",
+    height: "240px",
     display: "flex",
     flexDirection: "column",
     padding: "24px",
@@ -228,9 +228,19 @@ const styles = (theme) => ({
       fontSize: "16px",
     },
   },
+  actionButtonTip: {
+    fontWeight: "normal",
+    fontSize: "10px",
+    [theme.breakpoints.up("md")]: {
+      fontSize: "12px",
+    },
+    color: colors.white,
+    marginTop: "8px",
+  },
   voteButtonWrapper: {
     display: "flex",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-end",
     justifyContent: "flex-end",
   },
   accordionRoot: {
@@ -638,6 +648,10 @@ class VoteModal extends Component {
                     Submit Vote
                   </Typography>
                 </Button>
+                <span className={classes.actionButtonTip}>
+                  Please note your YFL will be locked until the end of the
+                  voting period (3 days from the start of voting)
+                </span>
               </div>
             </div>
           </div>
