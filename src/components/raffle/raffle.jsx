@@ -606,6 +606,30 @@ const styles = (theme) => ({
       marginRight: "16px",
     },
   },
+  raffleCardDayInfoContainer: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+  },
+  raffleCardIcons: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    "& > *": {
+      marginLeft: "8px",
+      marginRight: "8px",
+    },
+    marginBottom: "8px",
+  },
+  raffleCardDayInfoPairName: {
+    color: colors.white,
+    fontSize: "16px",
+    width: '100%',
+    textAlign: 'center',
+  },
   raffleCardBodyStatusText: {
     width: "100%",
     display: "flex",
@@ -678,6 +702,12 @@ const styles = (theme) => ({
     justifyContent: "flex-start",
     color: colors.white,
   },
+  raffleCardDayInfoImage: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    color: colors.white,
+  },
   raffleButtonDayHeader: {
     color: colors.white,
     fontSize: "16px",
@@ -693,6 +723,10 @@ const styles = (theme) => ({
   raffleButtonImage: {
     width: "25px",
     height: "25px",
+  },
+  raffleCardDayInfoImage: {
+    width: "30px",
+    height: "30px",
   },
   raffleDayInfoPairName: {
     color: colors.white,
@@ -1455,6 +1489,10 @@ class Raffle extends Component {
   renderRaffleInfoSection = (screenType) => {
     const { classes } = this.props;
     const { raffleInfo, remainingTime } = this.state;
+    const token1 =
+      raffleDays[raffleInfo && raffleInfo.currentDay]?.token1 || "ETH";
+    const token2 =
+      raffleDays[raffleInfo && raffleInfo.currentDay]?.token2 || "ETH";
 
     if (screenType === "DESKTOP") {
       return (
@@ -1523,10 +1561,23 @@ class Raffle extends Component {
                 </div>
               </div>
               <div className={classes.raffleCardBodyActionSection}>
-                <img
-                  alt="eth-link"
-                  src={require("../../assets/eth-link.svg")}
-                />
+                <div className={classes.raffleCardDayInfoContainer}>
+                  <div className={classes.raffleCardIcons}>
+                    <img
+                      alt="token1"
+                      className={classes.raffleCardDayInfoImage}
+                      src={require(`../../assets/coins/${token1.toUpperCase()}.png`)}
+                    />
+                    <img
+                      alt="token2"
+                      className={classes.raffleCardDayInfoImage}
+                      src={require(`../../assets/coins/${token2.toUpperCase()}.png`)}
+                    />
+                  </div>
+                  <Typography className={classes.raffleCardDayInfoPairName}>
+                    {token1} | {token2}
+                  </Typography>
+                </div>
                 <Button
                   className={classes.customActionButton}
                   variant="contained"
@@ -1660,7 +1711,7 @@ class Raffle extends Component {
                     Ends in:
                   </Typography>
                   <Typography variant={"h4"} className={classes.raffleEndText}>
-                  {remainingTime || "0h 0m"}
+                    {remainingTime || "0h 0m"}
                   </Typography>
                 </div>
               </div>
