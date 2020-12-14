@@ -564,7 +564,7 @@ const styles = (theme) => ({
     borderRadius: "8px",
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     [theme.breakpoints.up("ms")]: {
       width: "100%",
@@ -627,8 +627,8 @@ const styles = (theme) => ({
   raffleCardDayInfoPairName: {
     color: colors.white,
     fontSize: "16px",
-    width: '100%',
-    textAlign: 'center',
+    width: "100%",
+    textAlign: "center",
   },
   raffleCardBodyStatusText: {
     width: "100%",
@@ -1716,10 +1716,23 @@ class Raffle extends Component {
                 </div>
               </div>
               <div className={classes.raffleCardBodyActionSection}>
-                <img
-                  alt="eth-link"
-                  src={require("../../assets/eth-link.svg")}
-                />
+                <div className={classes.raffleCardDayInfoContainer}>
+                  <div className={classes.raffleCardIcons}>
+                    <img
+                      alt="token1"
+                      className={classes.raffleCardDayInfoImage}
+                      src={require(`../../assets/coins/${token1.toUpperCase()}.png`)}
+                    />
+                    <img
+                      alt="token2"
+                      className={classes.raffleCardDayInfoImage}
+                      src={require(`../../assets/coins/${token2.toUpperCase()}.png`)}
+                    />
+                  </div>
+                  <Typography className={classes.raffleCardDayInfoPairName}>
+                    {token1} | {token2}
+                  </Typography>
+                </div>
                 <Button
                   className={classes.customActionButton}
                   variant="contained"
