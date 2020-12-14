@@ -491,13 +491,11 @@ class FunctionProposal extends Component {
 
   renderProposal = (screenType) => {
     const { classes, proposal } = this.props;
-    const { currentBlock, currentTime, expanded } = this.state;
+    const { currentBlock, expanded } = this.state;
 
     const blocksTillEnd = proposal.endBlock - currentBlock;
-    const endTime = currentTime + blocksTillEnd * 1000 * 13.8;
-
-    // const blocksSinceStart = currentBlock - proposal.startBlock;
-    // const startTime = currentTime - blocksSinceStart * 1000 * 13.8;
+    const nowDate = moment();
+    const endDate = moment().add(parseInt(blocksTillEnd * 13.8), 'seconds');
 
     const proposerAddress =
       proposal && proposal.proposer
@@ -511,10 +509,13 @@ class FunctionProposal extends Component {
 
     let proposalTimeStamp = "Ended";
     if (proposal.endBlock > currentBlock) {
-      const periodTime = moment(endTime).subtract(currentTime);
-      proposalTimeStamp = `${periodTime.format("DD")}d 
-        ${periodTime.format("hh")}h 
-        ${periodTime.format("mm")}m`;
+      const days = endDate.diff(nowDate, 'days');
+      const hours = endDate.subtract(days, 'days').diff(nowDate, 'hours');
+      const minutes = endDate.subtract(hours, 'hours').diff(nowDate, 'minutes');
+      
+      proposalTimeStamp = `${days}d 
+        ${hours}h 
+        ${minutes}m`;
     }
 
     const proposalVotesFor = proposal.totalForVotes
