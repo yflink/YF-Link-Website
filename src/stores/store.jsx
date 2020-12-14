@@ -1543,7 +1543,10 @@ class Store {
           .call({ from: account.address });
         entered = enteredAmount != 0;
       }
-      const result = { currentDay, currentPair, entered };
+      const winners = await raffleContract.methods
+      .winners()
+      .call({ from: account.address });
+      const result = { currentDay, currentPair, entered, winners };
       callback(null, result);
     } catch (error) {
       console.log("GET RAFFLE ERROR", error);

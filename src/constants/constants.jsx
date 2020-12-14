@@ -76,7 +76,7 @@ export const raffleDays = [
     token1: "DRC",
     token2: "ETH",
     date: "2020-12-14",
-    nextDate: "2020-12-15",
+    nextDate: "2020-12-15Z14:00:00",
   },
   {
     title: "Day 2",
@@ -85,7 +85,7 @@ export const raffleDays = [
     token1: "ZUT",
     token2: "LINK",
     date: "2020-12-15",
-    nextDate: "2020-12-16",
+    nextDate: "2020-12-16Z14:00:00",
   },
   {
     title: "Day 3",
@@ -94,7 +94,7 @@ export const raffleDays = [
     token1: "LAYER",
     token2: "LINK",
     date: "2020-12-16",
-    nextDate: "2020-12-17",
+    nextDate: "2020-12-17Z14:00:00",
   },
   {
     title: "Day 4",
@@ -103,7 +103,7 @@ export const raffleDays = [
     token1: "MASQ",
     token2: "ETH",
     date: "2020-12-17",
-    nextDate: "2020-12-18",
+    nextDate: "2020-12-18Z14:00:00",
   },
   {
     title: "Day 5",
@@ -112,7 +112,7 @@ export const raffleDays = [
     token1: "RUGZ",
     token2: "LINK",
     date: "2020-12-18",
-    nextDate: "2020-12-19",
+    nextDate: "2020-12-19Z14:00:00",
   },
   {
     title: "Day 6",
@@ -121,7 +121,7 @@ export const raffleDays = [
     token1: "SERGS",
     token2: "LINK",
     date: "2020-12-19",
-    nextDate: "2020-12-20",
+    nextDate: "2020-12-20Z14:00:00",
   },
   {
     title: "Day 7",
@@ -130,7 +130,7 @@ export const raffleDays = [
     token1: "LINK",
     token2: "ETH",
     date: "2020-12-20",
-    nextDate: "2020-12-21",
+    nextDate: "2020-12-21Z14:00:00",
   },
   {
     title: "Day 8",
@@ -139,7 +139,7 @@ export const raffleDays = [
     token1: "AAVE",
     token2: "LINK",
     date: "2020-12-21",
-    nextDate: "2020-12-22",
+    nextDate: "2020-12-22Z14:00:00",
   },
   {
     title: "Day 9",
@@ -148,7 +148,7 @@ export const raffleDays = [
     token1: "SNX",
     token2: "LINK",
     date: "2020-12-22",
-    nextDate: "2020-12-23",
+    nextDate: "2020-12-23Z14:00:00",
   },
   {
     title: "Day 10",
@@ -157,7 +157,7 @@ export const raffleDays = [
     token1: "yUSD",
     token2: "ETH",
     date: "2020-12-23",
-    nextDate: "2020-12-24",
+    nextDate: "2020-12-24Z14:00:00",
   },
   {
     title: "Day 11",
@@ -166,7 +166,7 @@ export const raffleDays = [
     token1: "BONK",
     token2: "ETH",
     date: "2020-12-24",
-    nextDate: "2020-12-25",
+    nextDate: "2020-12-25Z14:00:00",
   },
   {
     title: "Day 12",
@@ -175,6 +175,6 @@ export const raffleDays = [
     token1: "YFL",
     token2: "LINK",
     date: "2020-12-25",
-    nextDate: "2020-12-26",
+    nextDate: "2020-12-26Z14:00:00",
   },
 ];
