@@ -63,6 +63,9 @@ export const colors = {
 
   lightBlack2: "rgba(0, 0, 0, 0.3)",
   lightBlack3: "rgba(255, 255, 255, 0.1)",
+
+  redGray1: "#8F4042",
+  redGray2: "#7A3638",
 };
 
 const breakpoints = createBreakpoints({

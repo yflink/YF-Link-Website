@@ -42,6 +42,12 @@ import {
   GET_GOVERNANCE_REQUIREMENTS,
   STAKE_RETURNED,
   STAKE,
+  GET_RAFFLE_INFO,
+  GET_RAFFLE_INFO_RETURNED,
+  ENTER_RAFFLE,
+  ENTER_RAFFLE_RETURNED,
+  CLAIM_PRIZE,
+  CLAIM_PRIZE_RETURNED,
 } from "../constants";
 import Web3 from "web3";
 
@@ -171,6 +177,7 @@ class Store {
           ],
         },
       ],
+      raffleInfo: {},
     };
 
     dispatcher.register(
@@ -232,6 +239,12 @@ class Store {
             break;
           case CONVERT:
             this.convert(payload);
+            break;
+          case GET_RAFFLE_INFO:
+            this.getRaffleInfo(payload);
+            break;
+          case ENTER_RAFFLE:
+            this.enterRaffle(payload);
             break;
           default:
             break;
@@ -1497,6 +1510,106 @@ class Store {
       callback(error);
     }
   };
+
+  getRaffleInfo = (payload) => {
+    const account = store.getStore("account");
+    this._callRaffleInfo(account, (err, res) => {
+      if (err) {
+        return emitter.emit(ERROR, err);
+      }
+      store.setStore({ raffleInfo: res });
+      return emitter.emit(GET_RAFFLE_INFO_RETURNED, res);
+    });
+  };
+
+  _callRaffleInfo = async (account, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const raffleContract = new web3.eth.Contract(
+      config.raffleABI,
+      config.raffleAddress
+    );
+    try {
+      const currentDay = await raffleContract.methods
+        .currentDay()
+        .call({ from: account.address });
+
+      const currentPair = await raffleContract.methods
+        .currentPairAndVault()
+        .call({ from: account.address });
+      let entered = false;
+      if (account && account.address) {
+        const enteredAmount = await raffleContract.methods
+          .balanceOf(account.address)
+          .call({ from: account.address });
+        entered = enteredAmount != 0;
+      }
+      const result = { currentDay, currentPair, entered };
+      callback(null, result);
+    } catch (error) {
+      console.log("GET RAFFLE ERROR", error);
+      callback(error);
+    }
+  };
+
+  enterRaffle = (payload) => {
+    const account = store.getStore("account");
+
+    this._callEnterRaffle(account, (err, res) => {
+      if (err) {
+        return emitter.emit(ERROR, err);
+      }
+      return emitter.emit(ENTER_RAFFLE_RETURNED, res);
+    });
+  };
+
+  _callEnterRaffle = async (account, callback) => {
+    console.log('_callEnterRaffle');
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const raffleContract = new web3.eth.Contract(
+      config.raffleABI,
+      config.raffleAddress
+    );
+    try {
+      raffleContract.methods
+      .enter()
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_RAFFLE_INFO, content: {} });
+        }
+      })
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });          
+    } catch (error) {
+      console.log("ENTER RAFFLE ERROR", error);
+      callback(error);
+    }
+  }
 
   claim = (payload) => {
     const account = store.getStore("account");
