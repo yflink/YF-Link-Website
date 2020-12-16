@@ -417,30 +417,43 @@ class VoteModal extends Component {
       today,
       closeModal,
       modalOpen,
+      entered,
+      winners,
     } = this.props;
     let dayTitle = null;
     let subTitle = null;
     let endsIn = null;
     let address = null;
     let buttonText = null;
-    let title = null;
-    let dayDate = null;
 
     const fullScreen = window.innerWidth < 768;
     if (selectedDay !== null && today !== null) {
+      if (winners && winners[selectedDay]) {
+        address = winners[selectedDay].address;
+      }
       if (selectedDay < today) {
-        dayTitle = "We have a winner! Congrats to";
+        if (address === account.address) {
+          dayTitle = "You Won! Congrats!🥳";
+        } else {
+          dayTitle = "We have a winner! Congrats to";
+        }
       } else if (selectedDay > today) {
         dayTitle = `${raffleDays[selectedDay].title} is not started yet.`;
         subTitle = `Come back again on ${raffleDays[selectedDay].subTitle}.`;
       } else {
         dayTitle = `Hasen't ended yet.`;
-        subTitle = "You still have time to enter!";
+        if (entered) {
+          subTitle = "Please wait until end of this day!";
+        } else {
+          subTitle = "You still have time to enter!";
+        }
         const nextDay = raffleDays[today] && raffleDays[today].nextDate;
         const tomorrow = moment.utc(nextDay);
         const timeRemain = tomorrow.diff(moment.now(), "minutes");
         endsIn = `Ends in: ${Math.floor(timeRemain / 60)}h ${timeRemain % 60}m`;
-        buttonText = "Enter";
+        if (!entered) {
+          buttonText = "Enter";
+        }
       }
     }
 

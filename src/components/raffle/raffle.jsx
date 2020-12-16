@@ -1493,6 +1493,8 @@ class Raffle extends Component {
         modalOpen={this.state.dayModalOpen}
         selectedDay={this.state.selectedDay}
         today={this.state.today}
+        entered={this.state.raffleInfo && this.state.raffleInfo.entered}
+        winners={this.state.raffleInfo && this.state.raffleInfo.winners}
         account={account}
       />
     );

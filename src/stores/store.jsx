@@ -1546,7 +1546,23 @@ class Store {
       const winners = await raffleContract.methods
         .winners()
         .call({ from: account.address });
-      const result = { currentDay, currentPair, entered, winners };
+
+      const winnedEvents = await raffleContract.getPastEvents("Winner", {
+        fromBlock: 0,
+        toBlock: "latest",
+      });
+      const winnersAddress = winnedEvents.map((item) => {
+        return {
+          address: item.returnValues._selected,
+          tokenId: item.returnValues._tokenId,
+        };
+      });
+      const result = {
+        currentDay,
+        currentPair,
+        entered,
+        winners: winnersAddress,
+      };
       callback(null, result);
     } catch (error) {
       console.log("GET RAFFLE ERROR", error);
