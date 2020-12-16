@@ -5,9 +5,7 @@ import bigInt from "big-integer";
 import { toFixed } from "../../constants";
 import config from "../../config";
 
-const NFTImages = [
-  "https://mega.nz/file/o0IwFbJY#r8mh4L1lYOuX4C9bwKiIhHfu8Y9wzoyvSHMWQh549iM",
-];
+const NFTImages = ["https://yflink.io/#/tokens/0.gif"];
 
 const TokenData = () => {
   const params = useParams();
