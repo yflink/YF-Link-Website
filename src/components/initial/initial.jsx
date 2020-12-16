@@ -764,6 +764,17 @@ class Initial extends Component {
                   style={{ color: colors.white, marginLeft: "8px" }}
                 />
               </IconButton>
+              <IconButton
+                className={classes.linkToolButton}
+                onClick={() => {
+                  window.open("https://info.linkswap.app/");
+                }}
+              >
+                <span className={classes.linkToolButtonSpan}>ANALYTICS</span>
+                <ArrowRightAltOutlinedIcon
+                  style={{ color: colors.white, marginLeft: "8px" }}
+                />
+              </IconButton>
             </div>
             <div className={classes.socialMediaContainer}>
               <SocialShare

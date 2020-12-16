@@ -142,6 +142,13 @@ class RedirectModal extends Component {
               externalLink={true}
               arrow={true}
             />
+            <HeaderLink
+              screenType="MOBILE"
+              text="Analytics"
+              to="https://info.linkswap.app/"
+              externalLink={true}
+              arrow={true}
+            />
           </div>
         </DialogContent>
       </Dialog>

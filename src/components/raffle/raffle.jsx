@@ -1432,11 +1432,13 @@ class Raffle extends Component {
                 "https://learn.yflink.io/",
                 "https://apycalc.yflink.io/",
                 "https://calculator.yflink.io/",
+                "https://info.linkswap.app/",
               ]}
               menu={[
                 "HELP CENTER",
                 "APY CALCULATOR: LP REWARDS",
                 "APY CALCULATOR: STAKE & VOTE",
+                "ANALYTICS",
               ]}
             />
           </div>
