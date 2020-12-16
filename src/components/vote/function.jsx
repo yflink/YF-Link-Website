@@ -495,7 +495,7 @@ class FunctionProposal extends Component {
 
     const blocksTillEnd = proposal.endBlock - currentBlock;
     const nowDate = moment();
-    const endDate = moment().add(parseInt(blocksTillEnd * 13.8), 'seconds');
+    const endDate = moment().add(parseInt(blocksTillEnd * 13.8), "seconds");
 
     const proposerAddress =
       proposal && proposal.proposer
@@ -509,10 +509,10 @@ class FunctionProposal extends Component {
 
     let proposalTimeStamp = "Ended";
     if (proposal.endBlock > currentBlock) {
-      const days = endDate.diff(nowDate, 'days');
-      const hours = endDate.subtract(days, 'days').diff(nowDate, 'hours');
-      const minutes = endDate.subtract(hours, 'hours').diff(nowDate, 'minutes');
-      
+      const days = endDate.diff(nowDate, "days");
+      const hours = endDate.subtract(days, "days").diff(nowDate, "hours");
+      const minutes = endDate.subtract(hours, "hours").diff(nowDate, "minutes");
+
       proposalTimeStamp = `${days}d 
         ${hours}h 
         ${minutes}m`;
@@ -570,7 +570,24 @@ class FunctionProposal extends Component {
                 proposal.description &&
                 proposal.description.includes("https://")
               ) {
-                window.open(proposal.description);
+                console.log("proposal description", proposal.description);
+                if (proposal.description[0] === '"') {
+                  if (
+                    proposal.description[proposal.description.length - 1] ===
+                    '"'
+                  ) {
+                    window.open(
+                      proposal.description.slice(
+                        1,
+                        proposal.description.length - 1
+                      )
+                    );
+                  } else {
+                    window.open(proposal.description.slice(1));
+                  }
+                } else {
+                  window.open(proposal.description);
+                }
               }
             }
           }}
