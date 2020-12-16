@@ -9,6 +9,8 @@ import interestTheme from "./theme";
 import Account from "./components/account";
 import Vote from "./components/vote";
 import Raffle from "./components/raffle";
+import TokenData from "./components/raffle/token";
+
 import Initial from "./components/initial/initial";
 
 import {
@@ -100,30 +102,23 @@ class App extends Component {
       <MuiThemeProvider theme={createMuiTheme(interestTheme)}>
         <CssBaseline />
         <HashRouter>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              minHeight: "100vh",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Switch>
-              <Route path="/stake">
-                <Vote />
-              </Route>
-              <Route path="/account">
-                <Account />
-              </Route>
-              <Route path="/linksmas-2020">
-                <Raffle />
-              </Route>
-              <Route path="/">
-                <Initial />
-              </Route>
-            </Switch>
-          </div>
+          <Switch>
+            <Route path="/stake">
+              <Vote />
+            </Route>
+            <Route path="/account">
+              <Account />
+            </Route>
+            <Route exact path="/linksmas-2020">
+              <Raffle />
+            </Route>
+            <Route path="/linksmas-2020/:id">
+              <TokenData />
+            </Route>
+            <Route path="/">
+              <Initial />
+            </Route>
+          </Switch>
         </HashRouter>
       </MuiThemeProvider>
     );
