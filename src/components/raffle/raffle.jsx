@@ -14,11 +14,6 @@ import {
 
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
-import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
-import HighlightOffRoundedIcon from "@material-ui/icons/HighlightOffRounded";
-import LockRoundedIcon from "@material-ui/icons/LockRounded";
-import AttachMoneyRoundedIcon from "@material-ui/icons/AttachMoneyRounded";
-import AddIcon from "@material-ui/icons/Add";
 
 import bigInt from "big-integer";
 import moment from "moment";
@@ -312,7 +307,7 @@ const styles = (theme) => ({
     justifyContent: "center",
     paddingLeft: "56px",
     "& > *": {
-      marginRight: "40px",
+      marginRight: "30px",
     },
   },
 
@@ -375,8 +370,6 @@ const styles = (theme) => ({
     width: "470px",
     height: "100%",
     backgroundImage: `url('YFL-BG-pattern-left.svg')`,
-    backgroundRepeat: "repeat-y",
-    backgroundSize: "270px 1200px",
     backgroundPositionX: "left",
     backgroundPositionY: "-350px",
     [theme.breakpoints.up("ms")]: {
@@ -391,7 +384,7 @@ const styles = (theme) => ({
     paddingTop: "10px",
     position: "relative",
     [theme.breakpoints.up("ms")]: {
-      paddingTop: "50px",
+      paddingTop: "20px",
     },
   },
 
@@ -1226,6 +1219,27 @@ const styles = (theme) => ({
     color: colors.white,
     letterSpacing: "0.05rem",
   },
+  rootBackground: {
+    position: "absolute",
+    left: "0px",
+    top: "90px",
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100vw",
+    height: "100vh",
+  },
+  leftBackground: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "space-between",
+    height: "100%",
+  },
+  rightBackground: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "space-between",
+    height: "100%",
+  },
 });
 
 const emitter = Store.emitter;
@@ -1324,7 +1338,6 @@ class Raffle extends Component {
 
   raffleInfoReturned = () => {
     const raffleInfo = store.getStore("raffleInfo");
-    console.log("raffleInfo", raffleInfo);
     this.setState({
       loading: false,
       raffleInfo,
@@ -1389,6 +1402,7 @@ class Raffle extends Component {
               }
               externalLink={true}
             />
+            <HeaderLink text="LINKSMAS" to={"/linksmas-2020"} selected={true} />
             <HeaderLink
               text="LINKSWAP"
               to={"https://linkswap.app/"}
@@ -1403,7 +1417,6 @@ class Raffle extends Component {
               text="STAKE & VOTE"
               to={account && account.address ? "/stake" : "/account"}
               redirectedTo={"/stake"}
-              selected={true}
             />
             <HeaderDropLink
               text="TOOLS"
@@ -1836,7 +1849,7 @@ class Raffle extends Component {
           <div className={classes.raffleDaysGrid}>
             {this.renderDayButton(
               "Day 1",
-              "Dec 14th",
+              "Dec 16th",
               "DRC | ETH",
               "drc",
               "eth",
@@ -1845,38 +1858,8 @@ class Raffle extends Component {
               }
             )}
             {this.renderDayButton(
-              "Day 2",
-              "Dec 15th",
-              "ZUT | LINK",
-              "zut",
-              "link",
-              () => {
-                this.showDayModal(1);
-              }
-            )}
-            {this.renderDayButton(
-              "Day 3",
-              "Dec 16th",
-              "LAYER | LINK",
-              "layer",
-              "link",
-              () => {
-                this.showDayModal(2);
-              }
-            )}
-            {this.renderDayButton(
-              "Day 4",
-              "Dec 17th",
-              "MASQ | ETH",
-              "masq",
-              "eth",
-              () => {
-                this.showDayModal(3);
-              }
-            )}
-            {this.renderDayButton(
               "Day 5",
-              "Dec 18th",
+              "Dec 20th",
               "RUGZ | LINK",
               "rugz",
               "link",
@@ -1885,38 +1868,8 @@ class Raffle extends Component {
               }
             )}
             {this.renderDayButton(
-              "Day 6",
-              "Dec 19th",
-              "SERGS | LINK",
-              "sergs",
-              "link",
-              () => {
-                this.showDayModal(5);
-              }
-            )}
-            {this.renderDayButton(
-              "Day 7",
-              "Dec 20th",
-              "LINK | ETH",
-              "link",
-              "eth",
-              () => {
-                this.showDayModal(6);
-              }
-            )}
-            {this.renderDayButton(
-              "Day 8",
-              "Dec 21th",
-              "AAVE | LINK",
-              "aave",
-              "link",
-              () => {
-                this.showDayModal(7);
-              }
-            )}
-            {this.renderDayButton(
               "Day 9",
-              "Dec 22th",
+              "Dec 24th",
               "SNX | LINK",
               "snx",
               "link",
@@ -1925,18 +1878,61 @@ class Raffle extends Component {
               }
             )}
             {this.renderDayButton(
+              "Day 2",
+              "Dec 17th",
+              "ZUT | LINK",
+              "zut",
+              "link",
+              () => {
+                this.showDayModal(1);
+              }
+            )}
+
+            {this.renderDayButton(
+              "Day 6",
+              "Dec 21th",
+              "SERGS | LINK",
+              "sergs",
+              "link",
+              () => {
+                this.showDayModal(5);
+              }
+            )}
+
+            {this.renderDayButton(
               "Day 10",
-              "Dec 23th",
-              "yUSD | ETH",
-              "yusd",
+              "Dec 25th",
+              "LINK | ETH",
+              "link",
               "eth",
               () => {
                 this.showDayModal(9);
               }
             )}
             {this.renderDayButton(
+              "Day 3",
+              "Dec 18th",
+              "LAYER | LINK",
+              "layer",
+              "link",
+              () => {
+                this.showDayModal(2);
+              }
+            )}
+
+            {this.renderDayButton(
+              "Day 7",
+              "Dec 22th",
+              "AAVE | LINK",
+              "aave",
+              "link",
+              () => {
+                this.showDayModal(6);
+              }
+            )}
+            {this.renderDayButton(
               "Day 11",
-              "Dec 24th",
+              "Dec 26th",
               "BONK | ETH",
               "bonk",
               "eth",
@@ -1945,8 +1941,28 @@ class Raffle extends Component {
               }
             )}
             {this.renderDayButton(
+              "Day 4",
+              "Dec 19th",
+              "MASQ | ETH",
+              "masq",
+              "eth",
+              () => {
+                this.showDayModal(3);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 8",
+              "Dec 23th",
+              "yUSD | ETH",              
+              "yusd",
+              "eth",
+              () => {
+                this.showDayModal(7);
+              }
+            )}
+            {this.renderDayButton(
               "Day 12",
-              "Dec 25th",
+              "Dec 27th",
               "YFL | LINK",
               "yfl",
               "link",
@@ -1974,6 +1990,32 @@ class Raffle extends Component {
 
     return (
       <div className={classes.root}>
+        <div className={classes.rootBackground}>
+          <div className={classes.leftBackground}>
+            <img
+              className={classes.topLeftCandyImg}
+              src={require("../../assets/left-candle.svg")}
+              alt="candy"
+            />
+            <img
+              className={classes.bottomLeftCandyImg}
+              src={require("../../assets/left-cane.svg")}
+              alt="cane"
+            />
+          </div>
+          <div className={classes.rightBackground}>
+            <img
+              className={classes.topRightCandyImg}
+              src={require("../../assets/right-candle.svg")}
+              alt="candy"
+            />
+            <img
+              className={classes.bottomRightCandyImg}
+              src={require("../../assets/right-cane.svg")}
+              alt="cane"
+            />
+          </div>
+        </div>
         {this.renderHeader("DESKTOP")}
         {this.renderHeader("MOBILE")}
         <div className={classes.mainBody}>

@@ -6,6 +6,7 @@ import {
   InputBase,
   IconButton,
   CircularProgress,
+  Button,
 } from "@material-ui/core";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
 import { withNamespaces } from "react-i18next";
@@ -463,6 +464,72 @@ const styles = (theme) => ({
       display: "none",
     },
   },
+  raffleAddWrapper: {
+    bottom: "0px",
+    minHeight: "100px",
+    position: "absolute",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#731013",
+    width: "100%",
+    zIndex: "100",
+    padding: "17px",
+  },
+  raffleBackgroundLeftImage: {
+    width: "90px",
+    height: "115px",
+    opacity: 0.2,
+    transform: "rotate(15deg)",
+    left: "10px",
+    position: "absolute",
+  },
+  raffleBackgroundRightImage: {
+    width: "90px",
+    height: "115px",
+    opacity: 0.2,
+    transform: "matrix(-0.97, 0.26, 0.26, 0.97, 0, 0)",
+    right: "10px",
+    position: "absolute",
+  },
+  raffleInfo: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  raffleInfoHeader: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: "24px",
+  },
+  raffleCandyIcon: {
+    marginLeft: "16px",
+    marginRight: "16px",
+  },
+  raffleCandyText: {
+    fontSize: "24px",
+    lineHeight: "29px",
+    textAlign: "center",
+    letterSpacing: "0.25rem",
+    color: colors.white,
+  },
+  raffleInfoBody: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  raffleJoinButton: {
+    borderRadius: "3px",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    color: colors.white,
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.5)",
+    },
+  },
 });
 
 const ValidateEmail = (mail) => {
@@ -754,6 +821,55 @@ class Initial extends Component {
       );
     }
   };
+  renderRaffleAd = () => {
+    const { classes } = this.props;
+    return (
+      <div className={classes.raffleAddWrapper}>
+        <img
+          className={classes.raffleBackgroundLeftImage}
+          src={require("../../assets/left-cane-small.png")}
+          alt="cane"
+        />
+        <div className={classes.raffleInfo}>
+          <div className={classes.raffleInfoHeader}>
+            <img
+              className={classes.raffleCandyIcon}
+              width="33px"
+              height="22px"
+              src={require("../../assets/ticket.svg")}
+              alt="candy"
+            />
+            <span className={classes.raffleCandyText}>
+              12 DAYS OF LINKSMAS IS HAPPENING NOW
+            </span>
+            <img
+              className={classes.raffleCandyIcon}
+              width="33px"
+              height="22px"
+              src={require("../../assets/raffle.svg")}
+              alt="candy"
+            />
+          </div>
+          <div className={classes.raffleInfoBody}>
+            <Button
+              className={classes.raffleJoinButton}
+              variant="contained"
+              onClick={() => {
+                this.nav("/linksmas-2020");
+              }}
+            >
+              Join the raffle
+            </Button>
+          </div>
+        </div>
+        <img
+          className={classes.raffleBackgroundRightImage}
+          src={require("../../assets/left-cane-small.png")}
+          alt="cane"
+        />
+      </div>
+    );
+  };
 
   renderModal = () => {
     const account = store.getStore("account");
@@ -783,7 +899,10 @@ class Initial extends Component {
 
         {this.renderBody("DESKTOP")}
         {this.renderBody("MOBILE")}
+
         {this.renderModal()}
+
+        {this.renderRaffleAd()}
       </div>
     );
   }

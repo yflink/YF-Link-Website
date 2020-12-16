@@ -349,7 +349,7 @@ const styles = (theme) => ({
     justifyContent: "center",
     paddingLeft: "56px",
     "& > *": {
-      marginRight: "40px",
+      marginRight: "30px",
     },
   },
 
@@ -1411,6 +1411,7 @@ class Vote extends Component {
               }
               externalLink={true}
             />
+            <HeaderLink text="LINKSMAS" to={"/linksmas-2020"} />
             <HeaderLink
               text="LINKSWAP"
               to={"https://linkswap.app/"}

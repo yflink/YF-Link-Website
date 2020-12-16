@@ -436,7 +436,7 @@ class VoteModal extends Component {
       } else {
         dayTitle = `Hasen't ended yet.`;
         subTitle = "You still have time to enter!";
-        const nextDay = raffleDays[today].nextDate;
+        const nextDay = raffleDays[today] && raffleDays[today].nextDate;
         const tomorrow = moment.utc(nextDay);
         const timeRemain = tomorrow.diff(moment.now(), "minutes");
         endsIn = `Ends in: ${Math.floor(timeRemain / 60)}h ${timeRemain % 60}m`;

@@ -2094,7 +2094,7 @@ const config = {
     },
   ],
 
-  raffleAddress: "0x9d722e929d96ffb318577dc37e5cd54b12ef5171",
+  raffleAddress: "0xecab82abe5d30b736730f88dcee21895fa0b18c2",
   raffleABI: [
     {
       inputs: [
