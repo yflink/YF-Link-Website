@@ -655,11 +655,19 @@ const styles = (theme) => ({
     borderRadius: "8px",
     padding: "24px",
   },
-  raffleDaysGrid: {
+  raffleDayGridDesktop: {
+    display: "none",
+    gridGap: "24px",
+    [theme.breakpoints.up("ms")]: {
+      display: "grid",
+      gridTemplateColumns: "auto auto auto",
+    },
+  },
+  raffleDayGridMobile: {
     display: "grid",
     gridGap: "24px",
     [theme.breakpoints.up("ms")]: {
-      gridTemplateColumns: "auto auto auto",
+      display: "none",
     },
   },
   raffleDayButton: {
@@ -1846,7 +1854,7 @@ class Raffle extends Component {
           </Typography>
         </div>
         <Card className={classes.raffleDaysCard}>
-          <div className={classes.raffleDaysGrid}>
+          <div className={classes.raffleDayGridDesktop}>
             {this.renderDayButton(
               "Day 1",
               "Dec 16th",
@@ -1953,13 +1961,139 @@ class Raffle extends Component {
             {this.renderDayButton(
               "Day 8",
               "Dec 23th",
-              "yUSD | ETH",              
+              "yUSD | ETH",
               "yusd",
               "eth",
               () => {
                 this.showDayModal(7);
               }
             )}
+            {this.renderDayButton(
+              "Day 12",
+              "Dec 27th",
+              "YFL | LINK",
+              "yfl",
+              "link",
+              () => {
+                this.showDayModal(11);
+              }
+            )}
+          </div>
+          <div className={classes.raffleDayGridMobile}>
+            {this.renderDayButton(
+              "Day 1",
+              "Dec 16th",
+              "DRC | ETH",
+              "drc",
+              "eth",
+              () => {
+                this.showDayModal(0);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 2",
+              "Dec 17th",
+              "ZUT | LINK",
+              "zut",
+              "link",
+              () => {
+                this.showDayModal(1);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 3",
+              "Dec 18th",
+              "LAYER | LINK",
+              "layer",
+              "link",
+              () => {
+                this.showDayModal(2);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 4",
+              "Dec 19th",
+              "MASQ | ETH",
+              "masq",
+              "eth",
+              () => {
+                this.showDayModal(3);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 5",
+              "Dec 20th",
+              "RUGZ | LINK",
+              "rugz",
+              "link",
+              () => {
+                this.showDayModal(4);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 6",
+              "Dec 21th",
+              "SERGS | LINK",
+              "sergs",
+              "link",
+              () => {
+                this.showDayModal(5);
+              }
+            )}
+
+            {this.renderDayButton(
+              "Day 7",
+              "Dec 22th",
+              "AAVE | LINK",
+              "aave",
+              "link",
+              () => {
+                this.showDayModal(6);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 8",
+              "Dec 23th",
+              "yUSD | ETH",
+              "yusd",
+              "eth",
+              () => {
+                this.showDayModal(7);
+              }
+            )}
+            {this.renderDayButton(
+              "Day 9",
+              "Dec 24th",
+              "SNX | LINK",
+              "snx",
+              "link",
+              () => {
+                this.showDayModal(8);
+              }
+            )}
+
+            {this.renderDayButton(
+              "Day 10",
+              "Dec 25th",
+              "LINK | ETH",
+              "link",
+              "eth",
+              () => {
+                this.showDayModal(9);
+              }
+            )}
+
+            {this.renderDayButton(
+              "Day 11",
+              "Dec 26th",
+              "BONK | ETH",
+              "bonk",
+              "eth",
+              () => {
+                this.showDayModal(10);
+              }
+            )}
+
             {this.renderDayButton(
               "Day 12",
               "Dec 27th",
