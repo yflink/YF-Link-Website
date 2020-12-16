@@ -430,12 +430,21 @@ class VoteModal extends Component {
     if (selectedDay !== null && today !== null) {
       if (winners && winners[selectedDay]) {
         address = winners[selectedDay].address;
+        if (
+          address === account.address &&
+          !winners[selectedDay].claimed &&
+          winners[selectedDay].won
+        ) {
+          buttonText = "Claim your prize";
+        }
       }
       if (selectedDay < today) {
         if (address === account.address) {
           dayTitle = "You Won! Congrats!🥳";
-        } else {
+        } else if (address) {
           dayTitle = "We have a winner! Congrats to";
+        } else {
+          dayTitle = "Winner will be selected soon!";
         }
       } else if (selectedDay > today) {
         dayTitle = `${raffleDays[selectedDay].title} is not started yet.`;
