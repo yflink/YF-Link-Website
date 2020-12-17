@@ -436,7 +436,7 @@ const StakeWithdrawModal = ({
   };
 
   const onStake = () => {
-    if (parseFloat(inputAmount)  <= 0 || parseFloat(inputAmount)  > parseFloat(balance) ) {
+    if (parseFloat(inputAmount) <= 0 || parseFloat(inputAmount) > parseFloat(balance)) {
       setError("Invalid Amount!");
       return;
     }

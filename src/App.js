@@ -9,6 +9,8 @@ import interestTheme from "./theme";
 import Account from "./components/account";
 import Vote from "./components/vote";
 import Raffle from "./components/raffle";
+import TokenData from "./components/raffle/token";
+
 import Initial from "./components/initial/initial";
 
 import {
@@ -116,8 +118,11 @@ class App extends Component {
               <Route path="/account">
                 <Account />
               </Route>
-              <Route path="/linksmas-2020">
+              <Route exact path="/linksmas-2020">
                 <Raffle />
+              </Route>
+              <Route path="/linksmas-2020/:id">
+                <TokenData />
               </Route>
               <Route path="/">
                 <Initial />

@@ -31,7 +31,7 @@ const styles = (theme) => ({
     paddingTop: "0px",
   },
   linkContainer: {
-    marginTop: "20%",
+    marginTop: "20px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -75,6 +75,12 @@ class RedirectModal extends Component {
                 "http://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
               }
               externalLink={true}
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="LINKSMAS"
+              to={"/linksmas-2020"}
+              selected={true}
             />
             <HeaderLink
               screenType="MOBILE"
@@ -133,6 +139,13 @@ class RedirectModal extends Component {
               screenType="MOBILE"
               text="STAKE & VOTE APY"
               to="https://calculator.yflink.io/"
+              externalLink={true}
+              arrow={true}
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="Analytics"
+              to="https://info.linkswap.app/"
               externalLink={true}
               arrow={true}
             />

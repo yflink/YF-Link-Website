@@ -349,7 +349,7 @@ const styles = (theme) => ({
     justifyContent: "center",
     paddingLeft: "56px",
     "& > *": {
-      marginRight: "40px",
+      marginRight: "30px",
     },
   },
 
@@ -1411,6 +1411,7 @@ class Vote extends Component {
               }
               externalLink={true}
             />
+            <HeaderLink text="LINKSMAS" to={"/linksmas-2020"} />
             <HeaderLink
               text="LINKSWAP"
               to={"https://linkswap.app/"}
@@ -1433,11 +1434,13 @@ class Vote extends Component {
                 "https://learn.yflink.io/",
                 "https://apycalc.yflink.io/",
                 "https://calculator.yflink.io/",
+                "https://info.linkswap.app/",
               ]}
               menu={[
                 "HELP CENTER",
                 "APY CALCULATOR: LP REWARDS",
                 "APY CALCULATOR: STAKE & VOTE",
+                "ANALYTICS",
               ]}
             />
           </div>

@@ -356,8 +356,15 @@ const styles = (theme) => ({
     marginLeft: "5px",
   },
   dayInfoText: {
+    fontSize: "24px",
+    lineHeight: "29px",
+    fontWeight: "normal",
+    color: colors.white,
+    marginBottom: "12px",
+  },
+  dayInfoNormalText: {
     fontSize: "16px",
-    lineHeight: "20px",
+    lineHeight: "19px",
     fontWeight: "normal",
     color: colors.white,
   },
@@ -417,30 +424,52 @@ class VoteModal extends Component {
       today,
       closeModal,
       modalOpen,
+      entered,
+      winners,
     } = this.props;
     let dayTitle = null;
     let subTitle = null;
     let endsIn = null;
     let address = null;
     let buttonText = null;
-    let title = null;
-    let dayDate = null;
-
     const fullScreen = window.innerWidth < 768;
     if (selectedDay !== null && today !== null) {
+      if (winners && winners[selectedDay]) {
+        address = winners[selectedDay].address;
+
+        if (
+          address === account.address &&
+          !winners[selectedDay].claimed &&
+          winners[selectedDay].won
+        ) {
+          buttonText = "Claim your prize";
+        }
+      }
       if (selectedDay < today) {
-        dayTitle = "We have a winner! Congrats to";
+        if (address === account.address) {
+          dayTitle = "You Won! Congrats!🥳";
+        } else if (address) {
+          dayTitle = "We have a winner! Congrats to";
+        } else {
+          dayTitle = "Winner will be selected soon!";
+        }
       } else if (selectedDay > today) {
         dayTitle = `${raffleDays[selectedDay].title} is not started yet.`;
         subTitle = `Come back again on ${raffleDays[selectedDay].subTitle}.`;
       } else {
         dayTitle = `Hasen't ended yet.`;
-        subTitle = "You still have time to enter!";
-        const nextDay = raffleDays[today].nextDate;
+        if (entered) {
+          subTitle = "Please wait until end of this day!";
+        } else {
+          subTitle = "You still have time to enter!";
+        }
+        const nextDay = raffleDays[today] && raffleDays[today].nextDate;
         const tomorrow = moment.utc(nextDay);
         const timeRemain = tomorrow.diff(moment.now(), "minutes");
         endsIn = `Ends in: ${Math.floor(timeRemain / 60)}h ${timeRemain % 60}m`;
-        buttonText = "Enter";
+        if (!entered) {
+          buttonText = "Enter";
+        }
       }
     }
 
@@ -476,7 +505,7 @@ class VoteModal extends Component {
                   src={require("../../../assets/ticket.svg")}
                   alt="ticket"
                 />
-                {raffleDays[selectedDay]?.title || "Day"}
+                {raffleDays[selectedDay]?.title || "Day"}{" "}
                 {selectedDay < today && "Winner"}
               </Typography>
             </div>
@@ -488,12 +517,27 @@ class VoteModal extends Component {
             <div className={classes.voteActionCard}>
               <div className={classes.voteButtonWrapper}>
                 {dayTitle && (
-                  <Typography variant={"h4"} className={classes.dayInfoText}>
+                  <Typography
+                    variant={"h4"}
+                    className={
+                      selectedDay < today
+                        ? classes.dayInfoText
+                        : classes.dayInfoNormalText
+                    }
+                  >
                     {dayTitle}
                   </Typography>
                 )}
                 {subTitle && (
-                  <Typography variant={"h4"} className={classes.dayInfoText}>
+                  <Typography
+                    variant={"h4"}
+                    className={
+                      selectedDay < today
+                        ? classes.dayInfoText
+                        : classes.dayInfoNormalText
+                    }
+                  >
+                    {" "}
                     {subTitle}
                   </Typography>
                 )}
@@ -502,7 +546,7 @@ class VoteModal extends Component {
                     {formatProposer(address)}
                   </Typography>
                 )}
-                {endsIn && (
+                {(endsIn || buttonText) && (
                   <Typography variant={"h4"} className={classes.dayInfoEnds}>
                     {endsIn}
                     {buttonText && (
