@@ -436,6 +436,7 @@ class VoteModal extends Component {
     if (selectedDay !== null && today !== null) {
       if (winners && winners[selectedDay]) {
         address = winners[selectedDay].address;
+
         if (
           address === account.address &&
           !winners[selectedDay].claimed &&
@@ -545,7 +546,7 @@ class VoteModal extends Component {
                     {formatProposer(address)}
                   </Typography>
                 )}
-                {endsIn && (
+                {(endsIn || buttonText) && (
                   <Typography variant={"h4"} className={classes.dayInfoEnds}>
                     {endsIn}
                     {buttonText && (
