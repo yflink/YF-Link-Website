@@ -356,8 +356,15 @@ const styles = (theme) => ({
     marginLeft: "5px",
   },
   dayInfoText: {
+    fontSize: "24px",
+    lineHeight: "29px",
+    fontWeight: "normal",
+    color: colors.white,
+    marginBottom: "12px",
+  },
+  dayInfoNormalText: {
     fontSize: "16px",
-    lineHeight: "20px",
+    lineHeight: "19px",
     fontWeight: "normal",
     color: colors.white,
   },
@@ -509,18 +516,33 @@ class VoteModal extends Component {
             <div className={classes.voteActionCard}>
               <div className={classes.voteButtonWrapper}>
                 {dayTitle && (
-                  <Typography variant={"h4"} className={classes.dayInfoText}>
+                  <Typography
+                    variant={"h4"}
+                    className={
+                      selectedDay < today
+                        ? classes.dayInfoText
+                        : classes.dayInfoNormalText
+                    }
+                  >
                     {dayTitle}
                   </Typography>
                 )}
                 {subTitle && (
-                  <Typography variant={"h4"} className={classes.dayInfoText}>
+                  <Typography
+                    variant={"h4"}
+                    className={
+                      selectedDay < today
+                        ? classes.dayInfoText
+                        : classes.dayInfoNormalText
+                    }
+                  >
+                    {" "}
                     {subTitle}
                   </Typography>
                 )}
                 {address && (
                   <Typography variant={"h4"} className={classes.dayInfoAddress}>
-                    {formatProposer(address)}
+                    {address}
                   </Typography>
                 )}
                 {endsIn && (
