@@ -7,8 +7,11 @@ import {
   IconButton,
   CircularProgress,
   Button,
+  Slide,
 } from "@material-ui/core";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
+import CloseIcon from "@material-ui/icons/Close";
+
 import { withNamespaces } from "react-i18next";
 import { colors } from "../../theme";
 
@@ -34,6 +37,12 @@ const styles = (theme) => ({
     background: colors.greyBackground,
     overflow: "hidden",
     position: "relative",
+  },
+  closeButton: {
+    position: "absolute",
+    right: "8px",
+    top: "0px",
+    zIndex: "1024",
   },
   title: {
     padding: "24px",
@@ -550,6 +559,7 @@ class Initial extends Component {
       inputEmail: "",
       error: "",
       modalOpen: false,
+      raffleOpen: true,
     };
   }
 
@@ -834,51 +844,65 @@ class Initial extends Component {
   };
   renderRaffleAd = () => {
     const { classes } = this.props;
+    const { raffleOpen } = this.state;
     return (
-      <div className={classes.raffleAddWrapper}>
-        <img
-          className={classes.raffleBackgroundLeftImage}
-          src={require("../../assets/left-cane-small.png")}
-          alt="cane"
-        />
-        <div className={classes.raffleInfo}>
-          <div className={classes.raffleInfoHeader}>
-            <img
-              className={classes.raffleCandyIcon}
-              width="33px"
-              height="22px"
-              src={require("../../assets/ticket.svg")}
-              alt="candy"
+      <Slide direction="up" in={raffleOpen} mountOnEnter unmountOnExit>
+        <div className={classes.raffleAddWrapper}>
+          <IconButton
+            aria-label="close"
+            className={classes.closeButton}
+            onClick={() => {
+              this.setState({ raffleOpen: false });
+            }}
+          >
+            <CloseIcon
+              style={{ color: colors.white, width: "32px", height: "32px" }}
             />
-            <span className={classes.raffleCandyText}>
-              12 DAYS OF LINKSMAS IS HAPPENING NOW
-            </span>
-            <img
-              className={classes.raffleCandyIcon}
-              width="33px"
-              height="22px"
-              src={require("../../assets/raffle.svg")}
-              alt="candy"
-            />
+          </IconButton>
+          <img
+            className={classes.raffleBackgroundLeftImage}
+            src={require("../../assets/left-cane-small.png")}
+            alt="cane"
+          />
+          <div className={classes.raffleInfo}>
+            <div className={classes.raffleInfoHeader}>
+              <img
+                className={classes.raffleCandyIcon}
+                width="33px"
+                height="22px"
+                src={require("../../assets/ticket.svg")}
+                alt="candy"
+              />
+              <span className={classes.raffleCandyText}>
+                12 DAYS OF LINKSMAS IS HAPPENING NOW
+              </span>
+              <img
+                className={classes.raffleCandyIcon}
+                width="33px"
+                height="22px"
+                src={require("../../assets/raffle.svg")}
+                alt="candy"
+              />
+            </div>
+            <div className={classes.raffleInfoBody}>
+              <Button
+                className={classes.raffleJoinButton}
+                variant="contained"
+                onClick={() => {
+                  this.nav("/linksmas-2020");
+                }}
+              >
+                Join the raffle
+              </Button>
+            </div>
           </div>
-          <div className={classes.raffleInfoBody}>
-            <Button
-              className={classes.raffleJoinButton}
-              variant="contained"
-              onClick={() => {
-                this.nav("/linksmas-2020");
-              }}
-            >
-              Join the raffle
-            </Button>
-          </div>
+          <img
+            className={classes.raffleBackgroundRightImage}
+            src={require("../../assets/left-cane-small.png")}
+            alt="cane"
+          />
         </div>
-        <img
-          className={classes.raffleBackgroundRightImage}
-          src={require("../../assets/left-cane-small.png")}
-          alt="cane"
-        />
-      </div>
+      </Slide>
     );
   };
 
