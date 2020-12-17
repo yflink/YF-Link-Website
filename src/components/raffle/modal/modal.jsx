@@ -498,7 +498,7 @@ class VoteModal extends Component {
                   src={require("../../../assets/ticket.svg")}
                   alt="ticket"
                 />
-                {raffleDays[selectedDay]?.title || "Day"}
+                {raffleDays[selectedDay]?.title || "Day"}{" "}
                 {selectedDay < today && "Winner"}
               </Typography>
             </div>
