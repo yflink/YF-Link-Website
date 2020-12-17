@@ -21,6 +21,12 @@ const styles = theme => ({
     height: '30px',
     marginRight: '10px',
   },
+  logoChristmas: {
+    position: 'absolute',
+    width: '38px',
+    left: '1px',
+    top: '-18px',
+  },
   spanContainer: {
   },
   linkText: {
@@ -34,16 +40,17 @@ const styles = theme => ({
 });
 
 class Logo extends Component {
-  
+
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root} onClick={ () => { this.nav('/') } }>
+      <div className={classes.root} onClick={() => { this.nav('/') }}>
         <div className={classes.iconContainer}>
           <img alt="logo" src={require("../../../assets/YFLink-header-logo.svg")} width="30px" height="30px" />
+          <img alt="logoChristmas" className={classes.logoChristmas} src={require("../../../assets/christmas_hat.svg")} />
         </div>
         <div className={classes.spanContainer}>
-          <Typography variant='h3' className={ classes.linkText }>YFLINK</Typography>
+          <Typography variant='h3' className={classes.linkText}>YFLINK</Typography>
         </div>
       </div>
     )
