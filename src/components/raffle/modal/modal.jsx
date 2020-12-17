@@ -542,7 +542,7 @@ class VoteModal extends Component {
                 )}
                 {address && (
                   <Typography variant={"h4"} className={classes.dayInfoAddress}>
-                    {address}
+                    {formatProposer(address)}
                   </Typography>
                 )}
                 {endsIn && (
