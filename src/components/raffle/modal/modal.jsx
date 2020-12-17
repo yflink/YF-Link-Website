@@ -425,7 +425,6 @@ class VoteModal extends Component {
     let endsIn = null;
     let address = null;
     let buttonText = null;
-
     const fullScreen = window.innerWidth < 768;
     if (selectedDay !== null && today !== null) {
       if (winners && winners[selectedDay]) {

@@ -246,9 +246,9 @@ class Store {
           case ENTER_RAFFLE:
             this.enterRaffle(payload);
             break;
-            case CLAIM_PRIZE:
-              this.claimPrize();
-              break;
+          case CLAIM_PRIZE:
+            this.claimPrize();
+            break;
           default:
             break;
         }
@@ -1554,16 +1554,21 @@ class Store {
         fromBlock: 0,
         toBlock: "latest",
       });
-      const winnersAddress = winnedEvents.map(async (item) => {
-        const data = await raffleContract.methods.details(item.returnValues._tokenId).call({from: account.address});
 
-        return {
-          address: item.returnValues._selected,
-          tokenId: item.returnValues._tokenId,
-          ...data
-        };
-      });
+      let winnersAddress = [];
 
+      let i = 0;
+
+      for (i = 0; i < winnedEvents.length; i = i + 1) {
+        const data = await raffleContract.methods
+          .details(winnedEvents[i].returnValues._tokenId)
+          .call({ from: account.address });
+        winnersAddress.push({
+          address: winnedEvents[i].returnValues._selected,
+          tokenId: winnedEvents[i].returnValues._tokenId,
+          ...data,
+        });
+      }
       const result = {
         currentDay,
         currentPair,
