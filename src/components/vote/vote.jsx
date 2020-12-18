@@ -3653,7 +3653,7 @@ class Vote extends Component {
   };
 
   renderProposals = () => {
-    const { govProposals, yYFLProposals, value } = this.state;
+    const { govProposals, yYFLProposals, value, account } = this.state;
     const { classes } = this.props;
 
     const currentProposals =
@@ -3712,6 +3712,7 @@ class Vote extends Component {
               proposal={proposal}
               startLoading={this.startLoading}
               showSnackbar={this.showSnackbar}
+              account={account}
               onVote={this.onVote}
             />
           </Paper>

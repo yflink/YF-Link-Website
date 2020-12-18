@@ -490,7 +490,7 @@ class FunctionProposal extends Component {
   };
 
   renderProposal = (screenType) => {
-    const { classes, proposal } = this.props;
+    const { classes, proposal, account } = this.props;
     const { currentBlock, expanded } = this.state;
 
     const blocksTillEnd = proposal.endBlock - currentBlock;

@@ -1060,33 +1060,6 @@ class Store {
     const account = store.getStore("account");
     const web3 = new Web3(store.getStore("web3context").library.provider);
 
-    this._getGovProposalCount(web3, account, (err, proposalCount) => {
-      if (err) {
-        return emitter.emit(ERROR, err);
-      }
-
-      let arr = Array.from(Array(parseInt(proposalCount)).keys());
-
-      if (proposalCount === 0) {
-        arr = [];
-      }
-
-      async.map(
-        arr,
-        (proposal, callback) => {
-          this._getGovProposals(web3, account, proposal, callback);
-        },
-        (err, proposalsData) => {
-          if (err) {
-            return emitter.emit(ERROR, err);
-          }
-
-          store.setStore({ govProposals: proposalsData });
-          emitter.emit(GET_PROPOSALS_RETURNED);
-        }
-      );
-    });
-
     this._getYYFLProposalCreatedEvents(web3, (err, proposalData) => {
       if (err) {
         return emitter.emit(ERROR, err);
@@ -1194,11 +1167,18 @@ class Store {
           toBlock: "latest",
         }
       );
-
+      let proposalsArray = {};
+      for (let i = 0; i < proposalEvents.length; i = i + 1) {
+        const proposal = await yYFLContract.methods
+          .proposals(proposalEvents[i].returnValues.id)
+          .call();
+        proposalsArray[proposalEvents[i].returnValues.id] = proposal;
+      }
       const proposals = proposalEvents.reduce((data, event) => {
         let newData = { ...data };
         newData[event.returnValues.id] = {
           ...event.returnValues,
+          ...proposalsArray[event.returnValues.id],
           address: event.address,
         };
         return newData;
@@ -1539,16 +1519,32 @@ class Store {
       const currentPair = await raffleContract.methods
         .currentPairAndVault()
         .call({ from: account.address });
+
       let entered = false;
       if (account && account.address) {
-        const enteredAmount = await raffleContract.methods
-          .balanceOf(account.address)
-          .call({ from: account.address });
-        entered = enteredAmount != 0;
+        const transferEvents = await raffleContract.getPastEvents("Transfer", {
+          fromBlock: 0,
+          toBlock: "latest",
+          filter: { from: 0x0, to: account.address },
+        });
+        console.log("transferEvents", transferEvents);
+        const tokenIds = transferEvents.map((event) => {
+          return event.returnValues.tokenId;
+        });
+
+        for (let i = 0; i < tokenIds.length; i++) {
+          const tokenDetail = await raffleContract.methods
+            .details(tokenIds[i])
+            .call({ from: account.address });
+          if (
+            tokenDetail &&
+            tokenDetail.day &&
+            parseInt(tokenDetail.day) === parseInt(currentDay)
+          ) {
+            entered = true;
+          }
+        }
       }
-      const winners = await raffleContract.methods
-        .winners()
-        .call({ from: account.address });
 
       const winnedEvents = await raffleContract.getPastEvents("Winner", {
         fromBlock: 0,
