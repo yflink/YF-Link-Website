@@ -61,6 +61,8 @@ import {
   CONNECTION_CONNECTED,
   CONNECTION_DISCONNECTED,
   CONFIGURE,
+  EXECUTE,
+  EXECUTE_RETURNED,
 } from "../../constants";
 
 const styles = (theme) => ({
@@ -1169,6 +1171,7 @@ class Vote extends Component {
     emitter.on(GET_BALANCES_RETURNED, this.balancesReturned);
     emitter.on(VOTE_FOR_RETURNED, this.showHash);
     emitter.on(VOTE_AGAINST_RETURNED, this.showHash);
+    emitter.on(EXECUTE_RETURNED, this.showHash);
     emitter.on(STAKE_RETURNED, this.stakeReturned);
     emitter.on(WITHDRAW_RETURNED, this.withdrawReturned);
     emitter.on(CONNECTION_CONNECTED, this.connectionConnected);
@@ -3652,6 +3655,10 @@ class Vote extends Component {
     });
   };
 
+  onExecute = (proposal) => {
+    dispatcher.dispatch({ type: EXECUTE, content: proposal });
+  };
+
   renderProposals = () => {
     const { govProposals, yYFLProposals, value, account } = this.state;
     const { classes } = this.props;
@@ -3668,11 +3675,25 @@ class Vote extends Component {
       value === 2 ? prop2.endBlock - prop1.endBlock : prop2.end - prop1.end
     );
 
+    let executableProposalIndex = -1;
+    const hasActiveProposal = store.getStore("hasActiveProposal");
+    if (hasActiveProposal) {
+      const lastProposal = yYFLProposals.filter((proposal) => {
+        if (proposal.proposer.toLowerCase() === account.address.toLowerCase()) {
+          return true;
+        }
+        return false;
+      });
+      if (lastProposal.length > 0){
+        executableProposalIndex = lastProposal[0].id;
+      }
+    }
+
     if (filteredProposals.length === 0) {
       return (
         <div className={classes.propEmptyContainer}>
           <Typography className={classes.stakeTitle} variant={"h3"}>
-            No proposals
+            Loading...
           </Typography>
         </div>
       );
@@ -3714,6 +3735,8 @@ class Vote extends Component {
               showSnackbar={this.showSnackbar}
               account={account}
               onVote={this.onVote}
+              onExecute={this.onExecute}
+              isExecutable={executableProposalIndex === proposal.id}
             />
           </Paper>
         );

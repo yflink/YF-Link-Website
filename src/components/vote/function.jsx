@@ -35,7 +35,26 @@ const styles = (theme) => ({
     width: "100%",
     height: "100%",
   },
-
+  accordionDesktopContainer: {
+    display: "none",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    [theme.breakpoints.up("ms")]: {
+      display: "flex",
+    },
+  },
+  accordionMobileContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    [theme.breakpoints.up("ms")]: {
+      display: "none",
+    },
+  },
   desktopContainer: {
     display: "none",
     flexDirection: "column",
@@ -417,6 +436,46 @@ const styles = (theme) => ({
     overflowWrap: "anywhere",
     marginLeft: "5px",
   },
+  executeContainer: {
+    backgroundColor: "#8C7E58",
+    height: "70px",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    [theme.breakpoints.up("ms")]: {
+      flexDirection: "row",
+    },
+  },
+  executeText: {
+    fontSize: "12px",
+    lineHeight: "14px",
+    fontWeight: "bold",
+    [theme.breakpoints.up("ms")]: {
+      fontSize: "16px",
+      lineHeight: "19px",
+    },
+  },
+  executeButton: {
+    height: "32px",
+    borderRadius: "3px",
+    backgroundColor: "rgba(255, 255, 255, 0.2);",
+    fontWeight: "bold",
+    fontSize: "16px",
+    lineHeight: "20px",
+    color: colors.white,
+    boxShadow: "none",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.5);",
+    },
+    marginTop: "8px",
+    [theme.breakpoints.up("ms")]: {
+      marginLeft: "24px",
+      marginTop: "0px",
+      height: "42px",
+    },
+  },
 });
 
 class FunctionProposal extends Component {
@@ -481,6 +540,14 @@ class FunctionProposal extends Component {
     }
   };
 
+  onExecute = (event) => {
+    event.stopPropagation();
+    const { onExecute: onExecuteHandler, proposal } = this.props;
+    if (onExecuteHandler) {
+      onExecuteHandler({ proposal });
+    }
+  };
+
   voteAgainstClicked = (event) => {
     event.stopPropagation();
     const { onVote, proposal } = this.props;
@@ -490,7 +557,7 @@ class FunctionProposal extends Component {
   };
 
   renderProposal = (screenType) => {
-    const { classes, proposal, account } = this.props;
+    const { classes, proposal, account, isExecutable } = this.props;
     const { currentBlock, expanded } = this.state;
 
     const blocksTillEnd = proposal.endBlock - currentBlock;
@@ -559,309 +626,64 @@ class FunctionProposal extends Component {
 
     if (screenType === "DESKTOP") {
       return (
-        <Accordion
-          classes={{ root: classes.desktopContainer }}
-          expanded={expanded}
-          onChange={(event, isExpanded) => {
-            if (isExpanded) {
-              this.setState({ expanded: true });
-            } else {
-              if (
-                proposal.description &&
-                proposal.description.includes("https://")
-              ) {
-                console.log("proposal description", proposal.description);
-                if (proposal.description[0] === '"') {
-                  if (
-                    proposal.description[proposal.description.length - 1] ===
-                    '"'
-                  ) {
-                    window.open(
-                      proposal.description.slice(
-                        1,
-                        proposal.description.length - 1
-                      )
-                    );
+        <div className={classes.accordionDesktopContainer}>
+          <Accordion
+            classes={{ root: classes.desktopContainer }}
+            expanded={expanded}
+            onChange={(event, isExpanded) => {
+              if (isExpanded) {
+                this.setState({ expanded: true });
+              } else {
+                if (
+                  proposal.description &&
+                  proposal.description.includes("https://")
+                ) {
+                  console.log("proposal description", proposal.description);
+                  if (proposal.description[0] === '"') {
+                    if (
+                      proposal.description[proposal.description.length - 1] ===
+                      '"'
+                    ) {
+                      window.open(
+                        proposal.description.slice(
+                          1,
+                          proposal.description.length - 1
+                        )
+                      );
+                    } else {
+                      window.open(proposal.description.slice(1));
+                    }
                   } else {
-                    window.open(proposal.description.slice(1));
+                    window.open(proposal.description);
                   }
-                } else {
-                  window.open(proposal.description);
                 }
               }
-            }
-          }}
-        >
-          <AccordionSummary
-            aria-controls="proposal-content"
-            id="proposal-header"
-            classes={{ root: classes.accordionSummary }}
+            }}
           >
-            <div className={classes.indexerContainer}>
-              <div className={classes.indexerValue}>
-                <Typography variant={"h3"} className={classes.proposalId}>
-                  {proposal.id}
-                </Typography>
-              </div>
-              <div className={classes.indexerTime}>
-                <Typography
-                  variant={"h5"}
-                  className={
-                    proposalTimeStamp === "Ended"
-                      ? classes.proposalTimeEnded
-                      : classes.proposalTimeNormal
-                  }
-                >
-                  {proposalTimeStamp}
-                </Typography>
-              </div>
-            </div>
-            <div className={classes.titleProperContainer}>
-              <div className={classes.proposalTitleContainer}>
-                {proposal.description &&
-                proposal.description.includes("https://") ? (
-                  <Typography variant={"h4"} className={classes.proposalTitle}>
-                    {this.getProposalTitle(proposal.description)}
+            <AccordionSummary
+              aria-controls="proposal-content"
+              id="proposal-header"
+              classes={{ root: classes.accordionSummary }}
+            >
+              <div className={classes.indexerContainer}>
+                <div className={classes.indexerValue}>
+                  <Typography variant={"h3"} className={classes.proposalId}>
+                    {proposal.id}
                   </Typography>
-                ) : (
-                  <Typography variant={"h4"} className={classes.proposalTitle}>
-                    {proposal.description}
-                  </Typography>
-                )}
-              </div>
-              <div className={classes.proposalAddressContainer}>
-                <Typography variant={"h5"} className={classes.proposalAddress}>
-                  Proposer {proposerAddress}
-                </Typography>
-              </div>
-            </div>
-            <div className={classes.voteRatioContainer}>
-              <div className={classes.voteValueContainer}>
-                <div className={classes.voteAgreeContainer}>
-                  <Button
-                    classes={{
-                      root: classes.voteAgreeButton,
-                      label: classes.voteAgreeLabel,
-                    }}
-                    variant="contained"
-                    color="primary"
-                    onClick={this.voteAgreeClicked}
-                    startIcon={
-                      <img
-                        className={classes.voteUpIcon}
-                        src={require("../../assets/thumbs-up.svg")}
-                        alt="thumb-up"
-                      />
+                </div>
+                <div className={classes.indexerTime}>
+                  <Typography
+                    variant={"h5"}
+                    className={
+                      proposalTimeStamp === "Ended"
+                        ? classes.proposalTimeEnded
+                        : classes.proposalTimeNormal
                     }
                   >
-                    <Typography
-                      variant={"h4"}
-                      className={classes.voteText}
-                      noWrap
-                    >
-                      {votesForText}
-                    </Typography>
-                  </Button>
-                </div>
-                <div className={classes.voteAgainstContainer}>
-                  <Button
-                    classes={{
-                      root: classes.voteAgainstButton,
-                      label: classes.voteAgainstLabel,
-                    }}
-                    variant="contained"
-                    color="primary"
-                    onClick={this.voteAgainstClicked}
-                    endIcon={
-                      <img
-                        className={classes.voteDownIcon}
-                        src={require("../../assets/thumbs-down.svg")}
-                        alt="thumb-down"
-                      />
-                    }
-                  >
-                    <Typography
-                      variant={"h4"}
-                      className={classes.voteText}
-                      noWrap
-                    >
-                      {votesAgainstText}
-                    </Typography>
-                  </Button>
-                </div>
-              </div>
-              <div className={classes.voteValueLineContainer}>
-                <div
-                  className={classes.voteGreenLine}
-                  style={{ width: `${votesForPercentage}%` }}
-                />
-                <div
-                  className={classes.voteRedLine}
-                  style={{ width: `${votesAgainstPercentage}%` }}
-                />
-                <div
-                  className={classes.voteIndicator}
-                  style={{ right: `${votesAgainstPercentage}%` }}
-                >
-                  <Typography className={classes.voteIndicatorText}>
-                    {votesForPercentage}
+                    {proposalTimeStamp}
                   </Typography>
                 </div>
               </div>
-            </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className={classes.detailWrapper}>
-              {contracts &&
-                contracts.map((item, index) => (
-                  <div className={classes.contractWrapper} key={index}>
-                    <span className={classes.contractIndexWrapper}>
-                      {index + 1}
-                    </span>
-                    <div className={classes.contractInfoWrapper}>
-                      <span className={classes.contractInfoHeader}>
-                        Contract:{" "}
-                        <span className={classes.contractInfoValue}>
-                          {item.contract || ""}
-                        </span>
-                      </span>
-                      <span className={classes.contractInfoHeader}>
-                        Function:{" "}
-                        <span className={classes.contractInfoValue}>
-                          {item.func || ""}
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              <Button
-                variant="outlined"
-                className={classes.hideButton}
-                onClick={() => {
-                  this.setState({ expanded: false });
-                }}
-              >
-                <Typography variant="h4" className={classes.hideButtonText}>
-                  Hide Function
-                </Typography>
-                <ArrowDropUpIcon style={{ color: colors.white }} />
-              </Button>
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      );
-    } else if (screenType === "MOBILE") {
-      return (
-        <Accordion
-          classes={{ root: classes.mobileContainer }}
-          expanded={expanded}
-          onChange={(event, isExpanded) => {
-            if (isExpanded) {
-              this.setState({ expanded: true });
-            } else {
-              if (
-                proposal.description &&
-                proposal.description.includes("https://")
-              ) {
-                window.open(proposal.description);
-              }
-            }
-          }}
-        >
-          <AccordionSummary
-            aria-controls="proposal-content"
-            id="proposal-header"
-            classes={{ root: classes.accordionSummary }}
-          >
-            <div className={classes.mobileAccordionSummaryWrapper}>
-              <div className={classes.mobileIndexerHeadingContainer}>
-                <div className={classes.indexerContainer}>
-                  <div className={classes.indexerValue}>
-                    <Typography variant={"h3"} className={classes.proposalId}>
-                      {proposal.id}
-                    </Typography>
-                  </div>
-                  <div className={classes.indexerTime}>
-                    <Typography
-                      variant={"h5"}
-                      className={
-                        proposalTimeStamp === "Ended"
-                          ? classes.proposalTimeEnded
-                          : classes.proposalTimeNormal
-                      }
-                    >
-                      {proposalTimeStamp}
-                    </Typography>
-                  </div>
-                </div>
-                <div className={classes.voteRatioContainer}>
-                  <div className={classes.voteValueContainer}>
-                    <div className={classes.voteAgreeContainer}>
-                      <Button
-                        classes={{
-                          root: classes.voteAgreeButton,
-                          label: classes.voteAgreeLabel,
-                        }}
-                        variant="contained"
-                        color="primary"
-                        onClick={this.voteAgreeClicked}
-                        startIcon={
-                          <img
-                            className={classes.voteUpIcon}
-                            src={require("../../assets/thumbs-up.svg")}
-                            alt="thumb-up"
-                          />
-                        }
-                      >
-                        <Typography
-                          variant={"h4"}
-                          className={classes.voteText}
-                          noWrap
-                        >
-                          {votesForPercentage}%
-                        </Typography>
-                      </Button>
-                    </div>
-                    <div className={classes.voteAgainstContainer}>
-                      <Button
-                        classes={{
-                          root: classes.voteAgainstButton,
-                          label: classes.voteAgainstLabel,
-                        }}
-                        variant="contained"
-                        color="primary"
-                        onClick={this.voteAgainstClicked}
-                        startIcon={
-                          <img
-                            className={classes.voteUpIcon}
-                            src={require("../../assets/thumbs-down.svg")}
-                            alt="thumb-down"
-                          />
-                        }
-                      >
-                        <Typography
-                          variant={"h4"}
-                          className={classes.voteText}
-                          noWrap
-                        >
-                          {votesAgainstPercentage}%
-                        </Typography>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className={classes.voteValueLineContainer}>
-                    <div
-                      className={classes.voteGreenLine}
-                      style={{ width: `${votesForPercentage}%` }}
-                    />
-                    <div
-                      className={classes.voteRedLine}
-                      style={{ width: `${votesAgainstPercentage}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-
               <div className={classes.titleProperContainer}>
                 <div className={classes.proposalTitleContainer}>
                   {proposal.description &&
@@ -890,47 +712,337 @@ class FunctionProposal extends Component {
                   </Typography>
                 </div>
               </div>
-            </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className={classes.detailWrapper}>
-              {contracts &&
-                contracts.map((item, index) => (
-                  <div className={classes.contractWrapper} key={index}>
-                    <span className={classes.contractIndexWrapper}>
-                      {index + 1}
-                    </span>
-                    <div className={classes.contractInfoWrapper}>
-                      <span className={classes.contractInfoHeader}>
-                        Contract:{" "}
-                        <span className={classes.contractInfoValue}>
-                          {item.contract || ""}
-                        </span>
-                      </span>
-                      <span className={classes.contractInfoHeader}>
-                        Function:{" "}
-                        <span className={classes.contractInfoValue}>
-                          {item.func || ""}
-                        </span>
-                      </span>
-                    </div>
+              <div className={classes.voteRatioContainer}>
+                <div className={classes.voteValueContainer}>
+                  <div className={classes.voteAgreeContainer}>
+                    <Button
+                      classes={{
+                        root: classes.voteAgreeButton,
+                        label: classes.voteAgreeLabel,
+                      }}
+                      variant="contained"
+                      color="primary"
+                      onClick={this.voteAgreeClicked}
+                      startIcon={
+                        <img
+                          className={classes.voteUpIcon}
+                          src={require("../../assets/thumbs-up.svg")}
+                          alt="thumb-up"
+                        />
+                      }
+                    >
+                      <Typography
+                        variant={"h4"}
+                        className={classes.voteText}
+                        noWrap
+                      >
+                        {votesForText}
+                      </Typography>
+                    </Button>
                   </div>
-                ))}
+                  <div className={classes.voteAgainstContainer}>
+                    <Button
+                      classes={{
+                        root: classes.voteAgainstButton,
+                        label: classes.voteAgainstLabel,
+                      }}
+                      variant="contained"
+                      color="primary"
+                      onClick={this.voteAgainstClicked}
+                      endIcon={
+                        <img
+                          className={classes.voteDownIcon}
+                          src={require("../../assets/thumbs-down.svg")}
+                          alt="thumb-down"
+                        />
+                      }
+                    >
+                      <Typography
+                        variant={"h4"}
+                        className={classes.voteText}
+                        noWrap
+                      >
+                        {votesAgainstText}
+                      </Typography>
+                    </Button>
+                  </div>
+                </div>
+                <div className={classes.voteValueLineContainer}>
+                  <div
+                    className={classes.voteGreenLine}
+                    style={{ width: `${votesForPercentage}%` }}
+                  />
+                  <div
+                    className={classes.voteRedLine}
+                    style={{ width: `${votesAgainstPercentage}%` }}
+                  />
+                  <div
+                    className={classes.voteIndicator}
+                    style={{ right: `${votesAgainstPercentage}%` }}
+                  >
+                    <Typography className={classes.voteIndicatorText}>
+                      {votesForPercentage}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div className={classes.detailWrapper}>
+                {contracts &&
+                  contracts.map((item, index) => (
+                    <div className={classes.contractWrapper} key={index}>
+                      <span className={classes.contractIndexWrapper}>
+                        {index + 1}
+                      </span>
+                      <div className={classes.contractInfoWrapper}>
+                        <span className={classes.contractInfoHeader}>
+                          Contract:{" "}
+                          <span className={classes.contractInfoValue}>
+                            {item.contract || ""}
+                          </span>
+                        </span>
+                        <span className={classes.contractInfoHeader}>
+                          Function:{" "}
+                          <span className={classes.contractInfoValue}>
+                            {item.func || ""}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                <Button
+                  variant="outlined"
+                  className={classes.hideButton}
+                  onClick={() => {
+                    this.setState({ expanded: false });
+                  }}
+                >
+                  <Typography variant="h4" className={classes.hideButtonText}>
+                    Hide Function
+                  </Typography>
+                  <ArrowDropUpIcon style={{ color: colors.white }} />
+                </Button>
+              </div>
+            </AccordionDetails>
+          </Accordion>
+          {isExecutable && (
+            <div className={classes.executeContainer}>
+              <Typography variant="h4" className={classes.executeText}>
+                Your proposal has passed. Execute now.
+              </Typography>
               <Button
-                variant="outlined"
-                className={classes.hideButton}
-                onClick={() => {
-                  this.setState({ expanded: false });
+                variant="contained"
+                className={classes.executeButton}
+                onClick={(event) => {
+                  this.onExecute(event);
                 }}
               >
-                <Typography variant="h4" className={classes.hideButtonText}>
-                  Hide Function
-                </Typography>
-                <ArrowDropUpIcon style={{ color: colors.white }} />
+                Execute
               </Button>
             </div>
-          </AccordionDetails>
-        </Accordion>
+          )}
+        </div>
+      );
+    } else if (screenType === "MOBILE") {
+      return (
+        <div className={classes.accordionMobileContainer}>
+          <Accordion
+            classes={{ root: classes.mobileContainer }}
+            expanded={expanded}
+            onChange={(event, isExpanded) => {
+              if (isExpanded) {
+                this.setState({ expanded: true });
+              } else {
+                if (
+                  proposal.description &&
+                  proposal.description.includes("https://")
+                ) {
+                  window.open(proposal.description);
+                }
+              }
+            }}
+          >
+            <AccordionSummary
+              aria-controls="proposal-content"
+              id="proposal-header"
+              classes={{ root: classes.accordionSummary }}
+            >
+              <div className={classes.mobileAccordionSummaryWrapper}>
+                <div className={classes.mobileIndexerHeadingContainer}>
+                  <div className={classes.indexerContainer}>
+                    <div className={classes.indexerValue}>
+                      <Typography variant={"h3"} className={classes.proposalId}>
+                        {proposal.id}
+                      </Typography>
+                    </div>
+                    <div className={classes.indexerTime}>
+                      <Typography
+                        variant={"h5"}
+                        className={
+                          proposalTimeStamp === "Ended"
+                            ? classes.proposalTimeEnded
+                            : classes.proposalTimeNormal
+                        }
+                      >
+                        {proposalTimeStamp}
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className={classes.voteRatioContainer}>
+                    <div className={classes.voteValueContainer}>
+                      <div className={classes.voteAgreeContainer}>
+                        <Button
+                          classes={{
+                            root: classes.voteAgreeButton,
+                            label: classes.voteAgreeLabel,
+                          }}
+                          variant="contained"
+                          color="primary"
+                          onClick={this.voteAgreeClicked}
+                          startIcon={
+                            <img
+                              className={classes.voteUpIcon}
+                              src={require("../../assets/thumbs-up.svg")}
+                              alt="thumb-up"
+                            />
+                          }
+                        >
+                          <Typography
+                            variant={"h4"}
+                            className={classes.voteText}
+                            noWrap
+                          >
+                            {votesForPercentage}%
+                          </Typography>
+                        </Button>
+                      </div>
+                      <div className={classes.voteAgainstContainer}>
+                        <Button
+                          classes={{
+                            root: classes.voteAgainstButton,
+                            label: classes.voteAgainstLabel,
+                          }}
+                          variant="contained"
+                          color="primary"
+                          onClick={this.voteAgainstClicked}
+                          startIcon={
+                            <img
+                              className={classes.voteUpIcon}
+                              src={require("../../assets/thumbs-down.svg")}
+                              alt="thumb-down"
+                            />
+                          }
+                        >
+                          <Typography
+                            variant={"h4"}
+                            className={classes.voteText}
+                            noWrap
+                          >
+                            {votesAgainstPercentage}%
+                          </Typography>
+                        </Button>
+                      </div>
+                    </div>
+                    <div className={classes.voteValueLineContainer}>
+                      <div
+                        className={classes.voteGreenLine}
+                        style={{ width: `${votesForPercentage}%` }}
+                      />
+                      <div
+                        className={classes.voteRedLine}
+                        style={{ width: `${votesAgainstPercentage}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className={classes.titleProperContainer}>
+                  <div className={classes.proposalTitleContainer}>
+                    {proposal.description &&
+                    proposal.description.includes("https://") ? (
+                      <Typography
+                        variant={"h4"}
+                        className={classes.proposalTitle}
+                      >
+                        {this.getProposalTitle(proposal.description)}
+                      </Typography>
+                    ) : (
+                      <Typography
+                        variant={"h4"}
+                        className={classes.proposalTitle}
+                      >
+                        {proposal.description}
+                      </Typography>
+                    )}
+                  </div>
+                  <div className={classes.proposalAddressContainer}>
+                    <Typography
+                      variant={"h5"}
+                      className={classes.proposalAddress}
+                    >
+                      Proposer {proposerAddress}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div className={classes.detailWrapper}>
+                {contracts &&
+                  contracts.map((item, index) => (
+                    <div className={classes.contractWrapper} key={index}>
+                      <span className={classes.contractIndexWrapper}>
+                        {index + 1}
+                      </span>
+                      <div className={classes.contractInfoWrapper}>
+                        <span className={classes.contractInfoHeader}>
+                          Contract:{" "}
+                          <span className={classes.contractInfoValue}>
+                            {item.contract || ""}
+                          </span>
+                        </span>
+                        <span className={classes.contractInfoHeader}>
+                          Function:{" "}
+                          <span className={classes.contractInfoValue}>
+                            {item.func || ""}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                <Button
+                  variant="outlined"
+                  className={classes.hideButton}
+                  onClick={() => {
+                    this.setState({ expanded: false });
+                  }}
+                >
+                  <Typography variant="h4" className={classes.hideButtonText}>
+                    Hide Function
+                  </Typography>
+                  <ArrowDropUpIcon style={{ color: colors.white }} />
+                </Button>
+              </div>
+            </AccordionDetails>
+          </Accordion>
+          {isExecutable && (
+            <div className={classes.executeContainer}>
+              <Typography variant="h4" className={classes.executeText}>
+                Your proposal has passed. Execute now.
+              </Typography>
+              <Button
+                variant="contained"
+                className={classes.executeButton}
+                onClick={(event) => {
+                  this.onExecute(event);
+                }}
+              >
+                Execute
+              </Button>
+            </div>
+          )}
+        </div>
       );
     }
   };

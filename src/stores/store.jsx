@@ -48,6 +48,8 @@ import {
   ENTER_RAFFLE_RETURNED,
   CLAIM_PRIZE,
   CLAIM_PRIZE_RETURNED,
+  EXECUTE,
+  EXECUTE_RETURNED,
 } from "../constants";
 import Web3 from "web3";
 
@@ -131,6 +133,7 @@ class Store {
       },
       govProposals: [],
       yYFLProposals: [],
+      hasActiveProposal: false,
       rewardPools: [
         {
           id: "gov",
@@ -248,6 +251,9 @@ class Store {
             break;
           case CLAIM_PRIZE:
             this.claimPrize();
+            break;
+          case EXECUTE:
+            this.execute(payload);
             break;
           default:
             break;
@@ -1060,7 +1066,7 @@ class Store {
     const account = store.getStore("account");
     const web3 = new Web3(store.getStore("web3context").library.provider);
 
-    this._getYYFLProposalCreatedEvents(web3, (err, proposalData) => {
+    this._getYYFLProposalCreatedEvents(web3, account, (err, proposalData, hasActive) => {
       if (err) {
         return emitter.emit(ERROR, err);
       }
@@ -1074,6 +1080,7 @@ class Store {
         if (proposalCount === 0) {
           arr = [];
         }
+        store.setStore({ hasActiveProposal: hasActive });
 
         async.map(
           arr,
@@ -1154,7 +1161,7 @@ class Store {
     }
   };
 
-  _getYYFLProposalCreatedEvents = async (web3, callback) => {
+  _getYYFLProposalCreatedEvents = async (web3,account,  callback) => {
     try {
       const yYFLContract = new web3.eth.Contract(
         config.yYFLGovABI,
@@ -1167,23 +1174,16 @@ class Store {
           toBlock: "latest",
         }
       );
-      let proposalsArray = {};
-      for (let i = 0; i < proposalEvents.length; i = i + 1) {
-        const proposal = await yYFLContract.methods
-          .proposals(proposalEvents[i].returnValues.id)
-          .call();
-        proposalsArray[proposalEvents[i].returnValues.id] = proposal;
-      }
       const proposals = proposalEvents.reduce((data, event) => {
         let newData = { ...data };
         newData[event.returnValues.id] = {
           ...event.returnValues,
-          ...proposalsArray[event.returnValues.id],
           address: event.address,
         };
         return newData;
       }, {});
-      callback(null, proposals);
+      const hasActiveProposal = await yYFLContract.methods.hasActiveProposal(account.address).call({from: account.address});
+      callback(null, proposals, hasActiveProposal);
     } catch (ex) {
       return callback(ex);
     }
@@ -1696,6 +1696,63 @@ class Store {
       console.log("ENTER RAFFLE ERROR", error);
       callback(error);
     }
+  };
+
+  execute = (payload) => {
+    const account = store.getStore("account");
+    const { proposal } = payload.content;
+    if (proposal && proposal.id) {
+      this._callExecute(account, proposal.id, (err, res) => {
+        if (err) {
+          return emitter.emit(ERROR, err);
+        }
+
+        return emitter.emit(EXECUTE_RETURNED, res);
+      });
+    }
+  };
+
+  _callExecute = async (account, id, callback) => {
+    const web3 = new Web3(store.getStore("web3context").library.provider);
+    const yYFLContract = new web3.eth.Contract(
+      config.yYFLABI,
+      config.yYFLAddress
+    );
+    yYFLContract.methods
+      .executeProposal(id)
+      .send({
+        from: account.address,
+        gasPrice: web3.utils.toWei(await this._getGasPrice(), "gwei"),
+      })
+      .on("transactionHash", function (hash) {
+        console.log(hash);
+        callback(null, hash);
+      })
+      .on("confirmation", function (confirmationNumber, receipt) {
+        console.log(confirmationNumber, receipt);
+        if (confirmationNumber === 2) {
+          dispatcher.dispatch({ type: GET_PROPOSALS, content: {} });
+        }
+      })
+      .on("receipt", function (receipt) {
+        console.log(receipt);
+      })
+      .on("error", function (error) {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      })
+      .catch((error) => {
+        if (!error.toString().includes("-32601")) {
+          if (error.message) {
+            return callback(error.message);
+          }
+          callback(error);
+        }
+      });
   };
 
   claim = (payload) => {

@@ -467,7 +467,7 @@ class VoteModal extends Component {
         const tomorrow = moment.utc(nextDay);
         const timeRemain = tomorrow.diff(moment.now(), "minutes");
         endsIn = `Ends in: ${Math.floor(timeRemain / 60)}h ${timeRemain % 60}m`;
-        buttonText = "Enter";
+          buttonText = "Enter";
       }
     }
 

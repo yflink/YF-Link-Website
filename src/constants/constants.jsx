@@ -68,6 +68,9 @@ export const ENTER_RAFFLE_RETURNED = "ENTER_RAFFLE_RETURNED";
 export const CLAIM_PRIZE = "CLAIM_PRIZE";
 export const CLAIM_PRIZE_RETURNED = "CLAIM_PRIZE_RETURNED";
 
+export const EXECUTE = "EXECUTE";
+export const EXECUTE_RETURNED = 'EXECUTE_RETURNED';
+
 export const raffleDays = [
   {
     title: "Day 1",
