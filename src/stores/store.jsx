@@ -1066,40 +1066,44 @@ class Store {
     const account = store.getStore("account");
     const web3 = new Web3(store.getStore("web3context").library.provider);
 
-    this._getYYFLProposalCreatedEvents(web3, account, (err, proposalData, hasActive) => {
-      if (err) {
-        return emitter.emit(ERROR, err);
-      }
-      this._getYYFLProposalCount(web3, account, (err, proposalCount) => {
+    this._getYYFLProposalCreatedEvents(
+      web3,
+      account,
+      (err, proposalData, hasActive) => {
         if (err) {
           return emitter.emit(ERROR, err);
         }
-
-        let arr = Array.from(Array(parseInt(proposalCount)).keys());
-
-        if (proposalCount === 0) {
-          arr = [];
-        }
-        store.setStore({ hasActiveProposal: hasActive });
-
-        async.map(
-          arr,
-          (proposal, callback) => {
-            this._getYYFLProposals(web3, account, proposal, callback);
-          },
-          (err, proposals) => {
-            if (err) {
-              return emitter.emit(ERROR, err);
-            }
-            const updatedProposals = proposals.map((item, index) => {
-              return { ...item, ...proposalData[index] };
-            });
-            store.setStore({ yYFLProposals: updatedProposals });
-            emitter.emit(GET_PROPOSALS_RETURNED);
+        this._getYYFLProposalCount(web3, account, (err, proposalCount) => {
+          if (err) {
+            return emitter.emit(ERROR, err);
           }
-        );
-      });
-    });
+
+          let arr = Array.from(Array(parseInt(proposalCount)).keys());
+
+          if (proposalCount === 0) {
+            arr = [];
+          }
+          store.setStore({ hasActiveProposal: hasActive });
+
+          async.map(
+            arr,
+            (proposal, callback) => {
+              this._getYYFLProposals(web3, account, proposal, callback);
+            },
+            (err, proposals) => {
+              if (err) {
+                return emitter.emit(ERROR, err);
+              }
+              const updatedProposals = proposals.map((item, index) => {
+                return { ...item, ...proposalData[index] };
+              });
+              store.setStore({ yYFLProposals: updatedProposals });
+              emitter.emit(GET_PROPOSALS_RETURNED);
+            }
+          );
+        });
+      }
+    );
   };
 
   _getGovProposalCount = async (web3, account, callback) => {
@@ -1161,7 +1165,7 @@ class Store {
     }
   };
 
-  _getYYFLProposalCreatedEvents = async (web3,account,  callback) => {
+  _getYYFLProposalCreatedEvents = async (web3, account, callback) => {
     try {
       const yYFLContract = new web3.eth.Contract(
         config.yYFLGovABI,
@@ -1182,7 +1186,9 @@ class Store {
         };
         return newData;
       }, {});
-      const hasActiveProposal = await yYFLContract.methods.hasActiveProposal(account.address).call({from: account.address});
+      const hasActiveProposal = await yYFLContract.methods
+        .hasActiveProposal(account.address)
+        .call({ from: account.address });
       callback(null, proposals, hasActiveProposal);
     } catch (ex) {
       return callback(ex);
@@ -1527,7 +1533,6 @@ class Store {
           toBlock: "latest",
           filter: { from: 0x0, to: account.address },
         });
-        console.log("transferEvents", transferEvents);
         const tokenIds = transferEvents.map((event) => {
           return event.returnValues.tokenId;
         });
