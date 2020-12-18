@@ -826,7 +826,7 @@ class FunctionProposal extends Component {
               </div>
             </AccordionDetails>
           </Accordion>
-          {isExecutable && (
+          {isExecutable && proposalTimeStamp === "Ended" && (
             <div className={classes.executeContainer}>
               <Typography variant="h4" className={classes.executeText}>
                 Your proposal has passed. Execute now.
@@ -1026,7 +1026,7 @@ class FunctionProposal extends Component {
               </div>
             </AccordionDetails>
           </Accordion>
-          {isExecutable && (
+          {isExecutable && proposalTimeStamp === "Ended" && (
             <div className={classes.executeContainer}>
               <Typography variant="h4" className={classes.executeText}>
                 Your proposal has passed. Execute now.
