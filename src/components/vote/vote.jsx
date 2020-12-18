@@ -3678,13 +3678,13 @@ class Vote extends Component {
     let executableProposalIndex = -1;
     const hasActiveProposal = store.getStore("hasActiveProposal");
     if (hasActiveProposal) {
-      const lastProposal = yYFLProposals.filter((proposal) => {
+      const lastProposal = filteredProposals.filter((proposal) => {
         if (proposal.proposer.toLowerCase() === account.address.toLowerCase()) {
           return true;
         }
         return false;
       });
-      if (lastProposal.length > 0){
+      if (lastProposal.length > 0) {
         executableProposalIndex = lastProposal[0].id;
       }
     }
