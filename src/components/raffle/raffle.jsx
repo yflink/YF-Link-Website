@@ -1314,7 +1314,7 @@ class Raffle extends Component {
     emitter.on(GET_RAFFLE_INFO_RETURNED, this.raffleInfoReturned);
     emitter.on(CONNECTION_CONNECTED, this.connectionConnected);
     emitter.on(CONNECTION_DISCONNECTED, this.connectionDisconnected);
-    emitter.on(ENTER_RAFFLE_RETURNED, this.enterRaffleReturned);
+    emitter.on(ENTER_RAFFLE_RETURNED, this.showHash);
     window.scrollTo(0, 0);
 
     setTimeout(() => {
@@ -1369,6 +1369,10 @@ class Raffle extends Component {
 
   showErrorMessage = (message) => {
     this.showSnackbar(message, "Warning");
+  };
+
+  showHash = (txHash) => {
+    this.showSnackbar(txHash, "Hash");
   };
 
   showSnackbar = (message, type) => {
