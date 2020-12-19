@@ -2123,7 +2123,24 @@ class Raffle extends Component {
   };
 
   onGetLpTokens = () => {
-    window.open("https://linkswap.app/#/pool");
+    const { raffleInfo } = this.state;
+    if (raffleInfo && raffleInfo.currentDay) {
+      const lpTokens = [
+        "https://linkswap.app/#/add/ETH/0xb78B3320493a4EFaa1028130C5Ba26f0B6085Ef8",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/0x83F873388Cd14b83A9f47FabDe3C9850b5C74548",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/0x0fF6ffcFDa92c53F615a4A75D982f399C989366b",
+        "https://linkswap.app/#/add/ETH/0x06F3C323f0238c72BF35011071f2b5B7F43A054c",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/0xEdFBd6c48c3dDfF5612Ade14B45bb19F916809ba",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/0x79BA92DDA26FcE15e1e9af47D5cFdFD2A093E000",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+        "https://linkswap.app/#/add/ETH/0x5dbcF33D8c2E976c6b560249878e6F1491Bca25c",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/ETH",
+        "https://linkswap.app/#/add/ETH/0x6D6506E6F438edE269877a0A720026559110B7d5",
+        "https://linkswap.app/#/add/0x514910771AF9Ca656af840dff83E8264EcF986CA/0x28cb7e841ee97947a86B06fA4090C8451f64c0be",
+      ];
+      window.open(lpTokens[raffleInfo.currentDay]);
+    }
   };
 
   render() {
