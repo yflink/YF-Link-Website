@@ -454,10 +454,10 @@ class VoteModal extends Component {
           dayTitle = "Winner will be selected soon!";
         }
       } else if (selectedDay > today) {
-        dayTitle = `${raffleDays[selectedDay].title} is not started yet.`;
+        dayTitle = `${raffleDays[selectedDay].title} has not started yet.`;
         subTitle = `Come back again on ${raffleDays[selectedDay].subTitle}.`;
       } else {
-        dayTitle = `Hasen't ended yet.`;
+        dayTitle = `Hasn't ended yet.`;
         if (entered) {
           subTitle = "Please wait until end of this day!";
         } else {
