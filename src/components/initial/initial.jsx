@@ -937,7 +937,7 @@ class Initial extends Component {
 
         {this.renderModal()}
 
-        {this.renderRaffleAd()}
+        {/* {this.renderRaffleAd()} */}
       </div>
     );
   }
