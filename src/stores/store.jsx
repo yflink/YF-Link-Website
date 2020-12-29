@@ -58,6 +58,7 @@ import {
   fortmatic,
   frame,
   injected,
+  injectedtw,
   ledger,
   portis,
   squarelink,
@@ -84,7 +85,7 @@ class Store {
       web3: null,
       connectorsByName: {
         MetaMask: injected,
-        TrustWallet: injected,
+        TrustWallet: injectedtw,
         WalletConnect: walletconnect,
         WalletLink: walletlink,
         Ledger: ledger,
