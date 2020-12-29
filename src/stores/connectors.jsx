@@ -40,7 +40,7 @@ export const walletconnect = new WalletConnectConnector({
 
 export const walletlink = new WalletLinkConnector({
   url: RPC_URLS[1],
-  appName: "YFLink"
+  appName: "YF Link"
 });
 
 export const ledger = new LedgerConnector({

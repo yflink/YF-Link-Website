@@ -59,7 +59,7 @@ class Logo extends Component {
         </div>
         <div className={classes.spanContainer}>
           <Typography variant="h3" className={classes.linkText}>
-            YFLINK
+            YF LINK
           </Typography>
         </div>
       </div>
