@@ -116,7 +116,7 @@ class Store {
         raw: {
           id: "yfl",
           symbol: "YFL",
-          name: "YFLink",
+          name: "YF Link",
           decimals: 18,
           address: config.yflAddress,
           abi: config.yflABI,
@@ -125,7 +125,7 @@ class Store {
         wrapper: {
           id: "wyfl",
           symbol: "wYFL",
-          name: "Wrapped YFLink",
+          name: "Wrapped YF Link",
           decimals: 18,
           address: config.yflinkWrapperAddress,
           abi: config.yflinkWrapperABI,
@@ -140,7 +140,7 @@ class Store {
           id: "gov",
           title: "Gov",
           name: "Governance",
-          website: "YFLink Token",
+          website: "YF Link Token",
           link: "https://yflink.io",
           instructionsLink:
             "https://gov.yflink.io/t/staking-in-the-governance-contract/28",
