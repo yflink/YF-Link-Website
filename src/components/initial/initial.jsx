@@ -614,7 +614,7 @@ class Initial extends Component {
                     className={classes.linkButton}
                     onClick={() => {
                       window.open(
-                        "http://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+                        "https://linkswap.app/#/buy"
                       );
                     }}
                   >
@@ -626,7 +626,7 @@ class Initial extends Component {
                   <IconButton
                     className={classes.linkButton}
                     onClick={() => {
-                      window.open("https://linkswap.app");
+                      window.open("https://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be");
                     }}
                   >
                     <LinkswapIcon style={{ color: colors.white }} />
