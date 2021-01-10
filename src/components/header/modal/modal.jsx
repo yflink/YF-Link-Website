@@ -112,14 +112,12 @@ class RedirectModal extends Component {
               text="LINKPAD"
               to="/"
               disabled
-              tag="SOON"
             />
             <HeaderLink
               screenType="MOBILE"
               text="LINKCHECK"
               to="/"
               disabled
-              tag="SOON"
             />
             <HeaderLink
               screenType="MOBILE"

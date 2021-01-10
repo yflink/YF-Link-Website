@@ -701,14 +701,6 @@ class Initial extends Component {
                     LINKPAD
                   </span>
                 </IconButton>
-                <div className={classes.comingSoonTagContainer}>
-                  <Typography
-                    variant="h6"
-                    className={classes.comingSoonTagText}
-                  >
-                    SOON
-                  </Typography>
-                </div>
               </div>
               <div className={classes.linkButtonDisabledWrapper}>
                 <IconButton
@@ -726,14 +718,6 @@ class Initial extends Component {
                     LINKCHECK
                   </span>
                 </IconButton>
-                <div className={classes.comingSoonTagContainer}>
-                  <Typography
-                    variant="h6"
-                    className={classes.comingSoonTagText}
-                  >
-                    SOON
-                  </Typography>
-                </div>
               </div>
             </div>
             <div className={classes.linkSwapToolsContainer}>
