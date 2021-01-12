@@ -78,12 +78,6 @@ class RedirectModal extends Component {
             />
             <HeaderLink
               screenType="MOBILE"
-              text="LINKSMAS"
-              to={"/linksmas-2020"}
-              selected={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
               text="LINKSWAP"
               to={"https://linkswap.app/"}
               externalLink={true}
@@ -102,22 +96,22 @@ class RedirectModal extends Component {
             />
             <HeaderLink
               screenType="MOBILE"
-              text="WAFFLEHOUSE"
-              to="/"
-              disabled
-              tag="SOON"
-            />
-            <HeaderLink
-              screenType="MOBILE"
               text="LINKPAD"
-              to="/"
-              disabled
+              to="https://blog.yflink.io/project-announcement-linkpad/"
+              externalLink={true}
             />
             <HeaderLink
               screenType="MOBILE"
               text="LINKCHECK"
+              to="https://blog.yflink.io/linkcheck/"
+              externalLink={true}
+            />
+            <HeaderLink
+              screenType="MOBILE"
+              text="WAFFLEHOUSE"
               to="/"
               disabled
+              tag="SOON"
             />
             <HeaderLink
               screenType="MOBILE"

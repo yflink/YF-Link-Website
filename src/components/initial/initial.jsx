@@ -343,6 +343,18 @@ const styles = (theme) => ({
       backgroundColor: "rgba(255, 255, 255, 0.2);",
     },
   },
+  linkSmallButton: {
+    width: "200px",
+    height: "48px",
+    borderRadius: "8px",
+    border: "solid 2px rgba(255, 255, 255, 1)",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.2);",
+    },
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
   linkDisabledButton: {
     width: "200px",
     height: "48px",
@@ -687,8 +699,10 @@ class Initial extends Component {
               </div>
               <div className={classes.linkButtonDisabledWrapper}>
                 <IconButton
-                  className={classes.linkDisabledButton}
-                  onClick={() => {}}
+                  className={classes.linkSmallButton}
+                  onClick={() => {
+                    window.open("https://blog.yflink.io/project-announcement-linkpad/");
+                  }}
                 >
                   <LinkpadIcon
                     style={{
@@ -704,8 +718,10 @@ class Initial extends Component {
               </div>
               <div className={classes.linkButtonDisabledWrapper}>
                 <IconButton
-                  className={classes.linkDisabledButton}
-                  onClick={() => {}}
+                  className={classes.linkSmallButton}
+                  onClick={() => {
+                    window.open("https://blog.yflink.io/linkcheck/");
+                  }}
                 >
                   <LinkcheckIcon
                     style={{
