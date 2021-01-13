@@ -21,6 +21,10 @@ export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42]
 });
 
+export const injectedtw = new InjectedConnector({
+  supportedChainIds: [1, 3, 4, 5, 42]
+});
+
 // export const network = new NetworkConnector({
 //   urls: { 1: RPC_URLS[1], 4: RPC_URLS[4] },
 //   defaultChainId: 1,
@@ -36,7 +40,7 @@ export const walletconnect = new WalletConnectConnector({
 
 export const walletlink = new WalletLinkConnector({
   url: RPC_URLS[1],
-  appName: "ygov.finance"
+  appName: "YF Link"
 });
 
 export const ledger = new LedgerConnector({

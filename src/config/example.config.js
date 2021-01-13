@@ -1,6 +1,6 @@
 import * as moment from "moment";
 const config = {
-  // YFLink Mainnet
+  // YF Link Mainnet
   yflAddress: "0x28cb7e841ee97947a86b06fa4090c8451f64c0be",
   yflABI: [
     {

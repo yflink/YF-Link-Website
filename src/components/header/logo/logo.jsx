@@ -1,64 +1,74 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
-import { withNamespaces } from 'react-i18next';
-import { colors } from '../../../theme/theme'
+import { withStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+import { withNamespaces } from "react-i18next";
+import { colors } from "../../../theme/theme";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    display: 'flex',
-    position: 'relative',
-    height: '30px',
-    cursor: 'pointer',
-    alignItems: 'center',
-    '&:hover': {
+    display: "flex",
+    position: "relative",
+    height: "30px",
+    cursor: "pointer",
+    alignItems: "center",
+    "&:hover": {
       opacity: 0.8,
-    }
+    },
   },
   iconContainer: {
-    width: '30px',
-    height: '30px',
-    marginRight: '10px',
+    width: "30px",
+    height: "30px",
+    marginRight: "10px",
   },
   logoChristmas: {
-    position: 'absolute',
-    width: '38px',
-    left: '1px',
-    top: '-18px',
+    position: "absolute",
+    width: "38px",
+    left: "1px",
+    top: "-18px",
   },
-  spanContainer: {
-  },
+  spanContainer: {},
   linkText: {
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: '24px',
-    lineHeight: '29px',
-    letterSpacing: '0.3em',
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: "24px",
+    lineHeight: "29px",
+    letterSpacing: "0.3em",
     color: colors.white,
-  }
+  },
 });
 
 class Logo extends Component {
-
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root} onClick={() => { this.nav('/') }}>
+      <div
+        className={classes.root}
+        onClick={() => {
+          this.nav("/");
+        }}
+      >
         <div className={classes.iconContainer}>
-          <img alt="logo" src={require("../../../assets/YFLink-header-logo.svg")} width="30px" height="30px" />
-          <img alt="logoChristmas" className={classes.logoChristmas} src={require("../../../assets/christmas_hat.svg")} />
+          <img
+            alt="logo"
+            src={require("../../../assets/YFLink-header-logo.svg")}
+            width="30px"
+            height="30px"
+          />
+          {/* <img alt="logoChristmas" className={classes.logoChristmas} src={require("../../../assets/christmas_hat.svg")} /> */}
         </div>
         <div className={classes.spanContainer}>
-          <Typography variant='h3' className={classes.linkText}>YFLINK</Typography>
+          <Typography variant="h3" className={classes.linkText}>
+            YF LINK
+          </Typography>
         </div>
       </div>
-    )
-  };
+    );
+  }
 
   nav = (screen) => {
-    this.props.history.push(screen)
-  }
+    this.props.history.push(screen);
+  };
 }
 
 export default withNamespaces()(withRouter(withStyles(styles)(Logo)));
