@@ -1422,7 +1422,7 @@ class Vote extends Component {
             />
             <HeaderLink
               text="LP REWARDS"
-              to={"https://rewards.linkswap.app"}
+              to={"https://linkswap.app/#/stake"}
               externalLink={true}
             />
             <HeaderLink
