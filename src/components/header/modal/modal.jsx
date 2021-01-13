@@ -92,7 +92,7 @@ class RedirectModal extends Component {
               screenType="MOBILE"
               text="LP REWARDS"
               externalLink={true}
-              to={"https://rewards.linkswap.app"}
+              to={"https://linkswap.app/#/stake"}
             />
             <HeaderLink
               screenType="MOBILE"

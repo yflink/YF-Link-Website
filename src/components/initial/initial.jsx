@@ -639,7 +639,7 @@ class Initial extends Component {
                   <IconButton
                     className={classes.linkButton}
                     onClick={() => {
-                      window.open("https://rewards.linkswap.app");
+                      window.open("https://linkswap.app/#/stake");
                     }}
                   >
                     <StakeIcon style={{ color: colors.white }} />
