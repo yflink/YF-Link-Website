@@ -598,13 +598,13 @@ const styles = (theme) => ({
   },
   footerSection: {
     backgroundColor: "#434E5D",
-    height: "45px",
+    height: "30px",
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     zIndex: "3",
-    padding: "0px 20px",
+    padding: "0px 10px",
   },
   footerSectionValue: {
     fontFamily: "Formular",
@@ -620,7 +620,7 @@ const styles = (theme) => ({
       marginRight: "0px",
     },
     "@media (min-width: 768px)": {
-      fontSize: "24px",
+      fontSize: "20px",
     },
   },
 });
@@ -777,18 +777,18 @@ class Initial extends Component {
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../assets/waffle.svg"),
-                    "Wafflehouse",
-                    "Blockchain game",
-                    "",
-                    true
-                  )}
-                  {this.renderMenuItem(
                     require("../../assets/linkpad.svg"),
                     "Linkpad",
                     "DeFi Venture Fund",
                     "https://blog.yflink.io/project-announcement-linkpad/",
                     false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/waffle.svg"),
+                    "Wafflehouse",
+                    "Blockchain game",
+                    "",
+                    true
                   )}
                   {this.renderMenuItem(
                     require("../../assets/linkswap.svg"),
