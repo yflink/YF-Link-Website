@@ -1,32 +1,25 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  Typography,
-  InputBase,
-  IconButton,
-  CircularProgress,
-  Button,
-  Slide,
-} from "@material-ui/core";
-import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
+import { Typography, IconButton, Button, Slide } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import CallMadeIcon from "@material-ui/icons/CallMade";
 
 import { withNamespaces } from "react-i18next";
 import { colors } from "../../theme";
 
 import HeaderLogo from "../header/logo/logo";
+import RedirectModal from "../header/modal/modal";
 import SocialShare from "../social/social";
 import Store from "../../stores";
+import HeaderMenuLink from "../header/link/menuLink";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
-import RedirectModal from "../header/modal/modal";
-import { ReactComponent as BuyIcon } from "../../assets/buy.svg";
-import { ReactComponent as LinkswapIcon } from "../../assets/linkswap.svg";
-import { ReactComponent as StakeIcon } from "../../assets/stake.svg";
-import { ReactComponent as VoteIcon } from "../../assets/vote.svg";
-import { ReactComponent as WaffleIcon } from "../../assets/waffle.svg";
-import { ReactComponent as LinkpadIcon } from "../../assets/linkpad.svg";
-import { ReactComponent as LinkcheckIcon } from "../../assets/linkcheck.svg";
+
+import {
+  v1Client,
+  LinkswapDayQuery,
+  TokenDataQuery,
+} from "../../stores/apollo";
 
 const styles = (theme) => ({
   root: {
@@ -69,11 +62,33 @@ const styles = (theme) => ({
     width: "100%",
     height: "200%",
     transform: `skew(-0.03turn, 15deg)`,
-    background: "rgba(0, 0, 0, 0.2)",
+    background: "#232E3B",
     "@media (max-width: 768px)": {
       display: "none",
     },
   },
+  rightArrowSection: {
+    position: "absolute",
+    zIndex: "2",
+    top: "0px",
+    "& > img": {
+      width: "100%",
+      maxWidth: "1240px",
+    },
+
+    "@media (max-width: 1240px)": {
+      left: "0px",
+    },
+
+    "@media (min-width: 1240px)": {
+      left: "calc(50% - 620px)",
+    },
+
+    "@media (max-width: 768px)": {
+      display: "none",
+    },
+  },
+  rightArrowUpSection: {},
   leftMarkSection: {
     zIndex: "1",
     position: "absolute",
@@ -116,11 +131,11 @@ const styles = (theme) => ({
   },
 
   desktopHeaderContainer: {
-    zIndex: "2",
+    zIndex: "3",
     width: "100%",
     height: "90px",
-    paddingLeft: "30px",
-    paddingRight: "30px",
+    paddingLeft: "60px",
+    paddingRight: "60px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -129,7 +144,7 @@ const styles = (theme) => ({
     },
   },
   mobileHeaderContainer: {
-    zIndex: "2",
+    zIndex: "3",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -145,7 +160,7 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "flex-start",
     flex: 1,
-    minWidth: "400px",
+    minWidth: "200px",
     "@media (max-width: 768px)": {
       minWidth: "100px",
     },
@@ -156,10 +171,76 @@ const styles = (theme) => ({
     flex: 2,
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     "& > *": {
       marginRight: "40px",
     },
+  },
+
+  linkProductsMenu: {
+    display: "grid",
+    gridTemplateColumns: "auto auto",
+    gridGap: "30px",
+    padding: "25px",
+    width: "505px",
+    zIndex: "9999",
+  },
+
+  linkProductsItem: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    cursor: "pointer",
+    "&:hover": {
+      opacity: "0.8",
+    },
+  },
+
+  linkProductsItemDisabled: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    opacity: "0.5",
+  },
+
+  linkProductsItemImage: {
+    width: "25px",
+    height: "25px",
+    marginRight: "15px",
+  },
+
+  linkProductsItemInfo: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+  },
+
+  linkProductsItemTitle: {
+    fontFamily: "Formular",
+    fontWeight: "700",
+    fontStyle: "normal",
+    fontSize: "12px",
+    lineHeight: "14.68px",
+    letterSpacing: "0.67px",
+  },
+
+  linkProductsItemTitleTag: {
+    backgroundColor: "#5F5D4B",
+    borderRadius: "3px",
+    color: "#EECB70",
+    padding: "5px",
+    fontSize: "8px",
+    marginLeft: "10px",
+  },
+
+  linkProductsItemText: {
+    fontFamily: "Formular",
+    fontWeight: "400",
+    fontStyle: "normal",
+    fontSize: "12px",
+    lineHeight: "14.68px",
+    letterSpacing: "0.67px",
   },
 
   optionsContainer: {
@@ -191,10 +272,6 @@ const styles = (theme) => ({
     },
   },
 
-  bodyLeftContainer: {
-    flex: 1,
-    minWidth: "400px",
-  },
   bodyRightContainer: {
     flex: 3,
     display: "flex",
@@ -203,9 +280,11 @@ const styles = (theme) => ({
     justifyContent: "center",
     width: "100%",
   },
+
   bodyRightSpace: {
     flex: 1,
   },
+
   bodyRightMain: {
     flex: 5,
     display: "flex",
@@ -217,78 +296,52 @@ const styles = (theme) => ({
     },
     alignItems: "center",
     justifyContent: "center",
-  },
-  comingSoonTagContainer: {
-    background: colors.yellowBackground,
-    borderRadius: "3px",
-    padding: "2px 6px",
-    marginLeft: "6px",
-    position: "absolute",
-    right: "-17px",
-    top: "-8px",
+    position: "relative",
   },
 
-  comingSoonTagText: {
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontSize: "12px",
-    lineHeight: "14px",
-    textAlign: "center",
-
+  linkswapInfoContainer: {
     display: "flex",
-    alignItems: "center",
-    letterSpacing: "0.06em",
-    color: colors.yellowText,
-  },
-
-  linkSwapIconContainer: {
-    marginBottom: "48px",
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     flexDirection: "column",
-    "@media (min-width: 768px)": {
-      height: "160px",
-      flexDirection: "row",
-    },
-  },
-
-  linkSwapDisabledIconContainer: {
-    marginBottom: "40px",
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-    "@media (min-width: 768px)": {
-      flexDirection: "row",
-    },
-  },
-
-  linkSwapToolsContainer: {
-    display: "flex",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    flexDirection: "column",
+  },
+
+  linkswapTitle: {
+    fontFamily: "Formular",
+    fontWeight: "400",
+    fontStyle: "normal",
+    fontSize: "30px",
+    lineHeight: "36.7px",
+    letterSpacing: "1.6px",
+    color: colors.white,
     marginBottom: "40px",
-    marginLeft: "0px",
-    "@media (min-width: 768px)": {
-      marginLeft: "30px",
+  },
+
+  linkswapLogo: {
+    marginBottom: "60px",
+    maxWidth: "683px",
+  },
+  linkswapLogoImage: {
+    maxWidth: "100%",
+  },
+  linkswapLaunchButton: {
+    backgroundColor: "#3B65D3",
+    borderRadius: "8px",
+    height: "44px",
+    color: colors.white,
+    fontFamily: "Formular",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "18px",
+    lineHeight: "22px",
+    letterSpacing: "1px",
+    padding: "14px",
+    "&:hover": {
+      backgroundColor: "#3B65D3",
+      opacity: 0.7,
     },
   },
 
-  doubleIconsWrapper: {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: "30px",
-    "@media (min-width: 768px)": {
-      marginBottom: "0px",
-      "&:first-child": {
-        marginRight: "40px",
-      },
-    },
-  },
   linkButtonWrapper: {
     display: "flex",
     flexDirection: "column",
@@ -300,6 +353,7 @@ const styles = (theme) => ({
     },
     position: "relative",
   },
+
   linkButtonDisabledWrapper: {
     display: "flex",
     flexDirection: "column",
@@ -326,6 +380,7 @@ const styles = (theme) => ({
     marginTop: "16px",
     whiteSpace: "nowrap",
   },
+
   linkDisabledButtonSpan: {
     color: colors.white,
     fontSize: "14px",
@@ -334,6 +389,7 @@ const styles = (theme) => ({
     letterSpacing: "0.06em",
     marginLeft: "12px",
   },
+
   linkButton: {
     width: "124px",
     height: "124px",
@@ -343,6 +399,7 @@ const styles = (theme) => ({
       backgroundColor: "rgba(255, 255, 255, 0.2);",
     },
   },
+
   linkDisabledButton: {
     width: "200px",
     height: "48px",
@@ -356,6 +413,7 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+
   linkToolButton: {
     display: "flex",
     alignItems: "center",
@@ -363,6 +421,7 @@ const styles = (theme) => ({
     paddingTop: "3px",
     paddingBottom: "3px",
   },
+
   linkToolButtonSpan: {
     color: colors.white,
     fontSize: "14px",
@@ -370,6 +429,7 @@ const styles = (theme) => ({
     letterSpacing: "0.06rem",
     whiteSpace: "nowrap",
   },
+
   emailInputContainer: {
     marginLeft: "6px",
     width: "350px",
@@ -412,43 +472,19 @@ const styles = (theme) => ({
     border: "solid 1px rgba(255, 0, 0)",
   },
 
-  emailErrorContainer: {
-    marginLeft: "6px",
-    marginBottom: "20px",
-  },
-
-  emailErrorText: {
-    color: colors.red,
-    fontStyle: "normal",
-    fontWeight: "normal",
-    fontSize: "12px",
-    lineHeight: "13px",
-    display: "flex",
-    alignItems: "center",
-    letterSpacing: "0.06em",
-    "& a": {
-      color: colors.white,
-    },
-  },
-  emailSuccessText: {
-    color: colors.green,
-    fontStyle: "normal",
-    fontWeight: "normal",
-    fontSize: "12px",
-    lineHeight: "13px",
-    display: "flex",
-    alignItems: "center",
-    letterSpacing: "0.06em",
-  },
   socialMediaContainer: {
     marginLeft: "6px",
     display: "flex",
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     "@media (max-width: 768px)": {
       justifyContent: "center",
+      right: "30px",
+      bottom: "30px",
     },
+    right: "60px",
+    bottom: "0px",
+    position: "absolute",
   },
   loadingIcon: {
     color: colors.white,
@@ -539,18 +575,102 @@ const styles = (theme) => ({
       backgroundColor: "rgba(255, 255, 255, 0.5)",
     },
   },
+  buyButtonContainer: {
+    width: "150px",
+    height: "45px",
+  },
+  buyButton: {
+    background: "#3865D3",
+    borderRadius: "8px",
+    color: "white",
+    width: "150px",
+    height: "44px",
+    fontFamily: "Formular",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "18px",
+    lineHeight: "22px",
+    padding: "14px",
+    "&:hover": {
+      opacity: "0.8",
+      background: "#3865D3",
+    },
+  },
+  footerSection: {
+    backgroundColor: "#434E5D",
+    height: "45px",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    zIndex: "3",
+    padding: "0px 20px",
+  },
+  footerSectionValue: {
+    fontFamily: "Formular",
+    fontWeight: "400",
+    fontSize: "16px",
+    fontStyle: "italic",
+    lineHeight: "29px",
+    letterSpacing: "1.33px",
+    whiteSpace: "nowrap",
+    color: colors.white,
+    marginRight: "20px",
+    "&:last-child": {
+      marginRight: "0px",
+    },
+    "@media (min-width: 768px)": {
+      fontSize: "24px",
+    },
+  },
 });
 
-const ValidateEmail = (mail) => {
-  if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
-    return "";
-  }
-  return "Invalid Address!";
-};
-
 const store = Store.store;
-const mailchimpUrl =
-  "https://yflink.us17.list-manage.com/subscribe/post?u=f170cca247406899e9a7fbe82&amp;id=feee202dc5";
+let timerId = null;
+
+const setLinkswapValues = async (setCallback) => {
+  try {
+    let linkswapData = {};
+    const { data } = await v1Client.query({
+      query: LinkswapDayQuery,
+      variables: {},
+      fetchPolicy: "network-only",
+      errorPolicy: "ignore",
+    });
+    if (data && data.linkswapDayDatas && data.linkswapDayDatas.length > 0) {
+      linkswapData = { ...data.linkswapDayDatas[0] };
+    }
+
+    const { data: tokenData } = await v1Client.query({
+      query: TokenDataQuery,
+      variables: {},
+      fetchPolicy: "network-only",
+      errorPolicy: "ignore",
+    });
+    if (
+      tokenData &&
+      tokenData.tokenDayDatas &&
+      tokenData.tokenDayDatas.length > 0
+    ) {
+      const yflToken = tokenData.tokenDayDatas.find(
+        (item) => item && item.token && item.token.symbol === "YFL"
+      );
+      const yflPriceUSD = yflToken.priceUSD;
+      const tokenCount = tokenData.tokenDayDatas.filter(
+        (item) => item && item.date === tokenData.tokenDayDatas[0].date
+      ).length;
+      linkswapData = {
+        ...linkswapData,
+        yflPrice: yflPriceUSD,
+        activePairs: tokenCount,
+        totalPools: tokenCount,
+      };
+    }
+    setCallback(linkswapData);
+  } catch (error) {
+    console.log("Fetching error", error);
+  }
+};
 
 class Initial extends Component {
   constructor(props) {
@@ -560,19 +680,213 @@ class Initial extends Component {
       error: "",
       modalOpen: false,
       raffleOpen: true,
+      linkswapInfo: null,
     };
   }
 
+  componentDidMount() {
+    if (timerId) {
+      clearInterval(timerId);
+    }
+    setLinkswapValues((data) => {
+      this.setLinkswapInfo(data);
+    });
+
+    timerId = setInterval(() => {
+      setLinkswapValues((data) => {
+        this.setLinkswapInfo(data);
+      });
+    }, 5000);
+  }
+
+  setLinkswapInfo = (data) => {
+    this.setState({ linkswapInfo: data });
+  };
+
+  renderMenuItem = (
+    logoUrl,
+    title,
+    text,
+    link,
+    isComingSoon,
+    isExternalLink = true
+  ) => {
+    const { classes } = this.props;
+    return (
+      <div
+        className={
+          !isComingSoon
+            ? classes.linkProductsItem
+            : classes.linkProductsItemDisabled
+        }
+        onClick={() => {
+          if (!isComingSoon) {
+            if (isExternalLink) {
+              window.open(link);
+            } else {
+              this.nav(link);
+            }
+          }
+        }}
+      >
+        <img
+          className={classes.linkProductsItemImage}
+          src={logoUrl}
+          alt="logo"
+        />
+        <div className={classes.linkProductsItemInfo}>
+          <Typography className={classes.linkProductsItemTitle}>
+            {title}
+            {isComingSoon && (
+              <span className={classes.linkProductsItemTitleTag}>SOON</span>
+            )}
+          </Typography>
+          <Typography className={classes.linkProductsItemText}>
+            {text}
+          </Typography>
+        </div>
+      </div>
+    );
+  };
+
   renderHeader = (screenType) => {
     const { classes } = this.props;
-    const account = store.getStore("account");
     if (screenType === "DESKTOP") {
       return (
         <div className={classes.desktopHeaderContainer}>
           <div className={classes.logoContainer}>
             <HeaderLogo />
           </div>
-          <div className={classes.linkContainer} />
+          <div className={classes.linkContainer}>
+            <HeaderMenuLink
+              text="PRODUCTS"
+              menuItems={
+                <div className={classes.linkProductsMenu}>
+                  {this.renderMenuItem(
+                    require("../../assets/linkswap.svg"),
+                    "Linkswap",
+                    "Automated Market Maker",
+                    "https://linkswap.app",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkcheck.svg"),
+                    "Linkcheck",
+                    "Team audits",
+                    "https://blog.yflink.io/linkcheck/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/waffle.svg"),
+                    "Wafflehouse",
+                    "Blockchain game",
+                    "",
+                    true
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkpad.svg"),
+                    "Linkpad",
+                    "DeFi Venture Fund",
+                    "https://blog.yflink.io/project-announcement-linkpad/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkpad.svg"),
+                    "Linklend",
+                    "DeFi Venture Fund",
+                    "https://blog.yflink.io/project-announcement-linklend/",
+                    true
+                  )}
+                </div>
+              }
+            />
+            <HeaderMenuLink
+              text="RESSOURCES"
+              menuItems={
+                <div className={classes.linkProductsMenu}>
+                  {this.renderMenuItem(
+                    require("../../assets/linkswap.svg"),
+                    "Analytics",
+                    "LINKSWAP Protocol Analytics",
+                    "https://info.linkswap.app",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkswap.svg"),
+                    "APY Calculator",
+                    "LP Rewards",
+                    "https://apycalc.yflink.io/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkswap.svg"),
+                    "Learn",
+                    "YF Link ecosystem",
+                    "https://learn.yflink.io/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkswap.svg"),
+                    "APY Calculator",
+                    "Stake & Vote",
+                    "https://calculator.yflink.io/",
+                    false
+                  )}
+                </div>
+              }
+            />
+            <HeaderMenuLink
+              text="GOVERNANCE"
+              menuItems={
+                <div className={classes.linkProductsMenu}>
+                  {this.renderMenuItem(
+                    require("../../assets/vote.svg"),
+                    "Stake & Vote",
+                    "yYFL Governance",
+                    "./stake",
+                    false,
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/stake.svg"),
+                    "LP Rewards",
+                    "Getting Rewards for LP",
+                    "https://rewards.linkswap.app/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkswap.svg"),
+                    "Linksmas",
+                    "YFL Xmas event",
+                    "https://yflink.io/#/linksmas-2020",
+                    false,
+                    false
+                  )}
+                </div>
+              }
+            />
+          </div>
+          <div className={classes.buyButtonContainer}>
+            <Button
+              variant="contained"
+              className={classes.buyButton}
+              onClick={() => {
+                window.open(
+                  "https://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+                );
+              }}
+            >
+              Buy YFL
+              <CallMadeIcon
+                style={{
+                  color: "white",
+                  width: "18px",
+                  height: "18px",
+                  marginLeft: "14px",
+                }}
+              />
+            </Button>
+          </div>
         </div>
       );
     } else {
@@ -605,186 +919,37 @@ class Initial extends Component {
             : classes.mobileBodyContainer
         }
       >
+        <div className={classes.bodyLeftContainer} />
         <div className={classes.bodyRightContainer}>
           <div className={classes.bodyRightMain}>
-            <div className={classes.linkSwapIconContainer}>
-              <div className={classes.doubleIconsWrapper}>
-                <div className={classes.linkButtonWrapper}>
-                  <IconButton
-                    className={classes.linkButton}
-                    onClick={() => {
-                      window.open(
-                        "http://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
-                      );
-                    }}
-                  >
-                    <BuyIcon style={{ color: colors.white }} />
-                  </IconButton>
-                  <span className={classes.linkButtonSpan}>BUY</span>
-                </div>
-                <div className={classes.linkButtonWrapper}>
-                  <IconButton
-                    className={classes.linkButton}
-                    onClick={() => {
-                      window.open("https://linkswap.app");
-                    }}
-                  >
-                    <LinkswapIcon style={{ color: colors.white }} />
-                  </IconButton>
-                  <span className={classes.linkButtonSpan}>LINKSWAP</span>
-                </div>
+            <div className={classes.linkswapInfoContainer}>
+              <Typography className={classes.linkswapTitle}>
+                Your link to DeFi
+              </Typography>
+              <div className={classes.linkswapLogo}>
+                <img
+                  className={classes.linkswapLogoImage}
+                  src={require("../../assets/swap.svg")}
+                  alt="swap"
+                />
               </div>
-              <div className={classes.doubleIconsWrapper}>
-                <div className={classes.linkButtonWrapper}>
-                  <IconButton
-                    className={classes.linkButton}
-                    onClick={() => {
-                      window.open("https://rewards.linkswap.app");
-                    }}
-                  >
-                    <StakeIcon style={{ color: colors.white }} />
-                  </IconButton>
-                  <span className={classes.linkButtonSpan}>LP REWARDS</span>
-                </div>
-                <div className={classes.linkButtonWrapper}>
-                  <IconButton
-                    className={classes.linkButton}
-                    onClick={() => {
-                      this.nav("/stake");
-                    }}
-                  >
-                    <VoteIcon style={{ color: colors.white }} />
-                  </IconButton>
-                  <span className={classes.linkButtonSpan}>STAKE & VOTE</span>
-                </div>
-              </div>
-            </div>
-            <div className={classes.linkSwapDisabledIconContainer}>
-              <div className={classes.linkButtonDisabledWrapper}>
-                <IconButton
-                  className={classes.linkDisabledButton}
-                  onClick={() => {}}
-                >
-                  <WaffleIcon
-                    style={{
-                      color: colors.white,
-                      width: "30px",
-                      height: "30px",
-                    }}
-                  />
-                  <span className={classes.linkDisabledButtonSpan}>
-                    WAFFLEHOUSE
-                  </span>
-                </IconButton>
-                <div className={classes.comingSoonTagContainer}>
-                  <Typography
-                    variant="h6"
-                    className={classes.comingSoonTagText}
-                  >
-                    SOON
-                  </Typography>
-                </div>
-              </div>
-              <div className={classes.linkButtonDisabledWrapper}>
-                <IconButton
-                  className={classes.linkDisabledButton}
-                  onClick={() => {}}
-                >
-                  <LinkpadIcon
-                    style={{
-                      color: colors.white,
-                      width: "30px",
-                      height: "30px",
-                    }}
-                  />
-                  <span className={classes.linkDisabledButtonSpan}>
-                    LINKPAD
-                  </span>
-                </IconButton>
-                <div className={classes.comingSoonTagContainer}>
-                  <Typography
-                    variant="h6"
-                    className={classes.comingSoonTagText}
-                  >
-                    SOON
-                  </Typography>
-                </div>
-              </div>
-              <div className={classes.linkButtonDisabledWrapper}>
-                <IconButton
-                  className={classes.linkDisabledButton}
-                  onClick={() => {}}
-                >
-                  <LinkcheckIcon
-                    style={{
-                      color: colors.white,
-                      width: "30px",
-                      height: "30px",
-                    }}
-                  />
-                  <span className={classes.linkDisabledButtonSpan}>
-                    LINKCHECK
-                  </span>
-                </IconButton>
-                <div className={classes.comingSoonTagContainer}>
-                  <Typography
-                    variant="h6"
-                    className={classes.comingSoonTagText}
-                  >
-                    SOON
-                  </Typography>
-                </div>
-              </div>
-            </div>
-            <div className={classes.linkSwapToolsContainer}>
-              <IconButton
-                className={classes.linkToolButton}
+              <Button
+                className={classes.linkswapLaunchButton}
+                variant="contained"
                 onClick={() => {
-                  window.open("https://learn.yflink.io/");
+                  window.open("https://linkswap.app/");
                 }}
               >
-                <span className={classes.linkToolButtonSpan}>HELP CENTER</span>
-                <ArrowRightAltOutlinedIcon
-                  style={{ color: colors.white, marginLeft: "8px" }}
+                Launch Linkswap
+                <CallMadeIcon
+                  style={{
+                    color: "white",
+                    width: "18px",
+                    height: "18px",
+                    marginLeft: "14px",
+                  }}
                 />
-              </IconButton>
-              <IconButton
-                className={classes.linkToolButton}
-                onClick={() => {
-                  window.open("https://apycalc.yflink.io/");
-                }}
-              >
-                <span className={classes.linkToolButtonSpan}>
-                  APY CALCULATOR: LP REWARDS
-                </span>
-                <ArrowRightAltOutlinedIcon
-                  style={{ color: colors.white, marginLeft: "8px" }}
-                />
-              </IconButton>
-              <IconButton
-                className={classes.linkToolButton}
-                onClick={() => {
-                  window.open("https://calculator.yflink.io/");
-                }}
-              >
-                <span className={classes.linkToolButtonSpan}>
-                  APY CALCULATOR: STAKE & VOTE
-                </span>
-                <ArrowRightAltOutlinedIcon
-                  style={{ color: colors.white, marginLeft: "8px" }}
-                />
-              </IconButton>
-              <IconButton
-                className={classes.linkToolButton}
-                onClick={() => {
-                  window.open("https://info.linkswap.app/");
-                }}
-              >
-                <span className={classes.linkToolButtonSpan}>ANALYTICS</span>
-                <ArrowRightAltOutlinedIcon
-                  style={{ color: colors.white, marginLeft: "8px" }}
-                />
-              </IconButton>
+              </Button>
             </div>
             <div className={classes.socialMediaContainer}>
               <SocialShare
@@ -808,6 +973,9 @@ class Initial extends Component {
       return (
         <>
           <div className={classes.rightMainSection} />
+          <div className={classes.rightArrowSection}>
+            <img alt="up" src={require("../../assets/yfl-blur-up.svg")} />
+          </div>
           <div className={classes.leftMarkSection}>
             <img
               alt="up"
@@ -917,6 +1085,49 @@ class Initial extends Component {
     );
   };
 
+  renderFooter = () => {
+    const { classes } = this.props;
+    const { linkswapInfo } = this.state;
+
+    if (linkswapInfo) {
+      return (
+        <div className={classes.footerSection}>
+          <Typography className={classes.footerSectionValue}>
+            24H VOLUME: $
+            {linkswapInfo &&
+              (parseFloat(linkswapInfo.dailyVolumeUSD) / 1000000).toFixed(2)}
+            M
+          </Typography>
+          <Typography className={classes.footerSectionValue}>
+            LIQUIDITY: $
+            {linkswapInfo &&
+              (parseFloat(linkswapInfo.totalLiquidityUSD) / 1000000).toFixed(2)}
+            M
+          </Typography>
+
+          <Typography className={classes.footerSectionValue}>
+            ACTIVE PAIRS: {linkswapInfo && linkswapInfo.activePairs}
+          </Typography>
+
+          <Typography className={classes.footerSectionValue}>
+            TOTAL POOLS: {linkswapInfo && linkswapInfo.totalPools}
+          </Typography>
+
+          <Typography className={classes.footerSectionValue}>
+            YFL PRICE: $
+            {linkswapInfo && parseFloat(linkswapInfo.yflPrice).toFixed(2)}
+          </Typography>
+        </div>
+      );
+    } else {
+      return (
+        <div className={classes.footerSection}>
+          <Typography className={classes.footerSectionValue}>...</Typography>
+        </div>
+      );
+    }
+  };
+
   closeModal = () => {
     this.setState({ modalOpen: false });
   };
@@ -934,6 +1145,8 @@ class Initial extends Component {
 
         {this.renderBody("DESKTOP")}
         {this.renderBody("MOBILE")}
+
+        {this.renderFooter()}
 
         {this.renderModal()}
 

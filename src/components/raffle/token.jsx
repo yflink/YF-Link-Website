@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useParams, withRouter } from "react-router-dom";
 import Web3 from "web3";
-import bigInt from "big-integer";
-import { toFixed } from "../../constants";
 import config from "../../config";
 
 const NFTImages = ["https://yflink.io/tokens/0.gif"];

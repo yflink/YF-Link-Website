@@ -33,8 +33,9 @@ const styles = (theme) => ({
     fontWeight: "normal",
     fontSize: "24px",
     lineHeight: "29px",
-    letterSpacing: "0.3em",
+    letterSpacing: "1px",
     color: colors.white,
+    whiteSpace: "nowrap",
   },
 });
 
@@ -55,7 +56,6 @@ class Logo extends Component {
             width="30px"
             height="30px"
           />
-          {/* <img alt="logoChristmas" className={classes.logoChristmas} src={require("../../../assets/christmas_hat.svg")} /> */}
         </div>
         <div className={classes.spanContainer}>
           <Typography variant="h3" className={classes.linkText}>

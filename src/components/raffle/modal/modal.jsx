@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import bigInt from "big-integer";
 import moment from "moment";
 
 import { withStyles } from "@material-ui/core/styles";
@@ -9,26 +8,14 @@ import {
   Dialog,
   IconButton,
   Typography,
-  InputBase,
   Button,
   Zoom,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
 } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
 import { colors } from "../../../theme";
 import Store from "../../../stores";
-import {
-  raffleDays,
-  ENTER_RAFFLE,
-  CLAIM_PRIZE,
-  ENTER_RAFFLE_RETURNED,
-  CLAIM_PRIZE_RETURNED,
-} from "../../../constants";
-import { getSignature, getFunctionBySignature } from "../../../utils";
-import { AbiCoder } from "ethers/utils";
+import { raffleDays, ENTER_RAFFLE, CLAIM_PRIZE } from "../../../constants";
 
 const dispatcher = Store.dispatcher;
 

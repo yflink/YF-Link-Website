@@ -557,7 +557,7 @@ class FunctionProposal extends Component {
   };
 
   renderProposal = (screenType) => {
-    const { classes, proposal, account, isExecutable } = this.props;
+    const { classes, proposal, isExecutable } = this.props;
     const { currentBlock, expanded } = this.state;
 
     const blocksTillEnd = proposal.endBlock - currentBlock;
@@ -612,7 +612,6 @@ class FunctionProposal extends Component {
     const contracts = proposal.targets.map((target, index) => {
       const signature = proposal.signatures[index];
       const calldata = proposal.calldatas[index];
-      const value = proposal.values[index];
 
       const params = getSignature(signature);
       const abi = new AbiCoder();

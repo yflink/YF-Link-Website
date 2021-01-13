@@ -75,11 +75,12 @@ const styles = (theme) => ({
   },
 
   linkText: {
+    fontFamily: "'Formular'",
     fontStyle: "normal",
-    fontWeight: "normal",
-    fontSize: "18px",
-    lineHeight: "21px",
-    letterSpacing: "0.06em",
+    fontWeight: "bold",
+    fontSize: "16px",
+    lineHeight: "18px",
+    letterSpacing: "1px",
     color: colors.white,
     whiteSpace: "nowrap",
   },

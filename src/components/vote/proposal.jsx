@@ -404,10 +404,8 @@ class Proposal extends Component {
     const { currentBlock, currentTime, title } = this.state;
 
     const blocksTillEnd = proposal.end - currentBlock;
-    const blocksSinceStart = currentBlock - proposal.start;
 
     const endTime = currentTime + blocksTillEnd * 1000 * 13.8;
-    const startTime = currentTime - blocksSinceStart * 1000 * 13.8;
 
     const proposerAddress =
       proposal && proposal.proposer
@@ -477,7 +475,11 @@ class Proposal extends Component {
             <div className={classes.proposalTitleContainer}>
               {isLinkMeme(proposal.url) ? (
                 <div className={classes.memeHeading}>
-                  <img src={proposal.url} className={classes.memeImage} />
+                  <img
+                    src={proposal.url}
+                    className={classes.memeImage}
+                    alt="url"
+                  />
                 </div>
               ) : (
                 <Typography variant={"h4"} className={classes.proposalTitle}>
@@ -662,7 +664,11 @@ class Proposal extends Component {
             <div className={classes.proposalTitleContainer}>
               {isLinkMeme(proposal.url) ? (
                 <div className={classes.memeHeading}>
-                  <img src={proposal.url} className={classes.memeImage} />
+                  <img
+                    src={proposal.url}
+                    className={classes.memeImage}
+                    alt="url"
+                  />
                 </div>
               ) : (
                 <Typography variant={"h4"} className={classes.proposalTitle}>

@@ -1,11 +1,20 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-import { DialogContent, Dialog, Slide, IconButton } from "@material-ui/core";
+import {
+  DialogContent,
+  Dialog,
+  Slide,
+  IconButton,
+  Button,
+  Typography,
+} from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
+import CallMadeIcon from "@material-ui/icons/CallMade";
+
 import { colors } from "../../../theme";
-import HeaderLink from "../link/link";
+import HeaderLogo from "../logo/logo";
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -23,28 +32,188 @@ const styles = (theme) => ({
     position: "relative",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: "0px",
+    padding: "0px 35px",
+  },
+  backgroundImageContainer: {
+    position: "absolute",
+    left: "0px",
+    top: "0px",
+    right: "0px",
+    bottom: "0px",
+    "& > img": {
+      width: "100%",
+      height: "100%",
+      opacity: "0.3",
+    },
   },
   closeButton: {
     position: "absolute",
-    right: "16px",
+    right: "32px",
     paddingTop: "0px",
   },
   linkContainer: {
-    marginTop: "20px",
+    marginTop: "30px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     "& > div": {
       marginTop: "30px",
     },
+    padding: "30px",
+    flex: 1,
+  },
+  linkGroupContainer: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+  linkGroupTitle: {
+    fontFamily: "Formular",
+    fontWeight: "600",
+    fontStyle: "normal",
+    fontSize: "12px",
+    lineHeight: "14.68px",
+    letterSpacing: "0.67px",
+    marginLeft: "20px",
+    color: colors.white,
+  },
+
+  logoContainer: {
+    position: "absolute",
+    left: "32px",
+    paddingTop: "0px",
+  },
+  buyButtonContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginBottom: "90px",
+  },
+  buyButton: {
+    background: "#3865D3",
+    borderRadius: "8px",
+    color: "white",
+    width: "150px",
+    height: "44px",
+    fontFamily: "Formular",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "18px",
+    lineHeight: "22px",
+    padding: "14px",
+    "&:hover": {
+      opacity: "0.8",
+      background: "#3865D3",
+    },
+  },
+  linkGroup: {
+    display: "grid",
+    gridTemplateColumns: "auto auto",
+    gridGap: "30px",
+    padding: "25px",
+    width: "100%",
+  },
+  linkProductsItem: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    cursor: "pointer",
+    "&:hover": {
+      opacity: "0.8",
+    },
+  },
+
+  linkProductsItemDisabled: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    opacity: "0.5",
+  },
+
+  linkProductsItemImage: {
+    width: "25px",
+    height: "25px",
+    marginRight: "15px",
+  },
+
+  linkProductsItemInfo: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+  },
+
+  linkProductsItemTitle: {
+    fontFamily: "Formular",
+    fontWeight: "700",
+    fontStyle: "normal",
+    fontSize: "12px",
+    lineHeight: "14.68px",
+    letterSpacing: "0.67px",
+    color: colors.white,
+  },
+
+  linkProductsItemTitleTag: {
+    backgroundColor: "#5F5D4B",
+    borderRadius: "3px",
+    color: "#EECB70",
+    padding: "5px",
+    fontSize: "8px",
+    marginLeft: "10px",
   },
 });
 
 class RedirectModal extends Component {
+  renderMenuItem = (
+    logoUrl,
+    title,
+    link,
+    isComingSoon,
+    isExternalLink = true
+  ) => {
+    const { classes } = this.props;
+    return (
+      <div
+        className={
+          !isComingSoon
+            ? classes.linkProductsItem
+            : classes.linkProductsItemDisabled
+        }
+        onClick={() => {
+          if (!isComingSoon) {
+            if (isExternalLink) {
+              window.open(link);
+            } else {
+              this.nav(link);
+            }
+          }
+        }}
+      >
+        <img
+          className={classes.linkProductsItemImage}
+          src={logoUrl}
+          alt="logo"
+        />
+        <div className={classes.linkProductsItemInfo}>
+          <Typography className={classes.linkProductsItemTitle}>
+            {title}
+            {isComingSoon && (
+              <span className={classes.linkProductsItemTitleTag}>SOON</span>
+            )}
+          </Typography>
+        </div>
+      </div>
+    );
+  };
+
+  nav = (url) => {
+    this.props.history.push(url);
+  };
+
   render() {
-    const { classes, closeModal, modalOpen, account } = this.props;
+    const { classes, closeModal, modalOpen } = this.props;
 
     const fullScreen = window.innerWidth < 768;
 
@@ -58,6 +227,15 @@ class RedirectModal extends Component {
         fullScreen={fullScreen}
       >
         <DialogContent classes={{ root: classes.root }}>
+          <div className={classes.backgroundImageContainer}>
+            <img
+              src={require("../../../assets/yfl-blur-up.svg")}
+              alt="background"
+            />
+          </div>
+          <div className={classes.logoContainer}>
+            <HeaderLogo />
+          </div>
           <IconButton
             aria-label="close"
             className={classes.closeButton}
@@ -68,87 +246,116 @@ class RedirectModal extends Component {
             />
           </IconButton>
           <div className={classes.linkContainer}>
-            <HeaderLink
-              screenType="MOBILE"
-              text="BUY YFL"
-              to={
-                "http://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
-              }
-              externalLink={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="LINKSMAS"
-              to={"/linksmas-2020"}
-              selected={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="LINKSWAP"
-              to={"https://linkswap.app/"}
-              externalLink={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="LP REWARDS"
-              externalLink={true}
-              to={"https://rewards.linkswap.app"}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="STAKE & VOTE"
-              to={account && account.address ? "/stake" : "/account"}
-              redirectedTo={"/stake"}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="WAFFLEHOUSE"
-              to="/"
-              disabled
-              tag="SOON"
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="LINKPAD"
-              to="/"
-              disabled
-              tag="SOON"
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="LINKCHECK"
-              to="/"
-              disabled
-              tag="SOON"
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="HELP CENTER"
-              to="https://learn.yflink.io/"
-              externalLink={true}
-              arrow={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="LP REWARDS APY"
-              to="https://apycalc.yflink.io/"
-              externalLink={true}
-              arrow={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="STAKE & VOTE APY"
-              to="https://calculator.yflink.io/"
-              externalLink={true}
-              arrow={true}
-            />
-            <HeaderLink
-              screenType="MOBILE"
-              text="Analytics"
-              to="https://info.linkswap.app/"
-              externalLink={true}
-              arrow={true}
-            />
+            <div className={classes.linkGroupContainer}>
+              <Typography className={classes.linkGroupTitle}>
+                Products
+              </Typography>
+              <div className={classes.linkGroup}>
+                {this.renderMenuItem(
+                  require("../../../assets/linkswap.svg"),
+                  "Linkswap",
+                  "https://linkswap.app",
+                  false
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/linkcheck.svg"),
+                  "Linkcheck",
+                  "",
+                  true
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/waffle.svg"),
+                  "Wafflehouse",
+                  "",
+                  true
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/linkpad.svg"),
+                  "Linkpad",
+                  "",
+                  true
+                )}
+              </div>
+            </div>
+            <div className={classes.linkGroupContainer}>
+              <Typography className={classes.linkGroupTitle}>
+                Ressources
+              </Typography>
+              <div className={classes.linkGroup}>
+                {this.renderMenuItem(
+                  require("../../../assets/linkswap.svg"),
+                  "Analytics",
+                  "https://info.linkswap.app",
+                  false
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/linkswap.svg"),
+                  "APY Calculator",
+                  "https://apycalc.yflink.io/",
+                  false
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/linkswap.svg"),
+                  "Learn",
+                  "https://learn.yflink.io/",
+                  false
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/linkswap.svg"),
+                  "APY Calculator",
+                  "https://calculator.yflink.io/",
+                  false
+                )}
+              </div>
+            </div>
+            <div className={classes.linkGroupContainer}>
+              <Typography className={classes.linkGroupTitle}>
+                Governance
+              </Typography>
+              <div className={classes.linkGroup}>
+                {this.renderMenuItem(
+                  require("../../../assets/vote.svg"),
+                  "Stake & Vote",
+                  "./stake",
+                  false,
+                  false
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/stake.svg"),
+                  "LP Rewards",
+                  "https://rewards.linkswap.app/",
+                  false
+                )}
+                {this.renderMenuItem(
+                  require("../../../assets/linkswap.svg"),
+                  "Linksmas",
+                  "./linksmas-2020",
+                  false,
+                  false
+                )}
+              </div>
+            </div>
+          </div>
+          <div className={classes.buyButtonContainer}>
+            <Button
+              variant="contained"
+              className={classes.buyButton}
+              onClick={() => {
+                window.open(
+                  "https://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+                );
+              }}
+            >
+              Buy YFL
+              <CallMadeIcon
+                style={{
+                  color: "white",
+                  width: "18px",
+                  height: "18px",
+                  marginLeft: "14px",
+                }}
+              />
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

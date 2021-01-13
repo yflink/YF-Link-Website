@@ -443,7 +443,6 @@ class VoteModal extends Component {
       proposal.targets.map((target, index) => {
         const signature = proposal.signatures[index];
         const calldata = proposal.calldatas[index];
-        const value = proposal.values[index];
 
         const params = getSignature(signature);
         const abi = new AbiCoder();

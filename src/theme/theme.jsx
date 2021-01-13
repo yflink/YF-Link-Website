@@ -38,7 +38,7 @@ export const colors = {
   topaz: "#0b8f92",
   darkGray: "rgba(43,57,84,.5)",
   borderBlue: "rgba(25, 101, 233, 0.5)",
-  greyBackground: "#2B3A4A",
+  greyBackground: "#2C3A4B",
   greyText: "#BDCBDA",
   yellowBackground: "rgba(238, 203, 112, 0.3)",
   yellowText: "#EECB70",

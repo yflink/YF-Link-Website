@@ -1,21 +1,11 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  Typography,
-  InputBase,
-  Button,
-  IconButton,
-  Card,
-  Tooltip,
-  Zoom,
-  Paper,
-} from "@material-ui/core";
+import { Typography, Button, IconButton, Card } from "@material-ui/core";
 
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import ArrowRightAltOutlinedIcon from "@material-ui/icons/ArrowRightAltOutlined";
 
-import bigInt from "big-integer";
 import moment from "moment";
 
 import HeaderLogo from "../header/logo/logo";
@@ -31,14 +21,9 @@ import DayModal from "./modal";
 import Store from "../../stores";
 import { colors } from "../../theme";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
-import { isLinkMeme, getSignature } from "../../utils";
-import { AbiCoder } from "ethers/utils";
 
 import {
   ERROR,
-  CONFIGURE_RETURNED,
-  PROPOSE_RETURNED,
-  GET_BALANCES_RETURNED,
   GET_RAFFLE_INFO,
   GET_RAFFLE_INFO_RETURNED,
   CONNECTION_CONNECTED,
@@ -708,6 +693,8 @@ const styles = (theme) => ({
     alignItems: "flex-start",
     justifyContent: "flex-start",
     color: colors.white,
+    width: "30px",
+    height: "30px",
   },
   raffleButtonDayHeader: {
     color: colors.white,
@@ -725,10 +712,7 @@ const styles = (theme) => ({
     width: "25px",
     height: "25px",
   },
-  raffleCardDayInfoImage: {
-    width: "30px",
-    height: "30px",
-  },
+
   raffleDayInfoPairName: {
     color: colors.white,
     width: "100px",
@@ -1253,12 +1237,6 @@ const styles = (theme) => ({
 const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
 const store = Store.store;
-
-function toFixed(bi, decimals, desired) {
-  const trunc = decimals - desired;
-  const shift = decimals - trunc;
-  return (bi.divide(10 ** trunc).toJSNumber() / 10 ** shift).toFixed(desired);
-}
 
 let timerId = null;
 

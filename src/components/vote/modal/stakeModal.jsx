@@ -424,6 +424,7 @@ const StakeWithdrawModal = ({
   React.useEffect(() => {
     emitter.on(STAKE_RETURNED, actionReturned);
     emitter.on(WITHDRAW_RETURNED, actionReturned);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -436,7 +437,10 @@ const StakeWithdrawModal = ({
   };
 
   const onStake = () => {
-    if (parseFloat(inputAmount) <= 0 || parseFloat(inputAmount) > parseFloat(balance)) {
+    if (
+      parseFloat(inputAmount) <= 0 ||
+      parseFloat(inputAmount) > parseFloat(balance)
+    ) {
       setError("Invalid Amount!");
       return;
     }
@@ -457,7 +461,10 @@ const StakeWithdrawModal = ({
   };
 
   const onUnstake = () => {
-    if (parseFloat(inputAmount) < 0 || parseFloat(inputAmount) > parseFloat(staked)) {
+    if (
+      parseFloat(inputAmount) < 0 ||
+      parseFloat(inputAmount) > parseFloat(staked)
+    ) {
       setError("Invalid Amount!");
       return;
     }
@@ -504,6 +511,7 @@ const StakeWithdrawModal = ({
       fullScreen={fullScreen}
     >
       <DialogContent classes={{ root: classes.root }}>
+        {loading && <></>}
         <IconButton
           aria-label="close"
           className={classes.closeButton}
@@ -611,90 +619,90 @@ const StakeWithdrawModal = ({
                 </div>
               </>
             ) : (
-                <>
-                  <div className={classes.desktopStakeWithdrawAvailableWrapper}>
-                    <Typography
-                      className={classes.stakeWithdrawAvailableText}
-                      variant={"h6"}
-                    >
-                      Currently Staked: {staked} {isLegacy ? "YFL" : "yYFL"}
-                      {!isLegacy && (
-                        <Typography
-                          className={classes.stakeWithdrawAvailableValue}
-                          variant={"h6"}
-                        >
-                          ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
-                        </Typography>
-                      )}
-                    </Typography>
-                    <Button
-                      className={classes.stakeWithdrawMaxButton}
-                      variant="contained"
-                      onClick={() => {
-                        onMax();
-                      }}
-                    >
-                      MAX
-                  </Button>
-                  </div>
-                  <div className={classes.mobileStakeWithdrawAvailableWrapper}>
-                    <Typography
-                      className={classes.stakeWithdrawAvailableText}
-                      variant={"h6"}
-                    >
-                      Staked: {staked} {isLegacy ? "YFL" : "yYFL"}
-                      {!isLegacy && (
-                        <Typography
-                          className={classes.stakeWithdrawAvailableValue}
-                          variant={"h6"}
-                        >
-                          ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
-                        </Typography>
-                      )}
-                    </Typography>
-                    <Button
-                      className={classes.stakeWithdrawMaxButton}
-                      variant="contained"
-                      onClick={() => {
-                        onMax();
-                      }}
-                    >
-                      MAX
-                  </Button>
-                  </div>
-                  <div className={classes.stakeWithdrawInputValueWrapper}>
-                    <InputBase
-                      classes={{
-                        root: classes.stakeWithdrawBoxRoot,
-                        input: classes.stakeWithdrawInputBoxInput,
-                      }}
-                      onChange={(ev) => {
-                        setInputAmount(ev.target.value);
-                      }}
-                      value={inputAmount}
-                      placeholder="Enter amount you want to unstake"
-                      type="number"
-                      autoFocus
-                    />
-                    {error && (
-                      <span className={classes.stakeWithdrawInputError}>
-                        {error}
-                      </span>
+              <>
+                <div className={classes.desktopStakeWithdrawAvailableWrapper}>
+                  <Typography
+                    className={classes.stakeWithdrawAvailableText}
+                    variant={"h6"}
+                  >
+                    Currently Staked: {staked} {isLegacy ? "YFL" : "yYFL"}
+                    {!isLegacy && (
+                      <Typography
+                        className={classes.stakeWithdrawAvailableValue}
+                        variant={"h6"}
+                      >
+                        ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
+                      </Typography>
                     )}
-                  </div>
-                  <div className={classes.stakeWithdrawPreviewWrapper}>
-                    <Typography
-                      className={classes.stakeWithdrawPreviewHeader}
-                      variant={"h6"}
-                    >
-                      You'll receive
                   </Typography>
-                    <Typography className={classes.stakeWithdrawPreviewText}>
-                      ${(inputAmount * price * secondPrice).toLocaleString()}
-                    </Typography>
-                  </div>
-                </>
-              )}
+                  <Button
+                    className={classes.stakeWithdrawMaxButton}
+                    variant="contained"
+                    onClick={() => {
+                      onMax();
+                    }}
+                  >
+                    MAX
+                  </Button>
+                </div>
+                <div className={classes.mobileStakeWithdrawAvailableWrapper}>
+                  <Typography
+                    className={classes.stakeWithdrawAvailableText}
+                    variant={"h6"}
+                  >
+                    Staked: {staked} {isLegacy ? "YFL" : "yYFL"}
+                    {!isLegacy && (
+                      <Typography
+                        className={classes.stakeWithdrawAvailableValue}
+                        variant={"h6"}
+                      >
+                        ≈ {(staked * price).toFixed(3).toLocaleString()} YFL
+                      </Typography>
+                    )}
+                  </Typography>
+                  <Button
+                    className={classes.stakeWithdrawMaxButton}
+                    variant="contained"
+                    onClick={() => {
+                      onMax();
+                    }}
+                  >
+                    MAX
+                  </Button>
+                </div>
+                <div className={classes.stakeWithdrawInputValueWrapper}>
+                  <InputBase
+                    classes={{
+                      root: classes.stakeWithdrawBoxRoot,
+                      input: classes.stakeWithdrawInputBoxInput,
+                    }}
+                    onChange={(ev) => {
+                      setInputAmount(ev.target.value);
+                    }}
+                    value={inputAmount}
+                    placeholder="Enter amount you want to unstake"
+                    type="number"
+                    autoFocus
+                  />
+                  {error && (
+                    <span className={classes.stakeWithdrawInputError}>
+                      {error}
+                    </span>
+                  )}
+                </div>
+                <div className={classes.stakeWithdrawPreviewWrapper}>
+                  <Typography
+                    className={classes.stakeWithdrawPreviewHeader}
+                    variant={"h6"}
+                  >
+                    You'll receive
+                  </Typography>
+                  <Typography className={classes.stakeWithdrawPreviewText}>
+                    ${(inputAmount * price * secondPrice).toLocaleString()}
+                  </Typography>
+                </div>
+              </>
+            )}
             <div className={classes.voteButtonWrapper}>
               {stakeOrWithdraw !== "Stake" && (
                 <span className={classes.unstakeWarningText}>

@@ -4,7 +4,6 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
-import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,9 +18,12 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     marginRight: theme.spacing(2),
-    backgroundColor: "#5c6772",
     color: colors.white,
     zIndex: "9999",
+    backgroundColor: "#425B77",
+    opacity: "0.5",
+    boxShadow: "-1px 2px 4px rgba(0, 0, 0, 0.5)",
+    maxWidth: "500px",
   },
   linkText: {
     fontFamily: "'Formular'",
@@ -35,11 +37,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuListComposition({
+export default function MenuLinkComponent({
   text,
   to,
-  menu,
-  anchorIcon = true,
+  anchorIcon = false,
+  menuItems,
 }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -116,17 +118,7 @@ export default function MenuListComposition({
                     id="menu-list-grow"
                     onKeyDown={handleListKeyDown}
                   >
-                    {to &&
-                      to.map((item, index) => (
-                        <MenuItem
-                          key={item}
-                          onClick={(ev) => {
-                            handleClose(ev, item);
-                          }}
-                        >
-                          {menu[index]}
-                        </MenuItem>
-                      ))}
+                    {menuItems}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
