@@ -35,6 +35,7 @@ const styles = (theme) => ({
     padding: "0px 35px",
   },
   backgroundImageContainer: {
+    zIndex: "1",
     position: "absolute",
     left: "0px",
     top: "0px",
@@ -60,7 +61,6 @@ const styles = (theme) => ({
     "& > div": {
       marginTop: "30px",
     },
-    padding: "30px",
     flex: 1,
   },
   linkGroupContainer: {
@@ -75,7 +75,6 @@ const styles = (theme) => ({
     fontSize: "12px",
     lineHeight: "14.68px",
     letterSpacing: "0.67px",
-    marginLeft: "20px",
     color: colors.white,
   },
 
@@ -83,6 +82,7 @@ const styles = (theme) => ({
     position: "absolute",
     left: "32px",
     paddingTop: "0px",
+    zIndex: "2",
   },
   buyButtonContainer: {
     width: "100%",
@@ -112,7 +112,7 @@ const styles = (theme) => ({
     display: "grid",
     gridTemplateColumns: "auto auto",
     gridGap: "30px",
-    padding: "25px",
+    padding: "25px 0px",
     width: "100%",
   },
   linkProductsItem: {
@@ -162,6 +162,11 @@ const styles = (theme) => ({
     padding: "5px",
     fontSize: "8px",
     marginLeft: "10px",
+  },
+  mainContainer: {
+    width: "100%",
+    height: "100%",
+    zIndex: "3",
   },
 });
 
@@ -233,129 +238,137 @@ class RedirectModal extends Component {
               alt="background"
             />
           </div>
-          <div className={classes.logoContainer}>
-            <HeaderLogo />
-          </div>
-          <IconButton
-            aria-label="close"
-            className={classes.closeButton}
-            onClick={closeModal}
-          >
-            <CloseIcon
-              style={{ color: colors.white, width: "32px", height: "32px" }}
-            />
-          </IconButton>
-          <div className={classes.linkContainer}>
-            <div className={classes.linkGroupContainer}>
-              <Typography className={classes.linkGroupTitle}>
-                Products
-              </Typography>
-              <div className={classes.linkGroup}>
-                {this.renderMenuItem(
-                  require("../../../assets/linkswap.svg"),
-                  "Linkswap",
-                  "https://linkswap.app",
-                  false
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/linkcheck.svg"),
-                  "Linkcheck",
-                  "",
-                  true
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/waffle.svg"),
-                  "Wafflehouse",
-                  "",
-                  true
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/linkpad.svg"),
-                  "Linkpad",
-                  "",
-                  true
-                )}
-              </div>
+          <div className={classes.mainContainer}>
+            <div className={classes.logoContainer}>
+              <HeaderLogo />
             </div>
-            <div className={classes.linkGroupContainer}>
-              <Typography className={classes.linkGroupTitle}>
-                Ressources
-              </Typography>
-              <div className={classes.linkGroup}>
-                {this.renderMenuItem(
-                  require("../../../assets/linkswap.svg"),
-                  "Analytics",
-                  "https://info.linkswap.app",
-                  false
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/linkswap.svg"),
-                  "APY Calculator",
-                  "https://apycalc.yflink.io/",
-                  false
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/linkswap.svg"),
-                  "Learn",
-                  "https://learn.yflink.io/",
-                  false
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/linkswap.svg"),
-                  "APY Calculator",
-                  "https://calculator.yflink.io/",
-                  false
-                )}
-              </div>
-            </div>
-            <div className={classes.linkGroupContainer}>
-              <Typography className={classes.linkGroupTitle}>
-                Governance
-              </Typography>
-              <div className={classes.linkGroup}>
-                {this.renderMenuItem(
-                  require("../../../assets/vote.svg"),
-                  "Stake & Vote",
-                  "./stake",
-                  false,
-                  false
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/stake.svg"),
-                  "LP Rewards",
-                  "https://rewards.linkswap.app/",
-                  false
-                )}
-                {this.renderMenuItem(
-                  require("../../../assets/linkswap.svg"),
-                  "Linksmas",
-                  "./linksmas-2020",
-                  false,
-                  false
-                )}
-              </div>
-            </div>
-          </div>
-          <div className={classes.buyButtonContainer}>
-            <Button
-              variant="contained"
-              className={classes.buyButton}
-              onClick={() => {
-                window.open(
-                  "https://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
-                );
-              }}
+            <IconButton
+              aria-label="close"
+              className={classes.closeButton}
+              onClick={closeModal}
             >
-              Buy YFL
-              <CallMadeIcon
-                style={{
-                  color: "white",
-                  width: "18px",
-                  height: "18px",
-                  marginLeft: "14px",
-                }}
+              <CloseIcon
+                style={{ color: colors.white, width: "32px", height: "32px" }}
               />
-            </Button>
+            </IconButton>
+            <div className={classes.linkContainer}>
+              <div className={classes.linkGroupContainer}>
+                <Typography className={classes.linkGroupTitle}>
+                  Products
+                </Typography>
+                <div className={classes.linkGroup}>
+                  {this.renderMenuItem(
+                    require("../../../assets/linkswap.svg"),
+                    "Linkswap",
+                    "https://linkswap.app",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/linkcheck.svg"),
+                    "Linkcheck",
+                    "https://blog.yflink.io/linkcheck/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/linkpad.svg"),
+                    "Linkpad",
+                    "https://blog.yflink.io/project-announcement-linkpad/",
+                    false
+                  )}
+
+                  {this.renderMenuItem(
+                    require("../../../assets/linkswap.svg"),
+                    "Linklend",
+                    "https://blog.yflink.io/project-announcement-linklend/",
+                    true
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/waffle.svg"),
+                    "Wafflehouse",
+                    "",
+                    true
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/linkswap.svg"),
+                    "NFTs",
+                    "",
+                    true
+                  )}
+                </div>
+              </div>
+              <div className={classes.linkGroupContainer}>
+                <Typography className={classes.linkGroupTitle}>
+                  Resources
+                </Typography>
+                <div className={classes.linkGroup}>
+                  {this.renderMenuItem(
+                    require("../../../assets/linkswap.svg"),
+                    "Analytics",
+                    "https://info.linkswap.app",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/linkswap.svg"),
+                    "APY Calculator",
+                    "https://apycalc.yflink.io/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/linkswap.svg"),
+                    "Learn",
+                    "https://learn.yflink.io/",
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/linkswap.svg"),
+                    "APY Calculator",
+                    "https://calculator.yflink.io/",
+                    false
+                  )}
+                </div>
+              </div>
+              <div className={classes.linkGroupContainer}>
+                <Typography className={classes.linkGroupTitle}>
+                  Stake & Vote
+                </Typography>
+                <div className={classes.linkGroup}>
+                  {this.renderMenuItem(
+                    require("../../../assets/vote.svg"),
+                    "Governance",
+                    "./stake",
+                    false,
+                    false
+                  )}
+                  {this.renderMenuItem(
+                    require("../../../assets/stake.svg"),
+                    "LP Rewards",
+                    "https://rewards.linkswap.app/",
+                    false
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className={classes.buyButtonContainer}>
+              <Button
+                variant="contained"
+                className={classes.buyButton}
+                onClick={() => {
+                  window.open(
+                    "https://linkswap.app/#/swap?outputCurrency=0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
+                  );
+                }}
+              >
+                Buy YFL
+                <CallMadeIcon
+                  style={{
+                    color: "white",
+                    width: "18px",
+                    height: "18px",
+                    marginLeft: "14px",
+                  }}
+                />
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

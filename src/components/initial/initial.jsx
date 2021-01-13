@@ -791,17 +791,24 @@ class Initial extends Component {
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../assets/linkpad.svg"),
+                    require("../../assets/linkswap.svg"),
                     "Linklend",
                     "DeFi Venture Fund",
                     "https://blog.yflink.io/project-announcement-linklend/",
+                    true
+                  )}
+                  {this.renderMenuItem(
+                    require("../../assets/linkswap.svg"),
+                    "NFTs",
+                    "View YFL NFTs",
+                    "",
                     true
                   )}
                 </div>
               }
             />
             <HeaderMenuLink
-              text="RESSOURCES"
+              text="RESOURCES"
               menuItems={
                 <div className={classes.linkProductsMenu}>
                   {this.renderMenuItem(
@@ -836,13 +843,13 @@ class Initial extends Component {
               }
             />
             <HeaderMenuLink
-              text="GOVERNANCE"
+              text="STAKE & VOTE"
               menuItems={
                 <div className={classes.linkProductsMenu}>
                   {this.renderMenuItem(
                     require("../../assets/vote.svg"),
-                    "Stake & Vote",
-                    "yYFL Governance",
+                    "Governance",
+                    "Stake YFL",
                     "./stake",
                     false,
                     false
@@ -850,16 +857,8 @@ class Initial extends Component {
                   {this.renderMenuItem(
                     require("../../assets/stake.svg"),
                     "LP Rewards",
-                    "Getting Rewards for LP",
+                    "Stake LPs",
                     "https://rewards.linkswap.app/",
-                    false
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
-                    "Linksmas",
-                    "YFL Xmas event",
-                    "https://yflink.io/#/linksmas-2020",
-                    false,
                     false
                   )}
                 </div>
