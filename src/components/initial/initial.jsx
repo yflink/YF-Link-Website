@@ -609,6 +609,8 @@ const styles = (theme) => ({
     overflow: "hidden",
     paddingLeft: "100%",
     boxSizing: "content-box",
+
+    cursor: "pointer",
   },
 
   footerSectionValue: {
@@ -881,7 +883,7 @@ class Initial extends Component {
                     require("../../assets/stake.svg"),
                     "LP Rewards",
                     "Stake LPs",
-                    "https://rewards.linkswap.app/",
+                    "https://linkswap.app/#/stake",
                     false
                   )}
                 </div>
@@ -1113,7 +1115,12 @@ class Initial extends Component {
 
     if (linkswapInfo) {
       return (
-        <div className={classes.footerSection}>
+        <div
+          className={classes.footerSection}
+          onClick={() => {
+            window.open("https://info.linkswap.app");
+          }}
+        >
           <div className={classes.footerTicker}>
             <Typography className={classes.footerSectionValue}>
               24H VOLUME: $

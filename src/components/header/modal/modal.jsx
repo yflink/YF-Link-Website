@@ -345,7 +345,7 @@ class RedirectModal extends Component {
                   {this.renderMenuItem(
                     require("../../../assets/stake.svg"),
                     "LP Rewards",
-                    "https://rewards.linkswap.app/",
+                    "https://linkswap.app/#/stake",
                     false
                   )}
                 </div>
