@@ -74,8 +74,7 @@ const styles = (theme) => ({
     "& > img": {
       width: "100%",
       maxWidth: "1240px",
-      filter: "blur(50px)",
-      opacity: "0.3",
+      filter: "blur(60px)",
     },
 
     "@media (max-width: 1240px)": {
