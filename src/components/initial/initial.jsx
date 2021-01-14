@@ -605,7 +605,12 @@ const styles = (theme) => ({
     justifyContent: "space-between",
     zIndex: "3",
     padding: "0px 10px",
+
+    overflow: "hidden",
+    paddingLeft: "100%",
+    boxSizing: "content-box",
   },
+
   footerSectionValue: {
     fontFamily: "Formular",
     fontWeight: "400",
@@ -622,6 +627,24 @@ const styles = (theme) => ({
     "@media (min-width: 768px)": {
       fontSize: "20px",
     },
+    display: "inline-block",
+  },
+  footerTicker: {
+    display: "inline-block",
+    height: "100%",
+    lineHeight: "100%",
+    whiteSpace: "nowrap",
+    paddingRight: "100%",
+    boxSizing: "content-box",
+
+    "-webkit-animation-iteration-count": "infinite",
+    "animation-iteration-count": "infinite",
+    "-webkit-animation-timing-function": "linear",
+    "animation-timing-function": "linear",
+    "-webkit-animation-name": "ticker",
+    "animation-name": "ticker",
+    "-webkit-animation-duration": "15s",
+    "animation-duration": "15s",
   },
 });
 
@@ -1091,31 +1114,35 @@ class Initial extends Component {
     if (linkswapInfo) {
       return (
         <div className={classes.footerSection}>
-          <Typography className={classes.footerSectionValue}>
-            24H VOLUME: $
-            {linkswapInfo &&
-              (parseFloat(linkswapInfo.dailyVolumeUSD) / 1000000).toFixed(2)}
-            M
-          </Typography>
-          <Typography className={classes.footerSectionValue}>
-            LIQUIDITY: $
-            {linkswapInfo &&
-              (parseFloat(linkswapInfo.totalLiquidityUSD) / 1000000).toFixed(2)}
-            M
-          </Typography>
+          <div className={classes.footerTicker}>
+            <Typography className={classes.footerSectionValue}>
+              24H VOLUME: $
+              {linkswapInfo &&
+                (parseFloat(linkswapInfo.dailyVolumeUSD) / 1000000).toFixed(2)}
+              M
+            </Typography>
+            <Typography className={classes.footerSectionValue}>
+              LIQUIDITY: $
+              {linkswapInfo &&
+                (parseFloat(linkswapInfo.totalLiquidityUSD) / 1000000).toFixed(
+                  2
+                )}
+              M
+            </Typography>
 
-          <Typography className={classes.footerSectionValue}>
-            ACTIVE PAIRS: {linkswapInfo && linkswapInfo.activePairs}
-          </Typography>
+            <Typography className={classes.footerSectionValue}>
+              ACTIVE PAIRS: {linkswapInfo && linkswapInfo.activePairs}
+            </Typography>
 
-          <Typography className={classes.footerSectionValue}>
-            TOTAL POOLS: {linkswapInfo && linkswapInfo.totalPools}
-          </Typography>
+            <Typography className={classes.footerSectionValue}>
+              TOTAL POOLS: {linkswapInfo && linkswapInfo.totalPools}
+            </Typography>
 
-          <Typography className={classes.footerSectionValue}>
-            YFL PRICE: $
-            {linkswapInfo && parseFloat(linkswapInfo.yflPrice).toFixed(2)}
-          </Typography>
+            <Typography className={classes.footerSectionValue}>
+              YFL PRICE: $
+              {linkswapInfo && parseFloat(linkswapInfo.yflPrice).toFixed(2)}
+            </Typography>
+          </div>
         </div>
       );
     } else {
