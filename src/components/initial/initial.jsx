@@ -793,7 +793,7 @@ class Initial extends Component {
                   {this.renderMenuItem(
                     require("../../assets/linkswap.svg"),
                     "Linklend",
-                    "DeFi Venture Fund",
+                    "Synthetic collateral lending",
                     "https://blog.yflink.io/project-announcement-linklend/",
                     true
                   )}
