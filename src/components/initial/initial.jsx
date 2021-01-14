@@ -852,7 +852,7 @@ class Initial extends Component {
                   )}
                   {this.renderMenuItem(
                     require("../../assets/linkswap.svg"),
-                    "Learn",
+                    "Help Center",
                     "YF Link ecosystem",
                     "https://learn.yflink.io/",
                     false
