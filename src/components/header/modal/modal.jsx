@@ -28,7 +28,7 @@ const styles = (theme) => ({
     background: `linear-gradient(0deg, ${colors.greyBackground}, ${colors.greyBackground})`,
     minWidth: "100%",
     minHeight: "100%",
-    overflow: "hidden",
+    overflow: "auto",
     position: "relative",
     alignItems: "center",
     justifyContent: "flex-start",
@@ -89,7 +89,7 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    marginBottom: "90px",
+    paddingBottom: "20px",
   },
   buyButton: {
     background: "#3865D3",
@@ -114,6 +114,9 @@ const styles = (theme) => ({
     gridGap: "30px",
     padding: "25px 0px",
     width: "100%",
+    "@media (max-width: 350px)": {
+      gridTemplateColumns: "auto",
+    },
   },
   linkProductsItem: {
     display: "flex",
