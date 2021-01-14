@@ -74,6 +74,8 @@ const styles = (theme) => ({
     "& > img": {
       width: "100%",
       maxWidth: "1240px",
+      filter: "blur(50px)",
+      opacity: "0.3",
     },
 
     "@media (max-width: 1240px)": {
@@ -84,8 +86,13 @@ const styles = (theme) => ({
       left: "calc(50% - 620px)",
     },
 
+    width: "100%",
+    height: "100%",
+
     "@media (max-width: 768px)": {
-      display: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
   },
   rightArrowUpSection: {},
@@ -1018,6 +1025,9 @@ class Initial extends Component {
       return (
         <>
           <div className={classes.topMainSection} />
+          <div className={classes.rightArrowSection}>
+            <img alt="up" src={require("../../assets/yfl-blur-up.svg")} />
+          </div>
           <div className={classes.bottomMarkSection}>
             <img
               alt="up"

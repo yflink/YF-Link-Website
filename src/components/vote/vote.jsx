@@ -1412,22 +1412,10 @@ class Vote extends Component {
               }
               externalLink={true}
             />
-            <HeaderLink text="LINKSMAS" to={"/linksmas-2020"} />
             <HeaderLink
               text="LINKSWAP"
               to={"https://linkswap.app/"}
               externalLink={true}
-            />
-            <HeaderLink
-              text="LP REWARDS"
-              to={"https://linkswap.app/#/stake"}
-              externalLink={true}
-            />
-            <HeaderLink
-              text="STAKE & VOTE"
-              to={account && account.address ? "/stake" : "/account"}
-              redirectedTo={"/stake"}
-              selected={true}
             />
             <HeaderDropLink
               text="TOOLS"
