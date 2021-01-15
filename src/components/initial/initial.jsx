@@ -837,14 +837,14 @@ class Initial extends Component {
                     true
                   )}
                   {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
+                    require("../../assets/linklend.svg"),
                     "Linklend",
                     "Synthetic collateral lending",
                     "https://blog.yflink.io/project-announcement-linklend/",
                     true
                   )}
                   {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
+                    require("../../assets/nft.svg"),
                     "NFTs",
                     "View YFL NFTs",
                     "",
@@ -858,28 +858,28 @@ class Initial extends Component {
               menuItems={
                 <div className={classes.linkProductsMenu}>
                   {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
+                    require("../../assets/analytics.svg"),
                     "Analytics",
                     "LINKSWAP Protocol Analytics",
                     "https://info.linkswap.app",
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
+                    require("../../assets/calculator_1.svg"),
                     "APY Calculator",
                     "LP Rewards",
                     "https://apycalc.yflink.io/",
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
+                    require("../../assets/help.svg"),
                     "Help Center",
                     "YF Link ecosystem",
                     "https://learn.yflink.io/",
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
+                    require("../../assets/calculator_2.svg"),
                     "APY Calculator",
                     "Stake & Vote",
                     "https://calculator.yflink.io/",

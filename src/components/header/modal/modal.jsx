@@ -280,7 +280,7 @@ class RedirectModal extends Component {
                   )}
 
                   {this.renderMenuItem(
-                    require("../../../assets/linkswap.svg"),
+                    require("../../../assets/linklend.svg"),
                     "Linklend",
                     "https://blog.yflink.io/project-announcement-linklend/",
                     true
@@ -292,7 +292,7 @@ class RedirectModal extends Component {
                     true
                   )}
                   {this.renderMenuItem(
-                    require("../../../assets/linkswap.svg"),
+                    require("../../../assets/nft.svg"),
                     "NFTs",
                     "",
                     true
@@ -305,25 +305,25 @@ class RedirectModal extends Component {
                 </Typography>
                 <div className={classes.linkGroup}>
                   {this.renderMenuItem(
-                    require("../../../assets/linkswap.svg"),
+                    require("../../../assets/analytics.svg"),
                     "Analytics",
                     "https://info.linkswap.app",
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../../assets/linkswap.svg"),
+                    require("../../../assets/calculator_1.svg"),
                     "APY Calculator",
                     "https://apycalc.yflink.io/",
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../../assets/linkswap.svg"),
+                    require("../../../assets/help.svg"),
                     "Help Center",
                     "https://learn.yflink.io/",
                     false
                   )}
                   {this.renderMenuItem(
-                    require("../../../assets/linkswap.svg"),
+                    require("../../../assets/calculator_2.svg"),
                     "APY Calculator",
                     "https://calculator.yflink.io/",
                     false
