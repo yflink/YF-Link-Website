@@ -1,0 +1,10 @@
+.filelist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.filelist > a {
+  font-size: "large";
+}
