@@ -653,6 +653,14 @@ const styles = (theme) => ({
     "animation-name": "ticker",
     "-webkit-animation-duration": "15s",
     "animation-duration": "15s",
+
+    "-webkit-animation-play-state": "running",
+    "animation-play-state": "running",
+
+    "&:hover": {
+      "-webkit-animation-play-state": "paused",
+      "animation-play-state": "paused",
+    },
   },
 });
 
@@ -727,7 +735,14 @@ class Initial extends Component {
       setLinkswapValues((data) => {
         this.setLinkswapInfo(data);
       });
-    }, 5000);
+    }, 15000);
+  }
+
+  componentWillUnmount() {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
   }
 
   setLinkswapInfo = (data) => {
