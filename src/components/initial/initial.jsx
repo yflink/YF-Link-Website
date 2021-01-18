@@ -15,11 +15,7 @@ import Store from "../../stores";
 import HeaderMenuLink from "../header/link/menuLink";
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
 
-import {
-  v1Client,
-  LinkswapDayQuery,
-  TokenDataQuery,
-} from "../../stores/apollo";
+import { v1Client, LinkswapDayQuery } from "../../stores/apollo";
 
 const styles = (theme) => ({
   root: {
@@ -676,35 +672,15 @@ const setLinkswapValues = async (setCallback) => {
       fetchPolicy: "network-only",
       errorPolicy: "ignore",
     });
-    if (data && data.linkswapDayDatas && data.linkswapDayDatas.length > 0) {
-      linkswapData = { ...data.linkswapDayDatas[0] };
-    }
-
-    const { data: tokenData } = await v1Client.query({
-      query: TokenDataQuery,
-      variables: {},
-      fetchPolicy: "network-only",
-      errorPolicy: "ignore",
-    });
-    if (
-      tokenData &&
-      tokenData.tokenDayDatas &&
-      tokenData.tokenDayDatas.length > 0
-    ) {
-      const yflToken = tokenData.tokenDayDatas.find(
-        (item) => item && item.token && item.token.symbol === "YFL"
-      );
-      const yflPriceUSD = yflToken.priceUSD;
-      const tokenCount = tokenData.tokenDayDatas.filter(
-        (item) => item && item.date === tokenData.tokenDayDatas[0].date
-      ).length;
+    if (data && data.linkswapFactories && data.bundles) {
       linkswapData = {
-        ...linkswapData,
-        yflPrice: yflPriceUSD,
-        activePairs: tokenCount,
-        totalPools: tokenCount,
+        yflPrice: data.bundles[0].yflPrice || "0",
+        dailyVolumeUSD: data.linkswapDayDatas[0].dailyVolumeUSD || "0",
+        totalLiquidityUSD: data.linkswapDayDatas[0].totalLiquidityUSD || "0",
+        pairCount: data.linkswapFactories[0].pairCount || "0",
       };
     }
+
     setCallback(linkswapData);
   } catch (error) {
     console.log("Fetching error", error);
@@ -810,21 +786,21 @@ class Initial extends Component {
                 <div className={classes.linkProductsMenu}>
                   {this.renderMenuItem(
                     require("../../assets/linkswap.svg"),
-                    "Linkswap",
+                    "LINKSWAP",
                     "Automated Market Maker",
                     "https://linkswap.app",
                     false
                   )}
                   {this.renderMenuItem(
                     require("../../assets/linkcheck.svg"),
-                    "Linkcheck",
+                    "LINKCHECK",
                     "Team audits",
                     "https://blog.yflink.io/linkcheck/",
                     false
                   )}
                   {this.renderMenuItem(
                     require("../../assets/linkpad.svg"),
-                    "Linkpad",
+                    "LINKPAD",
                     "DeFi Venture Fund",
                     "https://blog.yflink.io/project-announcement-linkpad/",
                     false
@@ -838,7 +814,7 @@ class Initial extends Component {
                   )}
                   {this.renderMenuItem(
                     require("../../assets/linklend.svg"),
-                    "Linklend",
+                    "LINKLEND",
                     "Synthetic collateral lending",
                     "https://blog.yflink.io/project-announcement-linklend/",
                     true
@@ -1162,11 +1138,7 @@ class Initial extends Component {
             </Typography>
 
             <Typography className={classes.footerSectionValue}>
-              ACTIVE PAIRS: {linkswapInfo && linkswapInfo.activePairs}
-            </Typography>
-
-            <Typography className={classes.footerSectionValue}>
-              TOTAL POOLS: {linkswapInfo && linkswapInfo.totalPools}
+              ACTIVE PAIRS: {linkswapInfo && linkswapInfo.pairCount}
             </Typography>
 
             <Typography className={classes.footerSectionValue}>

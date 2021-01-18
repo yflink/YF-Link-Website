@@ -13,32 +13,14 @@ export const v1Client = new ApolloClient({
 
 export const LinkswapDayQuery = gql`
   query linkswapQuery {
-    linkswapDayDatas(first: 3, orderBy: date, orderDirection: desc) {
-      date
-      dailyVolumeETH
-      totalLiquidityETH
-      dailyVolumeUSD
-      totalLiquidityUSD
-      dailyVolumeUntracked
+    linkswapFactories {
+      pairCount
     }
-  }
-`;
-
-export const TokenDataQuery = gql`
-  query tokens {
-    tokenDayDatas(orderBy: date, orderDirection: desc) {
-      id
-      date
-      token {
-        name
-        symbol
-      }
-      priceUSD
-      dailyVolumeToken
-      dailyVolumeETH
+    bundles {
+      yflPrice
+    }
+    linkswapDayDatas(first: 1, orderBy: date, orderDirection: desc) {
       dailyVolumeUSD
-      totalLiquidityToken
-      totalLiquidityETH
       totalLiquidityUSD
     }
   }

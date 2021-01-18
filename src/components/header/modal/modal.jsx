@@ -262,26 +262,26 @@ class RedirectModal extends Component {
                 <div className={classes.linkGroup}>
                   {this.renderMenuItem(
                     require("../../../assets/linkswap.svg"),
-                    "Linkswap",
+                    "LINKSWAP",
                     "https://linkswap.app",
                     false
                   )}
                   {this.renderMenuItem(
                     require("../../../assets/linkcheck.svg"),
-                    "Linkcheck",
+                    "LINKCHECK",
                     "https://blog.yflink.io/linkcheck/",
                     false
                   )}
                   {this.renderMenuItem(
                     require("../../../assets/linkpad.svg"),
-                    "Linkpad",
+                    "LINKPAD",
                     "https://blog.yflink.io/project-announcement-linkpad/",
                     false
                   )}
 
                   {this.renderMenuItem(
                     require("../../../assets/linklend.svg"),
-                    "Linklend",
+                    "LINLEND",
                     "https://blog.yflink.io/project-announcement-linklend/",
                     true
                   )}
