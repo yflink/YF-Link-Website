@@ -281,7 +281,7 @@ class RedirectModal extends Component {
 
                   {this.renderMenuItem(
                     require("../../../assets/linklend.svg"),
-                    "LINLEND",
+                    "LINKLEND",
                     "https://blog.yflink.io/project-announcement-linklend/",
                     true
                   )}
