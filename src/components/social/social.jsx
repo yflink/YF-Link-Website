@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Grid, Divider } from '@material-ui/core';
 import { withNamespaces } from 'react-i18next';
 
 const styles = theme => ({
@@ -21,16 +21,22 @@ const styles = theme => ({
     '&:hover': {
       opacity: '0.7',
     }
+  },
+  dividerColor: {
+    background: 'white',
+    '&:hover': {
+      opacity: '0.7',
+    }
   }
 });
 
 class Social extends Component {
 
   render() {
-    const { classes, twitterUrl, githubUrl, mediumUrl, telegramUrl, discordUrl } = this.props;
+    const { classes, twitterUrl, githubUrl, mediumUrl, telegramUrl, discordUrl, coingeckoUrl, coinmarketcapUrl, defipulseUrl, zerionUrl, debankUrl } = this.props;
 
     return (
-      <div className={classes.root}>
+      <Grid container alignItems="center" className={classes.root}>
         {twitterUrl && (
           <div className={classes.mediaContainer} onClick={() => {this.nav(twitterUrl)}}>
             <img alt="twitter" src={require("../../assets/yfl-twitter-logo.svg")} width="30px" height="30px" />
@@ -56,7 +62,33 @@ class Social extends Component {
             <img alt="medium" src={require("../../assets/yfl-discord-logo.svg")} width="30px" height="34px" />
           </div>
         )}
-      </div>
+        <Divider classes={{root: classes.dividerColor}} orientation="vertical" flexItem />
+        {coingeckoUrl && (
+          <div className={classes.mediaContainer} onClick={() => {this.nav(coingeckoUrl)}}>
+            <img alt="medium" src={require("../../assets/yfl-coingecko-logo.svg")} width="30px" height="34px" />
+          </div>
+        )}
+        {coinmarketcapUrl && (
+          <div className={classes.mediaContainer} onClick={() => {this.nav(coinmarketcapUrl)}}>
+            <img alt="medium" src={require("../../assets/yfl-coinmarketcap-logo.svg")} width="30px" height="34px" />
+          </div>
+        )}
+        {defipulseUrl && (
+          <div className={classes.mediaContainer} onClick={() => {this.nav(defipulseUrl)}}>
+            <img alt="medium" src={require("../../assets/yfl-defipulse-logo.svg")} width="30px" height="34px" />
+          </div>
+        )}
+        {zerionUrl && (
+          <div className={classes.mediaContainer} onClick={() => {this.nav(zerionUrl)}}>
+            <img alt="medium" src={require("../../assets/yfl-zerion-logo.svg")} width="30px" height="34px" />
+          </div>
+        )}
+        {debankUrl && (
+          <div className={classes.mediaContainer} onClick={() => {this.nav(debankUrl)}}>
+            <img alt="medium" src={require("../../assets/yfl-debank-logo.svg")} width="30px" height="34px" />
+          </div>
+        )}
+      </Grid>
     )
   };
 
