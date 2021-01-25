@@ -981,7 +981,7 @@ class Initial extends Component {
                 discordUrl="https://discord.gg/VGp7qw46fc"
                 coingeckoUrl="https://www.coingecko.com/en/exchanges/linkswap"
                 coinmarketcapUrl="https://coinmarketcap.com/exchanges/linkswap/"
-                defipulseUrl="https://defipulse.com/linkswap"
+                // defipulseUrl="https://defipulse.com/linkswap"
                 zerionUrl="https://app.zerion.io/market/asset/YFL-0x28cb7e841ee97947a86b06fa4090c8451f64c0be"
                 debankUrl="https://debank.com/projects/yflink"
               />
