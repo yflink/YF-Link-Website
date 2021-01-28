@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, IconButton, Button, Slide } from "@material-ui/core";
+
 import CloseIcon from "@material-ui/icons/Close";
 import CallMadeIcon from "@material-ui/icons/CallMade";
+import LocalMoviesIcon from "@material-ui/icons/LocalMovies";
 
 import { withNamespaces } from "react-i18next";
 import { colors } from "../../theme";
@@ -13,6 +15,8 @@ import RedirectModal from "../header/modal/modal";
 import SocialShare from "../social/social";
 import Store from "../../stores";
 import HeaderMenuLink from "../header/link/menuLink";
+import VideoAdsModal from "./modal";
+
 import { ReactComponent as OptionsIcon } from "../../assets/YFLink-header-options.svg";
 
 import { v1Client, LinkswapDayQuery } from "../../stores/apollo";
@@ -317,14 +321,19 @@ const styles = (theme) => ({
     letterSpacing: "1.6px",
     color: colors.white,
     marginBottom: "40px",
+    display: "flex",
+    alignItems: "flex-end",
   },
 
   linkswapLogo: {
     marginBottom: "60px",
     maxWidth: "683px",
+    display: "flex",
+    alignItems: "flex-start",
   },
   linkswapLogoImage: {
     maxWidth: "100%",
+    marginRight: "20px",
   },
   linkswapLaunchButton: {
     backgroundColor: "#3B65D3",
@@ -696,6 +705,7 @@ class Initial extends Component {
       modalOpen: false,
       raffleOpen: true,
       linkswapInfo: null,
+      showVideoAds: true,
     };
   }
 
@@ -946,6 +956,20 @@ class Initial extends Component {
             <div className={classes.linkswapInfoContainer}>
               <Typography className={classes.linkswapTitle}>
                 Your link to DeFi
+                <IconButton
+                  aria-label="close"
+                  onClick={() => {
+                    this.setState({ showVideoAds: true });
+                  }}
+                >
+                  <LocalMoviesIcon
+                    style={{
+                      color: colors.white,
+                      width: "24px",
+                      height: "24px",
+                    }}
+                  />
+                </IconButton>
               </Typography>
               <div className={classes.linkswapLogo}>
                 <img
@@ -1103,6 +1127,13 @@ class Initial extends Component {
     );
   };
 
+  renderVideoAds = () => {
+    const { showVideoAds } = this.state;
+    return (
+      <VideoAdsModal modalOpen={showVideoAds} closeModal={this.closeAdsModal} />
+    );
+  };
+
   renderModal = () => {
     const account = store.getStore("account");
     return (
@@ -1166,6 +1197,10 @@ class Initial extends Component {
     this.setState({ modalOpen: false });
   };
 
+  closeAdsModal = () => {
+    this.setState({ showVideoAds: false });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -1185,6 +1220,7 @@ class Initial extends Component {
         {this.renderModal()}
 
         {/* {this.renderRaffleAd()} */}
+        {this.renderVideoAds()}
       </div>
     );
   }
