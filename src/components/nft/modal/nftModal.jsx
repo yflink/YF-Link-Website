@@ -185,7 +185,7 @@ class NftModal extends Component {
 		this.state = {
 			filled: false,
 			price: '',
-			recipient: '',
+			contractAddress: '',
 		};
 	}
 
@@ -257,7 +257,7 @@ class NftModal extends Component {
 
 	renderSellPanel = () => {
 		const { classes } = this.props;
-		const { price, recipient } = this.state;
+		const { price, contractAddress } = this.state;
 
 		return (
 			<div className={classes.contentBox}>
@@ -277,6 +277,7 @@ class NftModal extends Component {
 							className={classes.input}
 							placeholder="Set price"
 							style={{ width: '100px' }}
+							value={price}
 							onChange={e => this.setState({ price: e.target.value })}
 							inputProps={{ style: { textAlign: 'right' } }}
 						/>
@@ -287,16 +288,20 @@ class NftModal extends Component {
 				<div className={classes.contentItemRow}>
 					<TextField
 						className={classes.input}
-						placeholder="Add Recipient"
+						placeholder="Payment Token Contract Address"
 						style={{ width: '100%' }}
-						onChange={e => this.setState({ recipient: e.target.value })}
+						value={contractAddress}
+						onChange={e => this.setState({ contractAddress: e.target.value })}
 					/>
 				</div>
 
 				<Divider className={classes.divider} />
 
 				<div className={classes.contentItemRow}>
-					<Button className={classes.sellButton} disabled={!price || !Number(price) || !recipient || !recipient.length}>
+					<Button
+						className={classes.sellButton}
+						disabled={!price || !Number(price) || !contractAddress || !contractAddress.length}
+					>
 						<Typography>Sell NFT</Typography>
 					</Button>
 				</div>
