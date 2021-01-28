@@ -89,6 +89,8 @@ const styles = theme => ({
 	infoIcon: {
 		color: colors.greyText,
 		marginLeft: theme.spacing(1),
+		width: '12px',
+		height: '12px',
 	},
 	emptyText: {
 		color: colors.lightRed1,
@@ -120,9 +122,53 @@ class NftModal extends Component {
 		};
 	}
 
+	renderFillPanel() {
+		const { classes } = this.props;
+		const { filled } = this.state;
+
+		return (
+			<div className={classes.contentBox}>
+				<div className={classes.contentItemRow} style={{ justifyContent: 'space-between' }}>
+					<div style={{ display: 'flex', alignItems: 'center' }}>
+						<Typography className={classes.greyText}>NFT Value</Typography>
+						<InfoOutlinedIcon className={classes.infoIcon} />
+					</div>
+					<Typography>1 YFL</Typography>
+				</div>
+
+				<div className={classes.contentItemRow}>
+					{filled ? (
+						<>
+							<CheckCircleIcon style={{ marginRight: '10px' }} />
+							<Typography variant="h3">Filled</Typography>
+						</>
+					) : (
+						<Typography variant="h3" className={classes.emptyText}>
+							Empty
+						</Typography>
+					)}
+				</div>
+
+				<div className={classes.contentItemRow} style={{ justifyContent: 'space-between' }}>
+					<Button className={classes.button} disabled={filled} onClick={() => this.setState({ filled: true })}>
+						<Typography>Refill</Typography>
+					</Button>
+					<Button className={classes.button} disabled={!filled} onClick={() => this.setState({ filled: false })}>
+						<Typography>Stake NFT Value</Typography>
+					</Button>
+				</div>
+
+				<div className={classes.contentItemRow}>
+					<Typography className={classes.greyText}>Wallet:</Typography>
+					&nbsp;
+					<Typography>203.46 YFL</Typography>
+				</div>
+			</div>
+		);
+	}
+
 	render() {
 		const { classes, closeModal, modalOpen, nftIndex } = this.props;
-		const { filled } = this.state;
 
 		const fullScreen = window.innerWidth < 768;
 
@@ -154,53 +200,7 @@ class NftModal extends Component {
 
 						<div className={classes.modalContent}>
 							<img className={classes.nftImg} src={NftImg} alt="nft" />
-							<div>
-								<div className={classes.contentBox}>
-									<div className={classes.contentItemRow} style={{ justifyContent: 'space-between' }}>
-										<div style={{ display: 'flex', alignItems: 'center' }}>
-											<Typography className={classes.greyText}>NFT Value</Typography>
-											<InfoOutlinedIcon className={classes.infoIcon} />
-										</div>
-										<Typography>1 YFL</Typography>
-									</div>
-
-									<div className={classes.contentItemRow}>
-										{filled ? (
-											<>
-												<CheckCircleIcon style={{ marginRight: '10px' }} />
-												<Typography variant="h3">Filled</Typography>
-											</>
-										) : (
-											<Typography variant="h3" className={classes.emptyText}>
-												Empty
-											</Typography>
-										)}
-									</div>
-
-									<div className={classes.contentItemRow} style={{ justifyContent: 'space-between' }}>
-										<Button
-											className={classes.button}
-											disabled={filled}
-											onClick={() => this.setState({ filled: true })}
-										>
-											<Typography>Refill</Typography>
-										</Button>
-										<Button
-											className={classes.button}
-											disabled={!filled}
-											onClick={() => this.setState({ filled: false })}
-										>
-											<Typography>Stake NFT Value</Typography>
-										</Button>
-									</div>
-
-									<div className={classes.contentItemRow}>
-										<Typography className={classes.greyText}>Wallet:</Typography>
-										&nbsp;
-										<Typography>203.46 YFL</Typography>
-									</div>
-								</div>
-							</div>
+							<div>{this.renderFillPanel()}</div>
 						</div>
 					</div>
 				</DialogContent>
