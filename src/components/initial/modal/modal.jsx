@@ -202,7 +202,7 @@ class AdsModal extends Component {
             <Player
               playsInline={true}
               poster="/videos/poster.png"
-              src="http://localhost:3000/videos/demo.mp4"
+              src="/videos/demo.mp4"
               autoPlay={true}
             >
               <BigPlayButton position="center" />
