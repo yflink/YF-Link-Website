@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
-import { DialogContent, Dialog, IconButton, Zoom, Typography } from '@material-ui/core';
+import { DialogContent, Dialog, IconButton, Zoom, Typography, Button } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 import { colors } from '../../../theme';
 import NftImg from '../../../assets/nft_template.png';
 
@@ -47,7 +50,6 @@ const styles = theme => ({
 	modalContainer: {
 		padding: '25px 94px',
 		color: colors.white,
-		width: '850px',
 	},
 	modalHeader: {
 		display: 'flex',
@@ -69,11 +71,58 @@ const styles = theme => ({
 		height: 'auto',
 		marginRight: '20px',
 	},
+	contentBox: {
+		width: '370px',
+		background: colors.darkGray3,
+		backdropFilter: 'blur(10px)',
+		borderRadius: '8px',
+		padding: '16px',
+	},
+	contentItemRow: {
+		display: 'flex',
+		alignItems: 'center',
+		padding: '8px 0',
+	},
+	greyText: {
+		color: colors.greyText,
+	},
+	infoIcon: {
+		color: colors.greyText,
+		marginLeft: theme.spacing(1),
+	},
+	emptyText: {
+		color: colors.lightRed1,
+	},
+	button: {
+		width: '163px',
+		height: '43px',
+		color: colors.white,
+		background: colors.lightGray,
+		padding: 0,
+		'&:hover': {
+			backgroundColor: colors.lightGray,
+			opacity: 0.7,
+		},
+		'&:disabled': {
+			backgroundColor: colors.lightGray,
+			opacity: 0.5,
+			color: colors.white,
+		},
+	},
 });
 
 class NftModal extends Component {
+	constructor() {
+		super();
+
+		this.state = {
+			filled: false,
+		};
+	}
+
 	render() {
 		const { classes, closeModal, modalOpen, nftIndex } = this.props;
+		const { filled } = this.state;
 
 		const fullScreen = window.innerWidth < 768;
 
@@ -106,8 +155,43 @@ class NftModal extends Component {
 						<div className={classes.modalContent}>
 							<img className={classes.nftImg} src={NftImg} alt="nft" />
 							<div>
-								<Typography variant="h3">Winner</Typography>
-								<Typography style={{ marginTop: '16px' }}>0x817bb...3db35</Typography>
+								<div className={classes.contentBox}>
+									<div className={classes.contentItemRow} style={{ justifyContent: 'space-between' }}>
+										<div style={{ display: 'flex', alignItems: 'center' }}>
+											<Typography className={classes.greyText}>NFT Value</Typography>
+											<InfoOutlinedIcon className={classes.infoIcon} />
+										</div>
+										<Typography>1 YFL</Typography>
+									</div>
+
+									<div className={classes.contentItemRow}>
+										{filled ? (
+											<>
+												<CheckCircleIcon style={{ marginRight: '10px' }} />
+												<Typography variant="h3">Filled</Typography>
+											</>
+										) : (
+											<Typography variant="h3" className={classes.emptyText}>
+												Empty
+											</Typography>
+										)}
+									</div>
+
+									<div className={classes.contentItemRow} style={{ justifyContent: 'space-between' }}>
+										<Button className={classes.button} disabled={filled}>
+											<Typography>Refill</Typography>
+										</Button>
+										<Button className={classes.button} disabled={!filled}>
+											<Typography>Stake NFT Value</Typography>
+										</Button>
+									</div>
+
+									<div className={classes.contentItemRow}>
+										<Typography className={classes.greyText}>Wallet:</Typography>
+										&nbsp;
+										<Typography>203.46 YFL</Typography>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

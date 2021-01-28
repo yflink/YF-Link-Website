@@ -53,15 +53,18 @@ export const colors = {
 
 	darkBackground: '#222B35',
 	darkGray2: '#3a4754',
+	darkGray3: '#1c2229',
 	lightGray2: '#41505d',
 	lightGray3: '#54616d',
 	lightGray4: '#56626f',
 	lightGray5: '#67727d',
 	lightGray6: '#414f5d',
+	lightGray7: '#4f565e',
 	brandBlue: '#2A5BDB',
 
 	lightGreen2: '#A0FFC1',
 	lightRed: '#FFA0A0',
+	lightRed1: '#DB2A2A',
 
 	lightBlack2: 'rgba(0, 0, 0, 0.3)',
 	lightBlack3: 'rgba(255, 255, 255, 0.1)',
