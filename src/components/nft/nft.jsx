@@ -207,7 +207,7 @@ class Nft extends Component {
 			tabIndex: 0,
 			searchName: '',
 			showSearch: false,
-			showModal: true,
+			showModal: false,
 			nftDetailIndex: 0,
 		};
 	}

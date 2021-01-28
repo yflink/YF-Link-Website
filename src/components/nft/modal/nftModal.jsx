@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
-import { DialogContent, Dialog, IconButton, Zoom, Typography, Button } from '@material-ui/core';
+import { DialogContent, Dialog, IconButton, Zoom, Typography, Button, TextField, Divider } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -76,7 +76,8 @@ const styles = theme => ({
 		background: colors.darkGray3,
 		backdropFilter: 'blur(10px)',
 		borderRadius: '8px',
-		padding: '16px',
+		padding: theme.spacing(2),
+		marginBottom: theme.spacing(2),
 	},
 	contentItemRow: {
 		display: 'flex',
@@ -111,6 +112,41 @@ const styles = theme => ({
 			color: colors.white,
 		},
 	},
+	input: {
+		background: colors.transGrayBackground0,
+		borderRadius: '3px',
+		padding: '12px',
+		'& input': {
+			color: colors.white,
+			padding: '0',
+		},
+		[theme.breakpoints.down('sm')]: {
+			maxWidth: '210px',
+		},
+	},
+	divider: {
+		width: 'calc(100% + 32px)',
+		transform: 'translateX(-16px)',
+		height: '2px',
+		background: colors.transGrayBackground0,
+		margin: '16px 0',
+	},
+	sellButton: {
+		width: '100%',
+		height: '43px',
+		color: colors.white,
+		background: colors.brandBlue,
+		padding: 0,
+		'&:hover': {
+			backgroundColor: colors.brandBlue,
+			opacity: 0.7,
+		},
+		'&:disabled': {
+			backgroundColor: colors.brandBlue,
+			opacity: 0.5,
+			color: colors.white,
+		},
+	},
 });
 
 class NftModal extends Component {
@@ -119,6 +155,8 @@ class NftModal extends Component {
 
 		this.state = {
 			filled: false,
+			price: '',
+			recipient: '',
 		};
 	}
 
@@ -167,6 +205,55 @@ class NftModal extends Component {
 		);
 	}
 
+	renderSellPanel() {
+		const { classes } = this.props;
+		const { price, recipient } = this.state;
+
+		return (
+			<div className={classes.contentBox}>
+				<div className={classes.contentItemRow}>
+					<Typography variant="h3" style={{ fontWeight: 'bold' }}>
+						Offer to Sell
+					</Typography>
+				</div>
+
+				<div style={{ padding: '8px 0' }}>
+					<div style={{ display: 'flex', alignItems: 'center' }}>
+						<Typography>Sell Price</Typography>
+						<InfoOutlinedIcon className={classes.infoIcon} />
+					</div>
+					<div style={{ display: 'flex', alignItems: 'center', marginTop: '11px' }}>
+						<TextField
+							className={classes.input}
+							placeholder="Set price"
+							style={{ width: '100px' }}
+							onChange={e => this.setState({ price: e.target.value })}
+							inputProps={{ style: { textAlign: 'right' } }}
+						/>
+						<Typography style={{ marginLeft: '12px' }}>YFL</Typography>
+					</div>
+				</div>
+
+				<div className={classes.contentItemRow}>
+					<TextField
+						className={classes.input}
+						placeholder="Add Recipient"
+						style={{ width: '100%' }}
+						onChange={e => this.setState({ recipient: e.target.value })}
+					/>
+				</div>
+
+				<Divider className={classes.divider} />
+
+				<div className={classes.contentItemRow}>
+					<Button className={classes.sellButton} disabled={!price || !price.length || !recipient || !recipient.length}>
+						<Typography>Sell NFT</Typography>
+					</Button>
+				</div>
+			</div>
+		);
+	}
+
 	render() {
 		const { classes, closeModal, modalOpen, nftIndex } = this.props;
 
@@ -200,7 +287,10 @@ class NftModal extends Component {
 
 						<div className={classes.modalContent}>
 							<img className={classes.nftImg} src={NftImg} alt="nft" />
-							<div>{this.renderFillPanel()}</div>
+							<div>
+								{this.renderFillPanel()}
+								{this.renderSellPanel()}
+							</div>
 						</div>
 					</div>
 				</DialogContent>
