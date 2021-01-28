@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import clsx from 'clsx';
 
 import { withStyles } from '@material-ui/core/styles';
 import { DialogContent, Dialog, IconButton, Zoom, Typography, Button, TextField, Divider } from '@material-ui/core';
@@ -7,6 +8,8 @@ import { DialogContent, Dialog, IconButton, Zoom, Typography, Button, TextField,
 import CloseIcon from '@material-ui/icons/Close';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import { colors } from '../../../theme';
 import NftImg from '../../../assets/nft_template.png';
@@ -22,6 +25,7 @@ const styles = theme => ({
 	},
 	paper: {
 		boxShadow: 'none',
+		overflow: 'visible',
 	},
 	root: {
 		flex: 1,
@@ -146,6 +150,31 @@ const styles = theme => ({
 			opacity: 0.5,
 			color: colors.white,
 		},
+	},
+	arrowButton: {
+		position: 'absolute',
+		top: '50%',
+		padding: 0,
+		color: colors.white,
+		background: 'transparent',
+		width: '43px',
+		minWidth: '43px',
+		height: '43px',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		border: '2px solid white',
+		boxSizing: 'border-box',
+		borderRadius: '3px',
+		'&:hover': {
+			background: 'transparent',
+		},
+	},
+	prevButton: {
+		left: '-80px',
+	},
+	nextButton: {
+		right: '-80px',
 	},
 });
 
@@ -294,6 +323,18 @@ class NftModal extends Component {
 						</div>
 					</div>
 				</DialogContent>
+
+				{nftIndex > 0 && (
+					<Button className={clsx(classes.arrowButton, classes.prevButton)} onClick={this.props.onPrev}>
+						<KeyboardArrowLeftIcon />
+					</Button>
+				)}
+
+				{nftIndex < 20 - 1 && (
+					<Button className={clsx(classes.arrowButton, classes.nextButton)} onClick={this.props.onNext}>
+						<KeyboardArrowRightIcon />
+					</Button>
+				)}
 			</Dialog>
 		);
 	}

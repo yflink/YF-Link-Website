@@ -362,6 +362,12 @@ class Nft extends Component {
 				closeModal={() => this.setState({ showModal: false })}
 				modalOpen={showModal}
 				nftIndex={nftDetailIndex}
+				onPrev={() => {
+					this.setState({ nftDetailIndex: nftDetailIndex - 1 });
+				}}
+				onNext={() => {
+					this.setState({ nftDetailIndex: nftDetailIndex + 1 });
+				}}
 			/>
 		);
 	};
