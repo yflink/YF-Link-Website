@@ -178,10 +178,18 @@ class NftModal extends Component {
 									</div>
 
 									<div className={classes.contentItemRow} style={{ justifyContent: 'space-between' }}>
-										<Button className={classes.button} disabled={filled}>
+										<Button
+											className={classes.button}
+											disabled={filled}
+											onClick={() => this.setState({ filled: true })}
+										>
 											<Typography>Refill</Typography>
 										</Button>
-										<Button className={classes.button} disabled={!filled}>
+										<Button
+											className={classes.button}
+											disabled={!filled}
+											onClick={() => this.setState({ filled: false })}
+										>
 											<Typography>Stake NFT Value</Typography>
 										</Button>
 									</div>
