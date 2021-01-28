@@ -179,8 +179,8 @@ const styles = theme => ({
 });
 
 class NftModal extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
 			filled: false,
@@ -189,7 +189,28 @@ class NftModal extends Component {
 		};
 	}
 
-	renderFillPanel() {
+	componentDidMount() {
+		document.addEventListener('keydown', this.handleKeyDown, false);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('keydown', this.handleKeyDown, false);
+	}
+
+	handleKeyDown = e => {
+		const { nftIndex } = this.props;
+		if (e.key === 'ArrowLeft') {
+			if (nftIndex > 0) {
+				this.props.onPrev();
+			}
+		} else if (e.key === 'ArrowRight') {
+			if (nftIndex < 20 - 1) {
+				this.props.onNext();
+			}
+		}
+	};
+
+	renderFillPanel = () => {
 		const { classes } = this.props;
 		const { filled } = this.state;
 
@@ -232,9 +253,9 @@ class NftModal extends Component {
 				</div>
 			</div>
 		);
-	}
+	};
 
-	renderSellPanel() {
+	renderSellPanel = () => {
 		const { classes } = this.props;
 		const { price, recipient } = this.state;
 
@@ -275,13 +296,13 @@ class NftModal extends Component {
 				<Divider className={classes.divider} />
 
 				<div className={classes.contentItemRow}>
-					<Button className={classes.sellButton} disabled={!price || !price.length || !recipient || !recipient.length}>
+					<Button className={classes.sellButton} disabled={!price || !Number(price) || !recipient || !recipient.length}>
 						<Typography>Sell NFT</Typography>
 					</Button>
 				</div>
 			</div>
 		);
-	}
+	};
 
 	render() {
 		const { classes, closeModal, modalOpen, nftIndex } = this.props;
