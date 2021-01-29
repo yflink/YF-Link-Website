@@ -265,13 +265,10 @@ class NftModal extends Component {
 					<Typography variant="h3" style={{ fontWeight: 'bold' }}>
 						Offer to Sell
 					</Typography>
+					<InfoOutlinedIcon className={classes.infoIcon} />
 				</div>
 
 				<div style={{ padding: '8px 0' }}>
-					<div style={{ display: 'flex', alignItems: 'center' }}>
-						<Typography>Sell Price</Typography>
-						<InfoOutlinedIcon className={classes.infoIcon} />
-					</div>
 					<div style={{ display: 'flex', alignItems: 'center', marginTop: '11px' }}>
 						<TextField
 							className={classes.input}
