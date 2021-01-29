@@ -5,7 +5,7 @@ import { DialogContent, Dialog, Zoom, IconButton } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import { colors } from "../../../theme";
+import { colors } from "../../../theme/theme";
 
 import { Player, BigPlayButton } from "video-react";
 
