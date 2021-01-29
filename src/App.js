@@ -11,6 +11,7 @@ import Vote from "./components/vote";
 import Raffle from "./components/raffle";
 import TokenData from "./components/raffle/token";
 
+import Demo from "./components/demo/demo";
 import Initial from "./components/initial/initial";
 
 import {
@@ -123,6 +124,9 @@ class App extends Component {
               </Route>
               <Route path="/linksmas-2020/:id">
                 <TokenData />
+              </Route>
+              <Route exact path="/demo">
+                <Demo />
               </Route>
               <Route path="/">
                 <Initial />
