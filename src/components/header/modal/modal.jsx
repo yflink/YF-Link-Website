@@ -348,6 +348,12 @@ class RedirectModal extends Component {
                     "https://linkswap.app/#/stake",
                     false
                   )}
+                  {this.renderMenuItem(
+                    require("../../../assets/yflusd-logo.svg"),
+                    "YFL-USD",
+                    "https://yflusd.linkswap.app/",
+                    false
+                  )}
                 </div>
               </div>
             </div>

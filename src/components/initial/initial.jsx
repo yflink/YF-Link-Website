@@ -890,6 +890,13 @@ class Initial extends Component {
                     "https://linkswap.app/#/stake",
                     false
                   )}
+                  {this.renderMenuItem(
+                    require("../../assets/yflusd-logo.svg"),
+                    "YFL-USD",
+                    "Stake to earn YFLUSD & sYFL",
+                    "https://yflusd.linkswap.app/",
+                    false
+                  )}
                 </div>
               }
             />
