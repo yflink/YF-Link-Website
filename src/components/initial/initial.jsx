@@ -892,7 +892,7 @@ class Initial extends Component {
                   )}
                   {this.renderMenuItem(
                     require("../../assets/yflusd-logo.svg"),
-                    "YFL-USD",
+                    "YFLUSD",
                     "Stake to earn YFLUSD & sYFL",
                     "https://yflusd.linkswap.app/",
                     false

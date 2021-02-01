@@ -350,7 +350,7 @@ class RedirectModal extends Component {
                   )}
                   {this.renderMenuItem(
                     require("../../../assets/yflusd-logo.svg"),
-                    "YFL-USD",
+                    "YFLUSD",
                     "https://yflusd.linkswap.app/",
                     false
                   )}
