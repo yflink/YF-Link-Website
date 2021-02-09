@@ -2222,10 +2222,10 @@ class Vote extends Component {
                       className={classes.linkswapStakeWithdrawButtonContainer}
                     >
                       <span className={classes.linkswapValueTip}>
-                        yYFL price increases after each reward distribution as
-                        YFL rewards are staked in the governance vault.
-                        Unstaking YFL converts yYFL back to your original amount
-                        of YFL staked plus distributed rewards
+                        yYFL price increases after each reward distribution. YFL
+                        rewards are staked in the governance vault. Unstaking
+                        YFL converts yYFL back to your original amount of YFL
+                        staked plus distributed rewards
                       </span>
                     </div>
                   </div>
@@ -2453,10 +2453,10 @@ class Vote extends Component {
                       className={classes.linkswapStakeWithdrawButtonContainer}
                     >
                       <span className={classes.linkswapValueTip}>
-                        yYFL price increases after each reward distribution as
-                        YFL rewards are staked in the governance vault.
-                        Unstaking YFL converts yYFL back to your original amount
-                        of YFL staked plus distributed rewards
+                        yYFL price increases after each reward distribution. YFL
+                        rewards are staked in the governance vault. Unstaking
+                        YFL converts yYFL back to your original amount of YFL
+                        staked plus distributed rewards
                       </span>
                     </div>
                   </div>
