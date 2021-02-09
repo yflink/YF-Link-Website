@@ -1647,19 +1647,19 @@ class Vote extends Component {
           yflUsdPrice
         : "0";
 
-    const linkReward =
-      yYFLToken && yYFLToken.linkBalance
-        ? toFixed(yYFLToken.linkBalance, 18, 3)
-        : "0";
-    const wethReward =
-      yYFLToken && yYFLToken.wethBalance
-        ? toFixed(yYFLToken.wethBalance, 18, 3)
-        : "0";
-    const linkPrice = (yYFLToken && yYFLToken.linkPrice) || 0;
-    const wethPrice = (yYFLToken && yYFLToken.wethPrice) || 0;
+    // const linkReward =
+    //   yYFLToken && yYFLToken.linkBalance
+    //     ? toFixed(yYFLToken.linkBalance, 18, 3)
+    //     : "0";
+    // const wethReward =
+    //   yYFLToken && yYFLToken.wethBalance
+    //     ? toFixed(yYFLToken.wethBalance, 18, 3)
+    //     : "0";
+    // const linkPrice = (yYFLToken && yYFLToken.linkPrice) || 0;
+    // const wethPrice = (yYFLToken && yYFLToken.wethPrice) || 0;
 
-    const totalReward =
-      parseFloat(linkReward) * linkPrice + parseFloat(wethReward) * wethPrice;
+    // const totalReward =
+    //   parseFloat(linkReward) * linkPrice + parseFloat(wethReward) * wethPrice;
 
     if (value === 0 || value === 1) {
       if (screenType === "DESKTOP") {
