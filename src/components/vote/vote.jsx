@@ -888,7 +888,7 @@ const styles = (theme) => ({
     backgroundColor: colors.transGreyBackground,
     borderRadius: "4px",
     width: "100%",
-    height: "223px",
+    height: "160px",
     flexDirection: "column",
     marginBottom: "16px",
     padding: "16px",
@@ -942,6 +942,13 @@ const styles = (theme) => ({
     lineHeight: "29px",
     letterSpacing: "0.05rem",
   },
+  linkswapValueTip: {
+    fontSize: "12px",
+    fontWeight: "bold",
+    lineHeight: "14px",
+    color: colors.greyText,
+    marginTop: "4px",
+  },
   linkswapActionContainer: {
     display: "flex",
     flexDirection: "column",
@@ -991,12 +998,13 @@ const styles = (theme) => ({
     width: "100%",
     height: "180px",
     background: colors.lightBlack2,
+    color: colors.white,
     borderRadius: "8px",
     padding: "16px",
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.up("ms")]: {
-      flex: "2",
+      flex: "1",
       height: "100%",
     },
   },
@@ -2017,17 +2025,6 @@ class Vote extends Component {
                   </span>
                 </div>
               </div>
-              <div className={classes.linkswapInfoCard}>
-                <div className={classes.linkswapInfoIconWrapper}>
-                  <AttachMoneyRoundedIcon style={{ color: colors.white }} />
-                </div>
-                <div className={classes.linkswapInfoTextWrapper}>
-                  <span>yYFL Price</span>
-                  <span className={classes.linkswapValueText}>
-                    {yYFLPrice} YFL
-                  </span>
-                </div>
-              </div>
             </div>
             <Card className={classes.governanceCard}>
               <div className={classes.governanceCardHeadSection}>
@@ -2212,80 +2209,24 @@ class Vote extends Component {
                       variant={"h4"}
                       className={classes.linkswapSWAHeaderContainer}
                     >
-                      Rewards
+                      yYFL Price
                     </Typography>
                     <div className={classes.linkswapConvertBody}>
-                      <div className={classes.linkswapRewardItem}>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardHeader}
-                        >
-                          Total Value
-                        </Typography>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapTotalReward}
-                        >
-                          ${totalReward.toLocaleString()}
-                        </Typography>
-                      </div>
-                      <div className={classes.linkswapRewardItem}>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardHeader}
-                        >
-                          LINK
-                        </Typography>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardValue}
-                        >
-                          {linkReward}
-                        </Typography>
-                      </div>
-                      <div className={classes.linkswapRewardItem}>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardHeader}
-                        >
-                          WETH
-                        </Typography>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardValue}
-                        >
-                          {wethReward}
-                        </Typography>
+                      <div className={classes.linkswapInfoTextWrapper}>
+                        <span className={classes.linkswapValueText}>
+                          {yYFLPrice} YFL
+                        </span>
                       </div>
                     </div>
                     <div
                       className={classes.linkswapStakeWithdrawButtonContainer}
                     >
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title="Convert rewards into YFL so that it can be distributed proportionately to all yYFL holders"
-                        placement="top"
-                        classes={{
-                          tooltip: classes.voteCreateProposalButtonTooltip,
-                        }}
-                      >
-                        <Button
-                          className={classes.linkswapActionButton}
-                          variant="contained"
-                          onClick={() => {
-                            this.onConvert();
-                          }}
-                          disabled={!token}
-                        >
-                          <Typography
-                            className={classes.linkswapActionButtonLabel}
-                            variant={"h4"}
-                            color={colors.white}
-                          >
-                            Convert
-                          </Typography>
-                        </Button>
-                      </Tooltip>
+                      <span className={classes.linkswapValueTip}>
+                        yYFL price increases after each reward distribution as
+                        YFL rewards are staked in the governance vault.
+                        Unstaking YFL converts yYFL back to your original amount
+                        of YFL staked plus distributed rewards
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -2321,17 +2262,6 @@ class Vote extends Component {
                   <span>YFL Price (USDT)</span>
                   <span className={classes.linkswapValueText}>
                     ${yflUsdPrice}
-                  </span>
-                </div>
-              </div>
-              <div className={classes.mobileLinkswapInfoCard}>
-                <div className={classes.linkswapInfoIconWrapper}>
-                  <AttachMoneyRoundedIcon style={{ color: colors.white }} />
-                </div>
-                <div className={classes.linkswapInfoTextWrapper}>
-                  <span>yYFL Price</span>
-                  <span className={classes.linkswapValueText}>
-                    {yYFLPrice} YFL
                   </span>
                 </div>
               </div>
@@ -2510,65 +2440,24 @@ class Vote extends Component {
                       variant={"h4"}
                       className={classes.linkswapSWAHeaderContainer}
                     >
-                      Rewards
+                      yYFL Price
                     </Typography>
                     <div className={classes.linkswapConvertBody}>
-                      <div className={classes.linkswapRewardItem}>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapTotalReward}
-                        >
-                          ${totalReward.toLocaleString()}
-                        </Typography>
-                      </div>
-                      <div className={classes.linkswapRewardItem}>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardHeader}
-                        >
-                          LINK
-                        </Typography>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardValue}
-                        >
-                          {linkReward}
-                        </Typography>
-                      </div>
-                      <div className={classes.linkswapRewardItem}>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardHeader}
-                        >
-                          WETH
-                        </Typography>
-                        <Typography
-                          variant={"h4"}
-                          className={classes.linkswapRewardValue}
-                        >
-                          {wethReward}
-                        </Typography>
+                      <div className={classes.linkswapInfoTextWrapper}>
+                        <span className={classes.linkswapValueText}>
+                          {yYFLPrice} YFL
+                        </span>
                       </div>
                     </div>
                     <div
                       className={classes.linkswapStakeWithdrawButtonContainer}
                     >
-                      <Button
-                        className={classes.linkswapActionButton}
-                        variant="contained"
-                        onClick={() => {
-                          this.onConvert();
-                        }}
-                        disabled={!token}
-                      >
-                        <Typography
-                          className={classes.linkswapActionButtonLabel}
-                          variant={"h4"}
-                          color={colors.white}
-                        >
-                          Convert
-                        </Typography>
-                      </Button>
+                      <span className={classes.linkswapValueTip}>
+                        yYFL price increases after each reward distribution as
+                        YFL rewards are staked in the governance vault.
+                        Unstaking YFL converts yYFL back to your original amount
+                        of YFL staked plus distributed rewards
+                      </span>
                     </div>
                   </div>
                 </div>
