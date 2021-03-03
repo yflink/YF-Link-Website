@@ -113,6 +113,9 @@ class App extends Component {
             }}
           >
             <Switch>
+              <Route path="/vote">
+                <Vote />
+              </Route>
               <Route path="/stake">
                 <Vote />
               </Route>

@@ -788,55 +788,6 @@ class Initial extends Component {
           </div>
           <div className={classes.linkContainer}>
             <HeaderMenuLink
-              text="PRODUCTS"
-              menuItems={
-                <div className={classes.linkProductsMenu}>
-                  {this.renderMenuItem(
-                    require("../../assets/linkswap.svg"),
-                    "LINKSWAP",
-                    "Automated Market Maker",
-                    "https://linkswap.app",
-                    false
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/linkcheck.svg"),
-                    "LINKCHECK",
-                    "Team audits",
-                    "https://blog.yflink.io/linkcheck/",
-                    false
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/linkpad.svg"),
-                    "LINKPAD",
-                    "DeFi Venture Fund",
-                    "https://blog.yflink.io/project-announcement-linkpad/",
-                    false
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/waffle.svg"),
-                    "Wafflehouse",
-                    "Blockchain game",
-                    "",
-                    true
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/linklend.svg"),
-                    "LINKLEND",
-                    "Synthetic collateral lending",
-                    "https://blog.yflink.io/project-announcement-linklend/",
-                    true
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/nft.svg"),
-                    "NFTs",
-                    "View YFL NFTs",
-                    "",
-                    true
-                  )}
-                </div>
-              }
-            />
-            <HeaderMenuLink
               text="RESOURCES"
               menuItems={
                 <div className={classes.linkProductsMenu}>
@@ -845,13 +796,6 @@ class Initial extends Component {
                     "Analytics",
                     "LINKSWAP Protocol Analytics",
                     "https://info.linkswap.app",
-                    false
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/calculator_1.svg"),
-                    "APY Calculator",
-                    "LP Rewards",
-                    "https://apycalc.yflink.io/",
                     false
                   )}
                   {this.renderMenuItem(
@@ -878,23 +822,16 @@ class Initial extends Component {
                   {this.renderMenuItem(
                     require("../../assets/vote.svg"),
                     "Governance",
-                    "Stake YFL",
-                    "./stake",
+                    "Voting",
+                    "./vote",
                     false,
                     false
                   )}
                   {this.renderMenuItem(
                     require("../../assets/stake.svg"),
-                    "LP Rewards",
-                    "Stake LPs",
+                    "Staking",
+                    "Stake on LINKSWAP",
                     "https://linkswap.app/#/stake",
-                    false
-                  )}
-                  {this.renderMenuItem(
-                    require("../../assets/yflusd-logo.svg"),
-                    "YFLUSD",
-                    "Stake to earn YFLUSD & sYFL",
-                    "https://yflusd.linkswap.app/",
                     false
                   )}
                 </div>

@@ -867,7 +867,7 @@ class Initial extends Component {
                   {this.renderMenuItem(
                     require("../../assets/calculator_2.svg"),
                     "APY Calculator",
-                    "Stake & Vote",
+                    "Stake",
                     "https://calculator.yflink.io/",
                     false
                   )}
@@ -875,14 +875,14 @@ class Initial extends Component {
               }
             />
             <HeaderMenuLink
-              text="STAKE & VOTE"
+              text="VOTE"
               menuItems={
                 <div className={classes.linkProductsMenu}>
                   {this.renderMenuItem(
                     require("../../assets/vote.svg"),
                     "Governance",
-                    "Stake YFL",
-                    "./stake",
+                    "Voting",
+                    "./vote",
                     false,
                     false
                   )}

@@ -3500,8 +3500,6 @@ class Vote extends Component {
         {this.renderHeader("MOBILE")}
         {!proposalScreen && (
           <div className={classes.mainBody}>
-            {this.renderGovernanceSection("DESKTOP")}
-            {this.renderGovernanceSection("MOBILE")}
             {this.renderVoteSection("DESKTOP")}
             {this.renderVoteSection("MOBILE")}
           </div>
