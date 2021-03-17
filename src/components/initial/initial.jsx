@@ -823,7 +823,7 @@ class Initial extends Component {
                     require("../../assets/vote.svg"),
                     "Governance",
                     "Voting",
-                    "./vote",
+                    "https://snapshot.org/#/yflink",
                     false,
                     false
                   )}
